@@ -1,0 +1,11 @@
+<j:jelly xmlns:j="jelly:core" xmlns:st="jelly:stapler" xmlns:d="jelly:define" xmlns:l="/lib/layout" xmlns:t="/lib/hudson" xmlns:f="/lib/form">
+  <j:if test="${descriptor.sites.size() &gt; 1}">
+    <f:entry title="${%Mantis site}">
+      <select class="setting-input" name="mantis.siteName">
+        <j:forEach var="s" items="${descriptor.sites}">
+          <f:option selected="${s.name==instance.siteName}">${s.name}</f:option>
+        </j:forEach>
+      </select>
+    </f:entry>
+  </j:if>
+</j:jelly>
