@@ -1,6 +1,7 @@
 package hudson.plugins.mantis;
 
 import hudson.model.Action;
+import hudson.plugins.mantis.model.MantisIssue;
 
 /**
  * Mantis issues related to the build.

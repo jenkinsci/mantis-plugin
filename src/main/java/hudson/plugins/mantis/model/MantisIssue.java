@@ -1,7 +1,7 @@
-package hudson.plugins.mantis;
+package hudson.plugins.mantis.model;
 
 /**
- * Obe Mantis issue.
+ * One Mantis issue.
  *
  * @author Seiji Sogabe
  */

@@ -15,7 +15,7 @@ import org.kohsuke.stapler.StaplerRequest;
 
 /**
  * Parses changelog for Mantis issue IDs and updates Mantis issues.
- * 
+ *
  * @author Seiji Sogabe
  */
 public final class MantisIssueUpdater extends Publisher {

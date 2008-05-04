@@ -1,3 +1,0 @@
-
-This plugin includes software developed by
-vboctor at users.sourceforge.net (http://www.futureware.biz/mantisconnect/)

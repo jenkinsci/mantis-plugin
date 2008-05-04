@@ -2,22 +2,24 @@ package hudson.plugins.mantis;
 
 import hudson.Util;
 import hudson.model.AbstractProject;
+import hudson.plugins.mantis.model.MantisIssue;
+import hudson.plugins.mantis.model.MantisNote;
+import hudson.plugins.mantis.model.MantisViewState;
+import hudson.plugins.mantis.soap.MantisConnectLocator;
+import hudson.plugins.mantis.soap.MantisConnectPortType;
+import hudson.plugins.mantis.soap.MantisSession;
 
 import java.net.MalformedURLException;
 import java.net.URL;
 
+import javax.xml.rpc.ServiceException;
+
 import org.kohsuke.stapler.DataBoundConstructor;
-import org.mantisbt.connect.IMCSession;
-import org.mantisbt.connect.MCException;
-import org.mantisbt.connect.axis.MCSession;
-import org.mantisbt.connect.model.IIssue;
-import org.mantisbt.connect.model.INote;
-import org.mantisbt.connect.model.Note;
 
 /**
  * Reperesents an external MAntis installation and configuration needed to access this
  * Mantis.
- * 
+ *
  * @author Seiji Sogabe
  */
 public final class MantisSite {
@@ -80,11 +82,9 @@ public final class MantisSite {
 
     public boolean isConnect() {
         try {
-            final IMCSession session = createSession();
+            final MantisSession session = createSession();
             session.getConfigString("default_language");
         } catch (final MantisHandlingException e) {
-            return false;
-        } catch (final MCException e) {
             return false;
         }
 
@@ -92,51 +92,46 @@ public final class MantisSite {
     }
 
     public MantisIssue getIssue(final Long id) throws MantisHandlingException {
-        IIssue issue;
-        final IMCSession session = createSession();
-        try {
-            issue = session.getIssue(id);
-        } catch (final MCException e) {
-            throw new MantisHandlingException(e);
-        }
+        final MantisSession session = createSession();
+        final MantisIssue issue = session.getIssue(id);
         if (issue == null) {
             return null;
         }
-        return new MantisIssue(id, issue.getSummary());
+        return issue;
     }
 
     public void addNote(final Long id, final String text, final boolean keepNotePrivate)
             throws MantisHandlingException {
-        final IMCSession session = createSession();
-        final INote note = new Note();
-        note.setPrivate(keepNotePrivate);
-        note.setText(text);
-        try {
-            session.addNote(id, note);
-        } catch (final MCException e) {
-            throw new MantisHandlingException(e);
-        }
+
+        final MantisViewState viewState = keepNotePrivate ? MantisViewState.PRIVATE
+                : MantisViewState.PUBLIC;
+        final MantisNote note = new MantisNote(text, viewState);
+
+        final MantisSession session = createSession();
+        session.addNote(id, note);
     }
 
-    private IMCSession createSession() throws MantisHandlingException {
+    private MantisSession createSession() throws MantisHandlingException {
         if (userName == null || password == null) {
             throw new MantisHandlingException("user name or password is null.");
         }
-        final URL mcUrl;
+        final URL endpoint;
         try {
-            mcUrl = new URL(url.toExternalForm() + END_POINT);
+            endpoint = new URL(url, END_POINT);
         } catch (final MalformedURLException e) {
             throw new AssertionError(e);
         }
 
-        IMCSession session;
+        MantisConnectPortType portType;
         try {
-            session = new MCSession(mcUrl, userName, password);
-        } catch (final MCException e) {
+            final MantisConnectLocator locator = new MantisConnectLocator();
+            portType = locator.getMantisConnectPort(endpoint);
+        } catch (final ServiceException e) {
             throw new MantisHandlingException(e);
         }
 
-        return session;
+        return new MantisSession(this, portType);
+
     }
 
 }

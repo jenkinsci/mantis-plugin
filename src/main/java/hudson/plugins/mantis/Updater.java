@@ -7,6 +7,7 @@ import hudson.model.Hudson;
 import hudson.model.Result;
 import hudson.model.Run;
 import hudson.model.AbstractBuild.DependencyChange;
+import hudson.plugins.mantis.model.MantisIssue;
 import hudson.scm.ChangeLogSet.Entry;
 
 import java.io.PrintStream;
@@ -20,7 +21,7 @@ import java.util.regex.Pattern;
 
 /**
  * Mantis update Logic.
- * 
+ *
  * @author Seiji Sogabe
  */
 final class Updater {

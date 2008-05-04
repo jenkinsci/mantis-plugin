@@ -4,6 +4,7 @@ import hudson.MarkupText;
 import hudson.Util;
 import hudson.MarkupText.SubText;
 import hudson.model.AbstractBuild;
+import hudson.plugins.mantis.model.MantisIssue;
 import hudson.scm.ChangeLogAnnotator;
 import hudson.scm.ChangeLogSet.Entry;
 

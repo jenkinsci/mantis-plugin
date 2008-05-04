@@ -85,10 +85,8 @@ public final class MantisProjectProperty extends JobProperty<AbstractProject<?, 
         }
 
         @Override
-        public JobProperty<?> newInstance(final StaplerRequest req,
-                final JSONObject formData) {
-            MantisProjectProperty mpp = req.bindJSON(MantisProjectProperty.class,
-                    formData);
+        public JobProperty<?> newInstance(final StaplerRequest req) throws FormException {
+            MantisProjectProperty mpp = req.bindParameters(MantisProjectProperty.class, "mantis.");
             if (mpp.siteName == null) {
                 mpp = null;
             }
