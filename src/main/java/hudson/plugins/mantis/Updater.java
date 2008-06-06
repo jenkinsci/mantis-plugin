@@ -58,8 +58,8 @@ final class Updater {
             return true;
         }
 
-        final boolean noUpdate = build.getResult().isWorseThan(Result.SUCCESS);
-        if (noUpdate) {
+        final boolean update = !build.getResult().isWorseThan(Result.SUCCESS);
+        if (!update) {
             build.addAction(new MantisCarryOverAction(ids.toArray(new Long[ids.size()])));
         }
 
@@ -70,7 +70,7 @@ final class Updater {
                 if (issue == null) {
                     continue;
                 }
-                if (!noUpdate) {
+                if (update) {
                     final String prjName = build.getProject().getName();
                     final int prjNumber = build.getNumber();
                     final String url = Util.encode(rootUrl + build.getUrl());
