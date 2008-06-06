@@ -71,12 +71,7 @@ final class Updater {
                     continue;
                 }
                 if (update) {
-                    final String prjName = build.getProject().getName();
-                    final int prjNumber = build.getNumber();
-                    final String url = Util.encode(rootUrl + build.getUrl());
-                    final String text =
-                            Messages.Updater_IssueIntegrated(prjName, prjNumber, url);
-
+                    final String text = createUpdateText(build, rootUrl);
                     site.updateIssue(id, text, property.isKeepNotePrivate());
                     logger.println(Messages.Updater_Updating(id));
                 }
@@ -84,6 +79,7 @@ final class Updater {
             }
         } catch (final MantisHandlingException e) {
             logger.println(Messages.Updater_FailedToAddNote());
+            logger.println(e);
             build.setResult(Result.FAILURE);
             return true;
         }
@@ -91,6 +87,16 @@ final class Updater {
                 new MantisBuildAction(issues.toArray(new MantisIssue[issues.size()])));
 
         return true;
+    }
+
+	private String createUpdateText(final AbstractBuild<?, ?> build,
+            final String rootUrl) {
+        final String prjName = build.getProject().getName();
+        final int prjNumber = build.getNumber();
+        final String url = Util.encode(rootUrl + build.getUrl());
+        final String text =
+                Messages.Updater_IssueIntegrated(prjName, prjNumber, url);
+        return text;
     }
 
     private Set<Long> findIssueIdsRecursive(final AbstractBuild<?, ?> build) {

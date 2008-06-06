@@ -26,7 +26,7 @@ public final class MantisProjectProperty extends JobProperty<AbstractProject<?, 
 
     public static final DescriptorImpl DESCRIPTOR = new DescriptorImpl();
 
-    public final String siteName;
+    private final String siteName;
 
     @DataBoundConstructor
     public MantisProjectProperty(final String siteName) {
@@ -40,6 +40,10 @@ public final class MantisProjectProperty extends JobProperty<AbstractProject<?, 
         this.siteName = name;
     }
 
+    public String getSiteName() {
+        return siteName;
+    }
+    
     public MantisSite getSite() {
         final MantisSite[] sites = DESCRIPTOR.getSites();
         if (siteName == null && sites.length > 0) {

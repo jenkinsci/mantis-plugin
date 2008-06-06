@@ -29,9 +29,9 @@
                    onchange="Form.findMatchingInput(this,'mantis.url').onchange()" />
           </f:entry>
 
-          <f:section title="${%HTTP Basic Authentication}" 
-                     help="/plugin/mantis/help-useBasicAuth.html">
-            <f:advanced>
+          <f:advanced>
+            <f:section title="${%HTTP Basic Authentication}" 
+                       help="/plugin/mantis/help-useBasicAuth.html">
               <f:entry title="${%User Name}">
                 <f:textbox name="mantis.basicUserName" value="${site.basicUserName}"
                 
@@ -42,8 +42,8 @@
                        type="password" value="${site.basicPassword}"
                        onchange="Form.findMatchingInput(this,'mantis.url').onchange()" />
               </f:entry>
-            </f:advanced>
-          </f:section>
+            </f:section>
+          </f:advanced>
 
           <f:entry title="">
             <div align="right">
