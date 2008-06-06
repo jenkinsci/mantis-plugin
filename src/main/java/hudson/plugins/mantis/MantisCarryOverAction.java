@@ -3,9 +3,8 @@ package hudson.plugins.mantis;
 import hudson.model.InvisibleAction;
 
 /**
- * Remembers Mantis IDs that need to be updated later,
- * when we get a successfull build.
- *
+ * Remembers Mantis IDs that need to be updated later, when we get a successfull build.
+ * 
  * @author Seiji Sogabe
  */
 public final class MantisCarryOverAction extends InvisibleAction {

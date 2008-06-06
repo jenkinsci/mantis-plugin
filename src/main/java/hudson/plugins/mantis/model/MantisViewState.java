@@ -19,5 +19,5 @@ public enum MantisViewState {
     };
 
 
-    abstract public int getCode();
+    public abstract int getCode();
 }

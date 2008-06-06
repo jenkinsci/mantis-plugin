@@ -21,17 +21,17 @@ import java.util.regex.Pattern;
 
 /**
  * Mantis update Logic.
- *
+ * 
  * @author Seiji Sogabe
  */
 final class Updater {
 
-    private static final Pattern ISSUE_PATTERN = Pattern.compile(
-            "(?<=\\bissue #?)(\\d+)(?>\\b)", Pattern.CASE_INSENSITIVE);
+    private static final Pattern ISSUE_PATTERN =
+            Pattern.compile("(?<=\\bissue #?)(\\d+)(?>\\b)", Pattern.CASE_INSENSITIVE);
 
-    private final MantisUpdaterProperty property;
+    private final MantisIssueUpdater property;
 
-    Updater(final MantisUpdaterProperty property) {
+    Updater(final MantisIssueUpdater property) {
         this.property = property;
     }
 
@@ -74,10 +74,10 @@ final class Updater {
                     final String prjName = build.getProject().getName();
                     final int prjNumber = build.getNumber();
                     final String url = Util.encode(rootUrl + build.getUrl());
-                    final String text = Messages.Updater_IssueIntegrated(prjName,
-                            prjNumber, url);
+                    final String text =
+                            Messages.Updater_IssueIntegrated(prjName, prjNumber, url);
 
-                    site.addNote(id, text, property.isKeepNotePrivate());
+                    site.updateIssue(id, text, property.isKeepNotePrivate());
                     logger.println(Messages.Updater_Updating(id));
                 }
                 issues.add(issue);
@@ -98,8 +98,8 @@ final class Updater {
 
         final Run<?, ?> prev = build.getPreviousBuild();
         if (prev != null) {
-            final MantisCarryOverAction action = prev
-                    .getAction(MantisCarryOverAction.class);
+            final MantisCarryOverAction action =
+                    prev.getAction(MantisCarryOverAction.class);
             if (action != null) {
                 ids.addAll(Arrays.asList(action.getIDs()));
             }

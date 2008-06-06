@@ -2,7 +2,7 @@ package hudson.plugins.mantis;
 
 /**
  * Mantis handling Exception.
- *
+ * 
  * @author Seiji Sogabe
  */
 public final class MantisHandlingException extends Exception {

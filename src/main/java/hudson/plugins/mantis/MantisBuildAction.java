@@ -5,7 +5,7 @@ import hudson.plugins.mantis.model.MantisIssue;
 
 /**
  * Mantis issues related to the build.
- *
+ * 
  * @author Seiji Sogabe
  */
 public final class MantisBuildAction implements Action {

@@ -1,29 +1,56 @@
 <j:jelly xmlns:j="jelly:core" xmlns:st="jelly:stapler" xmlns:d="jelly:define" xmlns:l="/lib/layout" xmlns:t="/lib/hudson" xmlns:f="/lib/form">
+  
   <f:section title="Mantis">
     <f:entry title="${%Mantis sites}"
-      description="${%Mantis sites that projects will want to connect}">
+             description="${%Mantis sites that projects will want to connect}">
       <f:repeatable name="mantissite" var="site" items="${descriptor.sites}">
+
         <table width="100%">
+
           <f:entry title="${%URL}" help="/plugin/mantis/help-url.html">
-            <f:textbox name="mantis.url" value="${site.url}"
-                checkUrl="'${rootURL}/jobProperty/MantisProjectProperty/urlCheck?value='+escape(this.value)" />
+            <f:textbox name="mantis.url" value="${site.url}" 
+               checkUrl="'${rootURL}/jobProperty/MantisProjectProperty/loginCheck?url='
+                       +escape(this.value)
+                       +'&amp;user='+escape(Form.findMatchingInput(this,'mantis.userName').value)
+                       +'&amp;pass='+escape(Form.findMatchingInput(this,'mantis.password').value)
+                       +'&amp;buser='+escape(Form.findMatchingInput(this,'mantis.basicUserName').value)
+                       +'&amp;bpass='+escape(Form.findMatchingInput(this,'mantis.basicPassword').value)" />
           </f:entry>
+
           <f:entry title="${%User Name}" help="/plugin/mantis/help-login.html">
             <f:textbox name="mantis.userName" value="${site.userName}"
                 checkMethod="post"
-                checkUrl="'${rootURL}/jobProperty/MantisProjectProperty/loginCheck?url='+escape(Form.findMatchingInput(this,'mantis.url').value)+'&amp;user='+escape(this.value)+'&amp;pass='+escape(Form.findMatchingInput(this,'mantis.password').value)"/>
+                checkUrl="Form.findMatchingInput(this,'mantis.url').onchange()" />
           </f:entry>
+
           <f:entry title="${%Password}">
             <input class="setting-input" name="mantis.password"
                    type="password" value="${site.password}"
-                   onchange="Form.findMatchingInput(this,'mantis.userName').onchange()" />
+                   onchange="Form.findMatchingInput(this,'mantis.url').onchange()" />
           </f:entry>
+
+          <f:section title="${%HTTP Basic Authentication}" 
+                     help="/plugin/mantis/help-useBasicAuth.html">
+            <f:advanced>
+              <f:entry title="${%User Name}">
+                <f:textbox name="mantis.basicUserName" value="${site.basicUserName}"
+                
+                           onchange="Form.findMatchingInput(this,'mantis.url').onchange()" />
+              </f:entry>
+              <f:entry title="${%Password}">
+                <input class="setting-input" name="mantis.basicPassword"
+                       type="password" value="${site.basicPassword}"
+                       onchange="Form.findMatchingInput(this,'mantis.url').onchange()" />
+              </f:entry>
+            </f:advanced>
+          </f:section>
 
           <f:entry title="">
             <div align="right">
               <f:repeatableDeleteButton />
             </div>
           </f:entry>
+          
         </table>
       </f:repeatable>
     </f:entry>
