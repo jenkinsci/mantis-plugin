@@ -12,19 +12,19 @@ import java.util.regex.Pattern;
 
 /**
  * Creates HTML link for Mantis issues.
- *
+ * 
  * @author Seiji Sogabe
  */
 public final class MantisLinkAnnotator extends ChangeLogAnnotator {
 
-    private static final Pattern ISSUE_PATTERN = Pattern.compile("\\bissue #?(\\d+)\\b",
-            Pattern.CASE_INSENSITIVE);
+    private static final Pattern ISSUE_PATTERN =
+            Pattern.compile("\\bissue #?(\\d+)\\b", Pattern.CASE_INSENSITIVE);
 
     @Override
     public void annotate(final AbstractBuild<?, ?> build, final Entry change,
             final MarkupText text) {
-        final MantisProjectProperty mpp = build.getParent().getProperty(
-                MantisProjectProperty.class);
+        final MantisProjectProperty mpp =
+                build.getParent().getProperty(MantisProjectProperty.class);
         if (mpp == null || mpp.getSite() == null) {
             return;
         }

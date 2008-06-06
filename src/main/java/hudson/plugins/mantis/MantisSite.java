@@ -5,32 +5,45 @@ import hudson.model.AbstractProject;
 import hudson.plugins.mantis.model.MantisIssue;
 import hudson.plugins.mantis.model.MantisNote;
 import hudson.plugins.mantis.model.MantisViewState;
-import hudson.plugins.mantis.soap.MantisConnectLocator;
-import hudson.plugins.mantis.soap.MantisConnectPortType;
 import hudson.plugins.mantis.soap.MantisSession;
 
 import java.net.MalformedURLException;
 import java.net.URL;
-
-import javax.xml.rpc.ServiceException;
 
 import org.kohsuke.stapler.DataBoundConstructor;
 
 /**
  * Reperesents an external MAntis installation and configuration needed to access this
  * Mantis.
- *
+ * 
  * @author Seiji Sogabe
  */
 public final class MantisSite {
 
-    private static final String END_POINT = "api/soap/mantisconnect.php";
-
+    /**
+     * the root URL of Mantis installation.
+     */
     private URL url;
 
+    /**
+     * user name for Mantis installation.
+     */
     private final String userName;
 
+    /**
+     * password for Mantis installation.
+     */
     private final String password;
+
+    /**
+     * user name for Basic Authentication.
+     */
+    private final String basicUserName;
+
+    /**
+     * password for Basic Authentication.
+     */
+    private final String basicPassword;
 
     public static MantisSite get(final AbstractProject<?, ?> p) {
         final MantisProjectProperty mpp = p.getProperty(MantisProjectProperty.class);
@@ -65,8 +78,17 @@ public final class MantisSite {
         return url.toExternalForm();
     }
 
+    public String getBasicUserName() {
+        return basicUserName;
+    }
+
+    public String getBasicPassword() {
+        return basicPassword;
+    }
+
     @DataBoundConstructor
-    public MantisSite(final URL url, final String userName, final String password) {
+    public MantisSite(final URL url, final String userName, final String password,
+            final String basicUserName, final String basicPassword) {
         if (!url.toExternalForm().endsWith("/")) {
             try {
                 this.url = new URL(url.toExternalForm() + '/');
@@ -76,8 +98,11 @@ public final class MantisSite {
         } else {
             this.url = url;
         }
-        this.userName = Util.fixEmpty(userName);
-        this.password = Util.fixEmpty(password);
+
+        this.userName = Util.fixEmptyAndTrim(userName);
+        this.password = Util.fixEmptyAndTrim(password);
+        this.basicUserName = Util.fixEmptyAndTrim(basicUserName);
+        this.basicPassword = Util.fixEmptyAndTrim(basicPassword);
     }
 
     public boolean isConnect() {
@@ -100,11 +125,11 @@ public final class MantisSite {
         return issue;
     }
 
-    public void addNote(final Long id, final String text, final boolean keepNotePrivate)
-            throws MantisHandlingException {
+    public void updateIssue(final Long id, final String text,
+            final boolean keepNotePrivate) throws MantisHandlingException {
 
-        final MantisViewState viewState = keepNotePrivate ? MantisViewState.PRIVATE
-                : MantisViewState.PUBLIC;
+        final MantisViewState viewState =
+                keepNotePrivate ? MantisViewState.PRIVATE : MantisViewState.PUBLIC;
         final MantisNote note = new MantisNote(text, viewState);
 
         final MantisSession session = createSession();
@@ -115,23 +140,7 @@ public final class MantisSite {
         if (userName == null || password == null) {
             throw new MantisHandlingException("user name or password is null.");
         }
-        final URL endpoint;
-        try {
-            endpoint = new URL(url, END_POINT);
-        } catch (final MalformedURLException e) {
-            throw new AssertionError(e);
-        }
-
-        MantisConnectPortType portType;
-        try {
-            final MantisConnectLocator locator = new MantisConnectLocator();
-            portType = locator.getMantisConnectPort(endpoint);
-        } catch (final ServiceException e) {
-            throw new MantisHandlingException(e);
-        }
-
-        return new MantisSession(this, portType);
-
+        return MantisSession.create(this);
     }
 
 }

@@ -15,7 +15,7 @@ import org.kohsuke.stapler.StaplerRequest;
 
 /**
  * Parses changelog for Mantis issue IDs and updates Mantis issues.
- *
+ * 
  * @author Seiji Sogabe
  */
 public final class MantisIssueUpdater extends Publisher {
@@ -40,9 +40,7 @@ public final class MantisIssueUpdater extends Publisher {
     @Override
     public boolean perform(final AbstractBuild<?, ?> build, final Launcher launcher,
             final BuildListener listener) throws InterruptedException, IOException {
-        final MantisUpdaterProperty property = new MantisUpdaterProperty();
-        property.setKeepNotePrivate(keepNotePrivate);
-        final Updater updater = new Updater(property);
+        final Updater updater = new Updater(this);
         return updater.perform(build, listener);
     }
 

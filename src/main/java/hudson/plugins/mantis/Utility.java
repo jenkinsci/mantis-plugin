@@ -4,7 +4,7 @@ import hudson.Util;
 
 /**
  * Utility class.
- *
+ * 
  * @author Seiji Sogabe
  */
 public final class Utility {

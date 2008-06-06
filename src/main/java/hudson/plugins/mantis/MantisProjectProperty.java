@@ -13,8 +13,6 @@ import java.net.URL;
 
 import javax.servlet.ServletException;
 
-import net.sf.json.JSONObject;
-
 import org.kohsuke.stapler.DataBoundConstructor;
 import org.kohsuke.stapler.StaplerRequest;
 import org.kohsuke.stapler.StaplerResponse;
@@ -42,6 +40,10 @@ public final class MantisProjectProperty extends JobProperty<AbstractProject<?, 
         this.siteName = name;
     }
 
+    public String getSiteName() {
+        return siteName;
+    }
+    
     public MantisSite getSite() {
         final MantisSite[] sites = DESCRIPTOR.getSites();
         if (siteName == null && sites.length > 0) {
@@ -62,7 +64,8 @@ public final class MantisProjectProperty extends JobProperty<AbstractProject<?, 
 
     public static final class DescriptorImpl extends JobPropertyDescriptor {
 
-        private final CopyOnWriteList<MantisSite> sites = new CopyOnWriteList<MantisSite>();
+        private final CopyOnWriteList<MantisSite> sites =
+                new CopyOnWriteList<MantisSite>();
 
         public DescriptorImpl() {
             super(MantisProjectProperty.class);
@@ -86,7 +89,8 @@ public final class MantisProjectProperty extends JobProperty<AbstractProject<?, 
 
         @Override
         public JobProperty<?> newInstance(final StaplerRequest req) throws FormException {
-            MantisProjectProperty mpp = req.bindParameters(MantisProjectProperty.class, "mantis.");
+            MantisProjectProperty mpp =
+                    req.bindParameters(MantisProjectProperty.class, "mantis.");
             if (mpp.siteName == null) {
                 mpp = null;
             }
@@ -100,28 +104,6 @@ public final class MantisProjectProperty extends JobProperty<AbstractProject<?, 
             return true;
         }
 
-        public void doUrlCheck(final StaplerRequest req, final StaplerResponse res)
-                throws IOException, ServletException {
-            new FormFieldValidator.URLCheck(req, res) {
-                @Override
-                protected void check() throws IOException, ServletException {
-                    final String value = Util.fixEmptyAndTrim(request
-                            .getParameter("value"));
-                    if (value == null) {
-                        error(Messages.MantisProjectProperty_MantisUrlMandatory());
-                        return;
-                    }
-                    try {
-                        open(new URL(value));
-                    } catch (final IOException e) {
-                        error(Messages.MantisProjectProperty_NotOpenUrl());
-                        return;
-                    }
-                    ok();
-                }
-            }.process();
-        }
-
         public void doLoginCheck(final StaplerRequest req, final StaplerResponse res)
                 throws IOException, ServletException {
             new FormFieldValidator(req, res, false) {
@@ -129,12 +111,16 @@ public final class MantisProjectProperty extends JobProperty<AbstractProject<?, 
                 protected void check() throws IOException, ServletException {
                     final String url = Util.fixEmptyAndTrim(req.getParameter("url"));
                     if (url == null) {
-                        ok();
+                        error(Messages.MantisProjectProperty_MantisUrlMandatory());
                         return;
                     }
-                    final String user = req.getParameter("user");
-                    final String pass = req.getParameter("pass");
-                    final MantisSite site = new MantisSite(new URL(url), user, pass);
+                    final String user = Util.fixEmptyAndTrim(req.getParameter("user"));
+                    final String pass = Util.fixEmptyAndTrim(req.getParameter("pass"));
+                    final String bUser = Util.fixEmptyAndTrim(req.getParameter("buser"));
+                    final String bPass = Util.fixEmptyAndTrim(req.getParameter("bpass"));
+
+                    final MantisSite site =
+                            new MantisSite(new URL(url), user, pass, bUser, bPass);
                     if (!site.isConnect()) {
                         error(Messages.MantisProjectProperty_UnableToLogin());
                         return;
