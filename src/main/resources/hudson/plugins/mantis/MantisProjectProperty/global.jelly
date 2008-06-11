@@ -9,18 +9,13 @@
 
           <f:entry title="${%URL}" help="/plugin/mantis/help-url.html">
             <f:textbox name="mantis.url" value="${site.url}" 
-               checkUrl="'${rootURL}/jobProperty/MantisProjectProperty/loginCheck?url='
-                       +escape(this.value)
-                       +'&amp;user='+escape(Form.findMatchingInput(this,'mantis.userName').value)
-                       +'&amp;pass='+escape(Form.findMatchingInput(this,'mantis.password').value)
-                       +'&amp;buser='+escape(Form.findMatchingInput(this,'mantis.basicUserName').value)
-                       +'&amp;bpass='+escape(Form.findMatchingInput(this,'mantis.basicPassword').value)" />
+               checkUrl="'${rootURL}/jobProperty/MantisProjectProperty/loginCheck?url='+escape(this.value)+'&amp;user='+escape(Form.findMatchingInput(this,'mantis.userName').value)+'&amp;pass='+escape(Form.findMatchingInput(this,'mantis.password').value)+'&amp;buser='+escape(Form.findMatchingInput(this,'mantis.basicUserName').value)+'&amp;bpass='+escape(Form.findMatchingInput(this,'mantis.basicPassword').value)" />
           </f:entry>
 
           <f:entry title="${%User Name}" help="/plugin/mantis/help-login.html">
             <f:textbox name="mantis.userName" value="${site.userName}"
                 checkMethod="post"
-                checkUrl="Form.findMatchingInput(this,'mantis.url').onchange()" />
+                onchange="Form.findMatchingInput(this,'mantis.url').onchange()" />
           </f:entry>
 
           <f:entry title="${%Password}">
@@ -33,8 +28,7 @@
             <f:section title="${%HTTP Basic Authentication}" 
                        help="/plugin/mantis/help-useBasicAuth.html">
               <f:entry title="${%User Name}">
-                <f:textbox name="mantis.basicUserName" value="${site.basicUserName}"
-                
+                <f:textbox name="mantis.basicUserName" value="${site.basicUserName}"                
                            onchange="Form.findMatchingInput(this,'mantis.url').onchange()" />
               </f:entry>
               <f:entry title="${%Password}">
