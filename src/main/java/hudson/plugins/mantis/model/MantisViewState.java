@@ -7,17 +7,16 @@ package hudson.plugins.mantis.model;
  */
 public enum MantisViewState {
 
-    PUBLIC() {
-        public int getCode() {
-            return 10;
-        }
-    },
-    PRIVATE() {
-        public int getCode() {
-            return 50;
-        }
-    };
+    PUBLIC(10),
+    PRIVATE(50);
 
+    private int code;
+    
+    private MantisViewState(final int code) {
+        this.code = code;
+    }
 
-    public abstract int getCode();
+    public int getCode() {
+        return code;
+    }
 }

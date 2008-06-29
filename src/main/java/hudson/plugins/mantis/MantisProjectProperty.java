@@ -13,6 +13,8 @@ import java.net.URL;
 
 import javax.servlet.ServletException;
 
+import net.sf.json.JSONObject;
+
 import org.kohsuke.stapler.DataBoundConstructor;
 import org.kohsuke.stapler.StaplerRequest;
 import org.kohsuke.stapler.StaplerResponse;
@@ -88,9 +90,9 @@ public final class MantisProjectProperty extends JobProperty<AbstractProject<?, 
         }
 
         @Override
-        public JobProperty<?> newInstance(final StaplerRequest req) throws FormException {
+        public JobProperty<?> newInstance(final StaplerRequest req, final JSONObject formData) throws FormException {
             MantisProjectProperty mpp =
-                    req.bindParameters(MantisProjectProperty.class, "mantis.");
+                    req.bindJSON(MantisProjectProperty.class, formData);
             if (mpp.siteName == null) {
                 mpp = null;
             }
