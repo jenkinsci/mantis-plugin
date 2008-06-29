@@ -58,8 +58,9 @@ final class Updater {
             return true;
         }
 
-        final boolean update = !build.getResult().isWorseThan(Result.SUCCESS);
+        final boolean update = !build.getResult().isWorseThan(Result.UNSTABLE);
         if (!update) {
+            // Keep id for next build
             build.addAction(new MantisCarryOverAction(ids.toArray(new Long[ids.size()])));
         }
 
@@ -89,7 +90,7 @@ final class Updater {
         return true;
     }
 
-	private String createUpdateText(final AbstractBuild<?, ?> build,
+    private String createUpdateText(final AbstractBuild<?, ?> build,
             final String rootUrl) {
         final String prjName = build.getProject().getName();
         final int prjNumber = build.getNumber();

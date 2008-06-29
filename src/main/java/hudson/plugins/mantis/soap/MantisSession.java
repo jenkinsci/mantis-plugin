@@ -12,6 +12,7 @@ import java.rmi.RemoteException;
 
 import javax.xml.rpc.ServiceException;
 
+import org.apache.axis.AxisProperties;
 import org.apache.axis.client.Stub;
 
 public final class MantisSession {
@@ -35,6 +36,11 @@ public final class MantisSession {
                 ((Stub) portType).setUsername(site.getBasicUserName());
                 ((Stub) portType).setPassword(site.getBasicPassword());
             }
+            // Support https 
+            // Allowing unsigned server certs
+            AxisProperties.setProperty("axis.socketSecureFactory", 
+                    "org.apache.axis.components.net.SunFakeTrustSocketFactory");
+  
         } catch (final ServiceException e) {
             throw new MantisHandlingException(e);
         } catch (final MalformedURLException e) {
