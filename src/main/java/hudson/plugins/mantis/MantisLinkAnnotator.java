@@ -8,6 +8,8 @@ import hudson.plugins.mantis.model.MantisIssue;
 import hudson.scm.ChangeLogAnnotator;
 import hudson.scm.ChangeLogSet.Entry;
 
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import java.util.regex.Pattern;
 
 /**
@@ -42,6 +44,7 @@ public final class MantisLinkAnnotator extends ChangeLogAnnotator {
             }
 
             if (issue == null) {
+                LOGGER.log(Level.WARNING, Messages.MantisLinkAnnotator_FailedToGetMantisIssue(id));
                 st.surroundWith("<a href='" + newUrl + "'>", "</a>");
             } else {
                 final String summary = Utility.escape(issue.getSummary());
@@ -51,4 +54,5 @@ public final class MantisLinkAnnotator extends ChangeLogAnnotator {
         }
     }
 
+    private static final Logger LOGGER = Logger.getLogger(MantisLinkAnnotator.class.getName());
 }
