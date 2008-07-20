@@ -2,6 +2,8 @@ package hudson.plugins.mantis;
 
 import hudson.Util;
 
+import java.io.PrintStream;
+
 /**
  * Utility class.
  * 
@@ -78,4 +80,11 @@ public final class Utility {
         return l;
     }
 
+    public static void log(final PrintStream logger, final String message, final Object... args) {
+        final StringBuffer buf = new StringBuffer();
+        buf.append("[MANTIS] ").append(message);
+        logger.printf(buf.toString(), args);
+        logger.println();
+    }
+    
 }

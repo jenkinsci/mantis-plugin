@@ -9,6 +9,8 @@ import hudson.plugins.mantis.soap.MantisSession;
 
 import java.net.MalformedURLException;
 import java.net.URL;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 import org.kohsuke.stapler.DataBoundConstructor;
 
@@ -106,30 +108,31 @@ public final class MantisSite {
     }
 
     public boolean isConnect() {
+        final String urlString = url.toExternalForm();
         try {
             final MantisSession session = createSession();
             session.getConfigString("default_language");
         } catch (final MantisHandlingException e) {
+            LOGGER.log(Level.WARNING, 
+                    Messages.MantisSite_FailedToConnectToMantis(urlString, e.getMessage()));
             return false;
         }
 
+        LOGGER.log(Level.INFO, 
+                Messages.MantisSite_SucceedInConnectingToMantis(urlString));
         return true;
     }
 
     public MantisIssue getIssue(final Long id) throws MantisHandlingException {
         final MantisSession session = createSession();
-        final MantisIssue issue = session.getIssue(id);
-        if (issue == null) {
-            return null;
-        }
-        return issue;
+        return session.getIssue(id);
     }
 
-    public void updateIssue(final Long id, final String text,
-            final boolean keepNotePrivate) throws MantisHandlingException {
+    public void updateIssue(final Long id, final String text, final boolean keepNotePrivate)
+            throws MantisHandlingException {
 
-        final MantisViewState viewState =
-                keepNotePrivate ? MantisViewState.PRIVATE : MantisViewState.PUBLIC;
+        final MantisViewState viewState = keepNotePrivate ? MantisViewState.PRIVATE
+                : MantisViewState.PUBLIC;
         final MantisNote note = new MantisNote(text, viewState);
 
         final MantisSession session = createSession();
@@ -137,10 +140,8 @@ public final class MantisSite {
     }
 
     private MantisSession createSession() throws MantisHandlingException {
-        if (userName == null || password == null) {
-            throw new MantisHandlingException("user name or password is null.");
-        }
         return MantisSession.create(this);
     }
 
+    private static final Logger LOGGER = Logger.getLogger(MantisSite.class.getName());
 }

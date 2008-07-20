@@ -59,8 +59,7 @@ public final class MantisSession {
         String configString;
         try {
             configString =
-                    portType.mc_config_get_string(site.getUserName(), site.getPassword(),
-                            key);
+                    portType.mc_config_get_string(site.getUserName(), site.getPassword(), key);
         } catch (final RemoteException e) {
             throw new MantisHandlingException(e);
         }
@@ -72,8 +71,7 @@ public final class MantisSession {
         IssueData data;
         try {
             data =
-                    portType.mc_issue_get(site.getUserName(), site.getPassword(),
-                            BigInteger.valueOf(id));
+                    portType.mc_issue_get(site.getUserName(), site.getPassword(), BigInteger.valueOf(id));
         } catch (final RemoteException e) {
             throw new MantisHandlingException(e);
         }
@@ -85,12 +83,10 @@ public final class MantisSession {
             throws MantisHandlingException {
         final IssueNoteData data = new IssueNoteData();
         data.setText(note.getText());
-        data.setView_state(new ObjectRef(BigInteger
-                .valueOf(note.getViewState().getCode()), null));
+        data.setView_state(new ObjectRef(BigInteger.valueOf(note.getViewState().getCode()), null));
 
         try {
-            portType.mc_issue_note_add(site.getUserName(), site.getPassword(), BigInteger
-                    .valueOf(id), data);
+            portType.mc_issue_note_add(site.getUserName(), site.getPassword(), BigInteger.valueOf(id), data);
         } catch (final RemoteException e) {
             throw new MantisHandlingException(e);
         }

@@ -21,7 +21,7 @@ import java.util.regex.Pattern;
 
 /**
  * Mantis update Logic.
- * 
+ *
  * @author Seiji Sogabe
  */
 final class Updater {
@@ -41,49 +41,47 @@ final class Updater {
 
         final MantisSite site = MantisSite.get(build.getProject());
         if (site == null) {
-            logger.println(Messages.Updater_NoMantisSite());
+            Utility.log(logger, Messages.Updater_NoMantisSite());
             build.setResult(Result.FAILURE);
             return true;
         }
 
         final String rootUrl = Hudson.getInstance().getRootUrl();
         if (rootUrl == null) {
-            logger.println(Messages.Updater_NoHudsonUrl());
+            Utility.log(logger, Messages.Updater_NoHudsonUrl());
             build.setResult(Result.FAILURE);
             return true;
         }
 
         final Set<Long> ids = findIssueIdsRecursive(build);
         if (ids.isEmpty()) {
-            return true;
+            Utility.log(logger, Messages.Updater_NoIssuesFound());
+			return true;
         }
 
         final boolean update = !build.getResult().isWorseThan(Result.UNSTABLE);
         if (!update) {
             // Keep id for next build
+            Utility.log(logger, Messages.Updater_KeepMantisIssueIdsForNextBuild());
             build.addAction(new MantisCarryOverAction(ids.toArray(new Long[ids.size()])));
         }
 
         final List<MantisIssue> issues = new ArrayList<MantisIssue>();
-        try {
-            for (final Long id : ids) {
+        for (final Long id : ids) {
+            try {
                 final MantisIssue issue = site.getIssue(id);
-                if (issue == null) {
-                    continue;
-                }
                 if (update) {
                     final String text = createUpdateText(build, rootUrl);
                     site.updateIssue(id, text, property.isKeepNotePrivate());
-                    logger.println(Messages.Updater_Updating(id));
+                    Utility.log(logger, Messages.Updater_Updating(id));
                 }
                 issues.add(issue);
+            } catch (final MantisHandlingException e) {
+                Utility.log(logger, Messages.Updater_FailedToAddNote(id, e.getMessage()));
+                build.setResult(Result.FAILURE);
             }
-        } catch (final MantisHandlingException e) {
-            logger.println(Messages.Updater_FailedToAddNote());
-            logger.println(e);
-            build.setResult(Result.FAILURE);
-            return true;
         }
+        
         build.getActions().add(
                 new MantisBuildAction(issues.toArray(new MantisIssue[issues.size()])));
 
@@ -135,4 +133,5 @@ final class Updater {
         }
         return ids;
     }
+
 }
