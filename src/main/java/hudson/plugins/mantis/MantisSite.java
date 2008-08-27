@@ -15,7 +15,7 @@ import java.util.logging.Logger;
 import org.kohsuke.stapler.DataBoundConstructor;
 
 /**
- * Reperesents an external MAntis installation and configuration needed to access this
+ * Reperesents an external Mantis installation and configuration needed to access this
  * Mantis.
  * 
  * @author Seiji Sogabe
@@ -25,8 +25,8 @@ public final class MantisSite {
     /**
      * the root URL of Mantis installation.
      */
-    private URL url;
-
+    private final URL url;
+    
     /**
      * user name for Mantis installation.
      */
@@ -46,7 +46,7 @@ public final class MantisSite {
      * password for Basic Authentication.
      */
     private final String basicPassword;
-
+    
     public static MantisSite get(final AbstractProject<?, ?> p) {
         final MantisProjectProperty mpp = p.getProperty(MantisProjectProperty.class);
         if (mpp != null) {

@@ -26,9 +26,6 @@ import java.util.regex.Pattern;
  */
 final class Updater {
 
-    private static final Pattern ISSUE_PATTERN =
-            Pattern.compile("(?<=\\bissue #?)(\\d+)(?>\\b)", Pattern.CASE_INSENSITIVE);
-
     private final MantisIssueUpdater property;
 
     Updater(final MantisIssueUpdater property) {
@@ -56,7 +53,7 @@ final class Updater {
         final Set<Long> ids = findIssueIdsRecursive(build);
         if (ids.isEmpty()) {
             Utility.log(logger, Messages.Updater_NoIssuesFound());
-			return true;
+            return true;
         }
 
         final boolean update = !build.getResult().isWorseThan(Result.UNSTABLE);
@@ -124,9 +121,14 @@ final class Updater {
 
     private Set<Long> findIssuesIds(final AbstractBuild<?, ?> build) {
         final Set<Long> ids = new HashSet<Long>();
-
+        final MantisProjectProperty mpp =
+            build.getParent().getProperty(MantisProjectProperty.class);
+        if (mpp == null || mpp.getSite() == null) {
+            return ids;
+        }
+        final Pattern pattern = mpp.getRegExp();
         for (final Entry change : build.getChangeSet()) {
-            final Matcher matcher = ISSUE_PATTERN.matcher(change.getMsg());
+            final Matcher matcher = pattern.matcher(change.getMsg());
             while (matcher.find()) {
                 ids.add(Long.valueOf(matcher.group()));
             }

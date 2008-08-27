@@ -3,6 +3,7 @@ package hudson.plugins.mantis;
 import hudson.Util;
 
 import java.io.PrintStream;
+import java.util.Arrays;
 
 /**
  * Utility class.
@@ -10,6 +11,14 @@ import java.io.PrintStream;
  * @author Seiji Sogabe
  */
 public final class Utility {
+
+    private final static char[] REGEXP_CHARS = new char[] {
+        '\\', '[', ']', '(', ')', '{', '}', '^', '$', '|', '?', '*', '+', '-', ':', ',', '.', '&'
+    };
+
+    static {
+        Arrays.sort(REGEXP_CHARS);
+    }
 
     private Utility() {
         //
@@ -86,4 +95,21 @@ public final class Utility {
         logger.println(buf.toString());
     }
     
+    public static final String escapeRegExp(final String str) {
+        if (str == null) {
+            return null;
+        }
+
+        final StringBuffer buf = new StringBuffer();
+        final int len = str.length();
+        for (int i = 0; i < len; i++) {
+            final char c = str.charAt(i);
+            if (Arrays.binarySearch(REGEXP_CHARS, c) >= 0) {
+                buf.append("\\");
+            }
+            buf.append(c);
+        }
+        
+        return buf.toString();
+    }
 }

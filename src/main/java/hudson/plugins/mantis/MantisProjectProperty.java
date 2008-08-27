@@ -10,6 +10,7 @@ import hudson.util.FormFieldValidator;
 
 import java.io.IOException;
 import java.net.URL;
+import java.util.regex.Pattern;
 
 import javax.servlet.ServletException;
 
@@ -28,10 +29,18 @@ public final class MantisProjectProperty extends JobProperty<AbstractProject<?, 
 
     public static final DescriptorImpl DESCRIPTOR = new DescriptorImpl();
 
+    private static final String ISSUE_ID_STRING = "%ID%";
+
+    private static final String DEFAULT_PATTERN = "issue #?" + ISSUE_ID_STRING;
+
     private final String siteName;
+    
+    private final String pattern;
+    
+    private final Pattern regExp;
 
     @DataBoundConstructor
-    public MantisProjectProperty(final String siteName) {
+    public MantisProjectProperty(final String siteName, final String pattern) {
         String name = siteName;
         if (siteName == null) {
             final MantisSite[] sites = DESCRIPTOR.getSites();
@@ -39,11 +48,21 @@ public final class MantisProjectProperty extends JobProperty<AbstractProject<?, 
                 name = sites[0].getName();
             }
         }
-        this.siteName = name;
+        this.siteName = Util.fixEmptyAndTrim(name);
+        this.pattern = Util.fixEmptyAndTrim(pattern);
+        this.regExp = createRegExp(this.pattern);
     }
 
     public String getSiteName() {
         return siteName;
+    }
+    
+    public String getPattern() {
+        return pattern;
+    }
+    
+    public Pattern getRegExp() {
+        return regExp;
     }
     
     public MantisSite getSite() {
@@ -131,5 +150,38 @@ public final class MantisProjectProperty extends JobProperty<AbstractProject<?, 
                 }
             }.process();
         }
+        
+        public void doPatternCheck(final StaplerRequest req, final StaplerResponse res)
+                throws IOException, ServletException {
+            new FormFieldValidator(req, res, false) {
+                @Override
+                protected void check() throws IOException, ServletException {
+                    final String pattern = Util.fixEmptyAndTrim(req.getParameter("pattern"));
+                    if (pattern == null) {
+                        ok();
+                        return;
+                    }
+                    if (pattern.indexOf(ISSUE_ID_STRING) == -1) {
+                        error(Messages.MantisProjectProperty_InvalidPattern(ISSUE_ID_STRING));
+                        return;
+                    }
+                    ok();
+                }
+            }.process();
+        }
     }
+    
+    public Pattern createRegExp(final String p) {
+        final StringBuffer buf =new StringBuffer();
+        buf.append("(?<=");
+        if (p != null) {
+            buf.append(Utility.escapeRegExp(p));
+        } else {
+            buf.append(DEFAULT_PATTERN);
+        }
+        buf.append(")");
+        final String regExp = buf.toString().replace(ISSUE_ID_STRING, ")(\\d+)(?=");
+        return Pattern.compile(regExp);
+    }
+    
 }

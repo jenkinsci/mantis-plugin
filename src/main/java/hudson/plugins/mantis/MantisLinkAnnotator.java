@@ -19,9 +19,6 @@ import java.util.regex.Pattern;
  */
 public final class MantisLinkAnnotator extends ChangeLogAnnotator {
 
-    private static final Pattern ISSUE_PATTERN =
-            Pattern.compile("\\bissue #?(\\d+)\\b", Pattern.CASE_INSENSITIVE);
-
     @Override
     public void annotate(final AbstractBuild<?, ?> build, final Entry change,
             final MarkupText text) {
@@ -34,7 +31,8 @@ public final class MantisLinkAnnotator extends ChangeLogAnnotator {
         final MantisBuildAction action = build.getAction(MantisBuildAction.class);
 
         final String url = mpp.getSite().getUrl().toExternalForm();
-        for (final SubText st : text.findTokens(ISSUE_PATTERN)) {
+        final Pattern pattern = mpp.getRegExp();
+        for (final SubText st : text.findTokens(pattern)) {
             final Long id = Long.valueOf(st.group(1));
             final String newUrl = Util.encodeRFC2396(url + "view.php?id=$1");
 

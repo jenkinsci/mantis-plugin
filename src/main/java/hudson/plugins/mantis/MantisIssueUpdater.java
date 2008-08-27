@@ -23,7 +23,7 @@ public final class MantisIssueUpdater extends Publisher {
     public static final DescriptorImpl DESCRIPTOR = new DescriptorImpl();
 
     private final boolean keepNotePrivate;
-
+    
     @DataBoundConstructor
     public MantisIssueUpdater(final boolean keepNotePrivate) {
         this.keepNotePrivate = keepNotePrivate;
@@ -65,5 +65,4 @@ public final class MantisIssueUpdater extends Publisher {
             return req.bindJSON(MantisIssueUpdater.class, formData);
         }
     }
-
 }
