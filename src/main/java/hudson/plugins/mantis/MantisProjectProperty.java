@@ -38,9 +38,11 @@ public final class MantisProjectProperty extends JobProperty<AbstractProject<?, 
     private final String pattern;
     
     private final Pattern regExp;
+    
+    private final boolean linkEnabled;
 
     @DataBoundConstructor
-    public MantisProjectProperty(final String siteName, final String pattern) {
+    public MantisProjectProperty(final String siteName, final String pattern, final boolean linkEnabled) {
         String name = siteName;
         if (siteName == null) {
             final MantisSite[] sites = DESCRIPTOR.getSites();
@@ -51,6 +53,7 @@ public final class MantisProjectProperty extends JobProperty<AbstractProject<?, 
         this.siteName = Util.fixEmptyAndTrim(name);
         this.pattern = Util.fixEmptyAndTrim(pattern);
         this.regExp = createRegExp(this.pattern);
+        this.linkEnabled = linkEnabled;
     }
 
     public String getSiteName() {
@@ -63,6 +66,10 @@ public final class MantisProjectProperty extends JobProperty<AbstractProject<?, 
     
     public Pattern getRegExp() {
         return regExp;
+    }
+    
+    public boolean isLinkEnabled() {
+        return linkEnabled;
     }
     
     public MantisSite getSite() {

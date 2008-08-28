@@ -27,6 +27,9 @@ public final class MantisLinkAnnotator extends ChangeLogAnnotator {
         if (mpp == null || mpp.getSite() == null) {
             return;
         }
+        if (!mpp.isLinkEnabled()) {
+            return;
+        }
 
         final MantisBuildAction action = build.getAction(MantisBuildAction.class);
 

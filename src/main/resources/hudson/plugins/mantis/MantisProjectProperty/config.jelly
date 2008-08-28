@@ -12,7 +12,10 @@
         <f:textbox name="mantis.pattern" value="${instance.pattern}" 
           checkUrl="'${rootURL}/jobProperty/MantisProjectProperty/patternCheck?pattern='+escape(this.value)" />
       </f:entry>
+      <f:entry>
+        <f:checkbox name="mantis.linkEnabled" id="linkEnabled" checked="${instance.linkEnabled}" />
+        <label for="linkEnabled">${%Enable hyperlink to the issue}</label>
+      </f:entry>
     </f:section>
-    <br />  
   </j:if>  
 </j:jelly>
