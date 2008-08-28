@@ -82,7 +82,20 @@ public final class MantisProjectProperty extends JobProperty<AbstractProject<?, 
     public JobPropertyDescriptor getDescriptor() {
         return DESCRIPTOR;
     }
-
+    
+    private Pattern createRegExp(final String p) {
+        final StringBuffer buf =new StringBuffer();
+        buf.append("(?<=");
+        if (p != null) {
+            buf.append(Utility.escapeRegExp(p));
+        } else {
+            buf.append(DEFAULT_PATTERN);
+        }
+        buf.append(")");
+        final String regExp = buf.toString().replace(ISSUE_ID_STRING, ")(\\d+)(?=");
+        return Pattern.compile(regExp);
+    }
+        
     public static final class DescriptorImpl extends JobPropertyDescriptor {
 
         private final CopyOnWriteList<MantisSite> sites =
@@ -170,18 +183,4 @@ public final class MantisProjectProperty extends JobProperty<AbstractProject<?, 
             }.process();
         }
     }
-    
-    public Pattern createRegExp(final String p) {
-        final StringBuffer buf =new StringBuffer();
-        buf.append("(?<=");
-        if (p != null) {
-            buf.append(Utility.escapeRegExp(p));
-        } else {
-            buf.append(DEFAULT_PATTERN);
-        }
-        buf.append(")");
-        final String regExp = buf.toString().replace(ISSUE_ID_STRING, ")(\\d+)(?=");
-        return Pattern.compile(regExp);
-    }
-    
 }
