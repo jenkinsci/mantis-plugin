@@ -17,7 +17,7 @@ import org.kohsuke.stapler.DataBoundConstructor;
 /**
  * Reperesents an external Mantis installation and configuration needed to access this
  * Mantis.
- * 
+ *
  * @author Seiji Sogabe
  */
 public final class MantisSite {
@@ -26,7 +26,7 @@ public final class MantisSite {
      * the root URL of Mantis installation.
      */
     private final URL url;
-    
+
     /**
      * user name for Mantis installation.
      */
@@ -46,7 +46,7 @@ public final class MantisSite {
      * password for Basic Authentication.
      */
     private final String basicPassword;
-    
+
     public static MantisSite get(final AbstractProject<?, ?> p) {
         final MantisProjectProperty mpp = p.getProperty(MantisProjectProperty.class);
         if (mpp != null) {
@@ -113,22 +113,22 @@ public final class MantisSite {
             final MantisSession session = createSession();
             session.getConfigString("default_language");
         } catch (final MantisHandlingException e) {
-            LOGGER.log(Level.WARNING, 
+            LOGGER.log(Level.WARNING,
                     Messages.MantisSite_FailedToConnectToMantis(urlString, e.getMessage()));
             return false;
         }
 
-        LOGGER.log(Level.INFO, 
+        LOGGER.log(Level.INFO,
                 Messages.MantisSite_SucceedInConnectingToMantis(urlString));
         return true;
     }
 
-    public MantisIssue getIssue(final Long id) throws MantisHandlingException {
+    public MantisIssue getIssue(final int id) throws MantisHandlingException {
         final MantisSession session = createSession();
         return session.getIssue(id);
     }
 
-    public void updateIssue(final Long id, final String text, final boolean keepNotePrivate)
+    public void updateIssue(final int id, final String text, final boolean keepNotePrivate)
             throws MantisHandlingException {
 
         final MantisViewState viewState = keepNotePrivate ? MantisViewState.PRIVATE

@@ -14,7 +14,7 @@ import java.util.regex.Pattern;
 
 /**
  * Creates HTML link for Mantis issues.
- * 
+ *
  * @author Seiji Sogabe
  */
 public final class MantisLinkAnnotator extends ChangeLogAnnotator {
@@ -36,7 +36,7 @@ public final class MantisLinkAnnotator extends ChangeLogAnnotator {
         final String url = mpp.getSite().getUrl().toExternalForm();
         final Pattern pattern = mpp.getRegExp();
         for (final SubText st : text.findTokens(pattern)) {
-            final Long id = Long.valueOf(st.group(1));
+            final int id = Integer.valueOf(st.group(1));
             final String newUrl = Util.encodeRFC2396(url + "view.php?id=$1");
 
             MantisIssue issue = null;
