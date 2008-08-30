@@ -8,6 +8,9 @@ import hudson.plugins.mantis.model.MantisIssue;
 import hudson.scm.ChangeLogAnnotator;
 import hudson.scm.ChangeLogSet.Entry;
 
+import java.io.IOException;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import java.util.regex.Pattern;
@@ -42,6 +45,8 @@ public final class MantisLinkAnnotator extends ChangeLogAnnotator {
             MantisIssue issue = null;
             if (action != null) {
                 issue = action.getIssue(id);
+            } else {
+                issue = getIssue(build, id);
             }
 
             if (issue == null) {
@@ -53,6 +58,18 @@ public final class MantisLinkAnnotator extends ChangeLogAnnotator {
                         summary), "</a>");
             }
         }
+    }
+
+    private MantisIssue getIssue(final AbstractBuild<?, ?> build, final int id) {
+        MantisIssue issue = null;
+        MantisSite site = MantisSite.get(build.getProject());
+        try {
+            issue = site.getIssue(id);
+            build.addAction(new MantisBuildAction(new MantisIssue[] {issue}));
+        } catch (final MantisHandlingException e) {
+            //
+        }
+        return issue;
     }
 
     private static final Logger LOGGER = Logger.getLogger(MantisLinkAnnotator.class.getName());
