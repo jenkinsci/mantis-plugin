@@ -11,11 +11,11 @@ public final class MantisIssue implements Serializable {
 
     private static final long serialVersionUID = 1L;
 
-    private final Long id;
+    private final int id;
 
     private final String summary;
 
-    public Long getId() {
+    public int getId() {
         return id;
     }
 
@@ -23,7 +23,7 @@ public final class MantisIssue implements Serializable {
         return summary;
     }
 
-    public MantisIssue(final Long id, final String summary) {
+    public MantisIssue(final int id, final String summary) {
         this.id = id;
         this.summary = summary;
     }

@@ -12,10 +12,7 @@ import hudson.scm.ChangeLogSet.Entry;
 
 import java.io.PrintStream;
 import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.HashSet;
 import java.util.List;
-import java.util.Set;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -50,8 +47,8 @@ final class Updater {
             return true;
         }
 
-        final Set<Long> ids = findIssueIdsRecursive(build);
-        if (ids.isEmpty()) {
+        final int[] ids = findIssueIdsRecursive(build);
+        if (ids.length == 0) {
             Utility.log(logger, Messages.Updater_NoIssuesFound());
             return true;
         }
@@ -60,11 +57,11 @@ final class Updater {
         if (!update) {
             // Keep id for next build
             Utility.log(logger, Messages.Updater_KeepMantisIssueIdsForNextBuild());
-            build.addAction(new MantisCarryOverAction(ids.toArray(new Long[ids.size()])));
+            build.addAction(new MantisCarryOverAction(ids));
         }
 
         final List<MantisIssue> issues = new ArrayList<MantisIssue>();
-        for (final Long id : ids) {
+        for (final int id : ids) {
             try {
                 final MantisIssue issue = site.getIssue(id);
                 if (update) {
@@ -78,7 +75,7 @@ final class Updater {
                 build.setResult(Result.FAILURE);
             }
         }
-        
+
         build.getActions().add(
                 new MantisBuildAction(issues.toArray(new MantisIssue[issues.size()])));
 
@@ -95,15 +92,17 @@ final class Updater {
         return text;
     }
 
-    private Set<Long> findIssueIdsRecursive(final AbstractBuild<?, ?> build) {
-        final Set<Long> ids = new HashSet<Long>();
+    private int[] findIssueIdsRecursive(final AbstractBuild<?, ?> build) {
+        final List<Integer> ids = new ArrayList<Integer>();
 
         final Run<?, ?> prev = build.getPreviousBuild();
         if (prev != null) {
             final MantisCarryOverAction action =
                     prev.getAction(MantisCarryOverAction.class);
             if (action != null) {
-                ids.addAll(Arrays.asList(action.getIDs()));
+                for (int id : action.getIDs()) {
+                    ids.add(id);
+                }
             }
         }
 
@@ -116,11 +115,16 @@ final class Updater {
             }
         }
 
-        return ids;
+        final int[] array = new int[ids.size()];
+        for (int i = 0, size = ids.size(); i < size; i++) {
+            array[i] = ids.get(i);
+        }
+
+        return array;
     }
 
-    private Set<Long> findIssuesIds(final AbstractBuild<?, ?> build) {
-        final Set<Long> ids = new HashSet<Long>();
+    private List<Integer> findIssuesIds(final AbstractBuild<?, ?> build) {
+        final List<Integer> ids = new ArrayList<Integer>();
         final MantisProjectProperty mpp =
             build.getParent().getProperty(MantisProjectProperty.class);
         if (mpp == null || mpp.getSite() == null) {
@@ -130,7 +134,7 @@ final class Updater {
         for (final Entry change : build.getChangeSet()) {
             final Matcher matcher = pattern.matcher(change.getMsg());
             while (matcher.find()) {
-                ids.add(Long.valueOf(matcher.group()));
+                ids.add(Integer.valueOf(matcher.group()));
             }
         }
         return ids;

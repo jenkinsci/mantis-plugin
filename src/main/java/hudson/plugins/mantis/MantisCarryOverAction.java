@@ -4,7 +4,7 @@ import hudson.model.InvisibleAction;
 
 /**
  * Remembers Mantis IDs that need to be updated later, when we get a successfull build.
- * 
+ *
  * @author Seiji Sogabe
  */
 public final class MantisCarryOverAction extends InvisibleAction {
@@ -13,11 +13,11 @@ public final class MantisCarryOverAction extends InvisibleAction {
 
     private final String ids;
 
-    public MantisCarryOverAction(final Long[] ids) {
+    public MantisCarryOverAction(final int[] ids) {
         this.ids = Utility.join(ids, ",");
     }
 
-    public Long[] getIDs() {
+    public int[] getIDs() {
         return Utility.tokenize(ids, ",");
     }
 

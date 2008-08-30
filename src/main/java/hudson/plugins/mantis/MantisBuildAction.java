@@ -5,7 +5,7 @@ import hudson.plugins.mantis.model.MantisIssue;
 
 /**
  * Mantis issues related to the build.
- * 
+ *
  * @author Seiji Sogabe
  */
 public final class MantisBuildAction implements Action {
@@ -30,9 +30,9 @@ public final class MantisBuildAction implements Action {
         return "mantis";
     }
 
-    public MantisIssue getIssue(final Long id) {
+    public MantisIssue getIssue(final int id) {
         for (final MantisIssue issue : issues) {
-            if (issue.getId().equals(id)) {
+            if (issue.getId() == id) {
                 return issue;
             }
         }

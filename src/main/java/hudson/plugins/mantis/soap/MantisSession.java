@@ -36,11 +36,11 @@ public final class MantisSession {
                 ((Stub) portType).setUsername(site.getBasicUserName());
                 ((Stub) portType).setPassword(site.getBasicPassword());
             }
-            // Support https 
+            // Support https
             // Allowing unsigned server certs
-            AxisProperties.setProperty("axis.socketSecureFactory", 
+            AxisProperties.setProperty("axis.socketSecureFactory",
                     "org.apache.axis.components.net.SunFakeTrustSocketFactory");
-  
+
         } catch (final ServiceException e) {
             throw new MantisHandlingException(e);
         } catch (final MalformedURLException e) {
@@ -67,7 +67,7 @@ public final class MantisSession {
         return configString;
     }
 
-    public MantisIssue getIssue(final Long id) throws MantisHandlingException {
+    public MantisIssue getIssue(final int id) throws MantisHandlingException {
         IssueData data;
         try {
             data =
@@ -79,7 +79,7 @@ public final class MantisSession {
         return new MantisIssue(id, data.getSummary());
     }
 
-    public void addNote(final Long id, final MantisNote note)
+    public void addNote(final int id, final MantisNote note)
             throws MantisHandlingException {
         final IssueNoteData data = new IssueNoteData();
         data.setText(note.getText());
