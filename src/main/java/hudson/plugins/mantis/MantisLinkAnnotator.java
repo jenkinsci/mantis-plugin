@@ -65,7 +65,6 @@ public final class MantisLinkAnnotator extends ChangeLogAnnotator {
         MantisSite site = MantisSite.get(build.getProject());
         try {
             issue = site.getIssue(id);
-            build.addAction(new MantisBuildAction(new MantisIssue[] {issue}));
         } catch (final MantisHandlingException e) {
             //
         }
