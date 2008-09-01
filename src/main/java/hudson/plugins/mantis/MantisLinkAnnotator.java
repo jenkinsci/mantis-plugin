@@ -38,6 +38,7 @@ public final class MantisLinkAnnotator extends ChangeLogAnnotator {
 
         final String url = mpp.getSite().getUrl().toExternalForm();
         final Pattern pattern = mpp.getRegExp();
+        final List<MantisIssue> list = new ArrayList<MantisIssue>();
         for (final SubText st : text.findTokens(pattern)) {
             final int id = Integer.valueOf(st.group(1));
             final String newUrl = Util.encodeRFC2396(url + "view.php?id=$1");
@@ -47,6 +48,9 @@ public final class MantisLinkAnnotator extends ChangeLogAnnotator {
                 issue = action.getIssue(id);
             } else {
                 issue = getIssue(build, id);
+                if (issue != null) {
+                    list.add(issue);
+                }
             }
 
             if (issue == null) {
@@ -57,6 +61,13 @@ public final class MantisLinkAnnotator extends ChangeLogAnnotator {
                 st.surroundWith(String.format("<a href='%s' tooltip='%s'>", newUrl,
                         summary), "</a>");
             }
+        }
+
+        build.getActions().add(new MantisBuildAction(list.toArray(new MantisIssue[list.size()])));
+        try {
+            build.save();
+        } catch (final IOException e) {
+            LOGGER.log(Level.WARNING, Messages.MantisLinkAnnotator_FailedToSave(), e);
         }
     }
 
