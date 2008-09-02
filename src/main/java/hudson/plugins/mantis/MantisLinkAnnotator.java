@@ -41,7 +41,7 @@ public final class MantisLinkAnnotator extends ChangeLogAnnotator {
         final List<MantisIssue> list = new ArrayList<MantisIssue>();
         for (final SubText st : text.findTokens(pattern)) {
             final int id = Integer.valueOf(st.group(1));
-            final String newUrl = Util.encodeRFC2396(url + "view.php?id=$1");
+            final String newUrl = Util.encode(url + "view.php?id=$1");
 
             MantisIssue issue = null;
             if (action != null) {
