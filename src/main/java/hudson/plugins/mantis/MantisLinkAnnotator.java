@@ -63,11 +63,13 @@ public final class MantisLinkAnnotator extends ChangeLogAnnotator {
             }
         }
 
-        build.getActions().add(new MantisBuildAction(list.toArray(new MantisIssue[list.size()])));
-        try {
-            build.save();
-        } catch (final IOException e) {
-            LOGGER.log(Level.WARNING, Messages.MantisLinkAnnotator_FailedToSave(), e);
+        if (!list.isEmpty()) {
+            build.getActions().add(new MantisBuildAction(list.toArray(new MantisIssue[list.size()])));
+            try {
+                build.save();
+            } catch (final IOException e) {
+                LOGGER.log(Level.WARNING, Messages.MantisLinkAnnotator_FailedToSave(), e);
+            }
         }
     }
 
