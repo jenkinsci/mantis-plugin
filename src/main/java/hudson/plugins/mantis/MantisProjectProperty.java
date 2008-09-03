@@ -34,11 +34,11 @@ public final class MantisProjectProperty extends JobProperty<AbstractProject<?, 
     private static final String DEFAULT_PATTERN = "issue #?" + ISSUE_ID_STRING;
 
     private final String siteName;
-    
+
     private final String pattern;
-    
+
     private final Pattern regExp;
-    
+
     private final boolean linkEnabled;
 
     @DataBoundConstructor
@@ -59,19 +59,21 @@ public final class MantisProjectProperty extends JobProperty<AbstractProject<?, 
     public String getSiteName() {
         return siteName;
     }
-    
+
     public String getPattern() {
         return pattern;
     }
-    
+
     public Pattern getRegExp() {
-        return regExp;
+        // If project configuration has not saved after upgrading to 0.5.X,
+        // return default issue id pattern.
+        return (regExp != null) ? regExp : createRegExp(pattern);
     }
-    
+
     public boolean isLinkEnabled() {
         return linkEnabled;
     }
-    
+
     public MantisSite getSite() {
         final MantisSite[] sites = DESCRIPTOR.getSites();
         if (siteName == null && sites.length > 0) {
@@ -89,7 +91,7 @@ public final class MantisProjectProperty extends JobProperty<AbstractProject<?, 
     public JobPropertyDescriptor getDescriptor() {
         return DESCRIPTOR;
     }
-    
+
     private Pattern createRegExp(final String p) {
         final StringBuffer buf =new StringBuffer();
         buf.append("(?<=");
@@ -102,7 +104,7 @@ public final class MantisProjectProperty extends JobProperty<AbstractProject<?, 
         final String regExp = buf.toString().replace(ISSUE_ID_STRING, ")(\\d+)(?=");
         return Pattern.compile(regExp);
     }
-        
+
     public static final class DescriptorImpl extends JobPropertyDescriptor {
 
         private final CopyOnWriteList<MantisSite> sites =
@@ -170,7 +172,7 @@ public final class MantisProjectProperty extends JobProperty<AbstractProject<?, 
                 }
             }.process();
         }
-        
+
         public void doPatternCheck(final StaplerRequest req, final StaplerResponse res)
                 throws IOException, ServletException {
             new FormFieldValidator(req, res, false) {
