@@ -7,6 +7,7 @@ import hudson.plugins.mantis.model.MantisNote;
 import hudson.plugins.mantis.model.MantisViewState;
 import hudson.plugins.mantis.soap.MantisSession;
 
+import hudson.util.Scrambler;
 import java.net.MalformedURLException;
 import java.net.URL;
 import java.util.logging.Level;
@@ -47,6 +48,26 @@ public final class MantisSite {
      */
     private final String basicPassword;
 
+    /**
+     * HTTP-Proxy Host.
+     */
+    private final String proxyHost;
+
+    /**
+     * HTTP-Proxy Port.
+     */
+    private final String proxyPort;
+
+    /**
+     * HTTP-Proxy Username.
+     */
+    private final String proxyUserName;
+
+    /**
+     * HTTP-Proxy Password which is scrambled.
+     */
+    private final String proxyPassword;
+    
     public static MantisSite get(final AbstractProject<?, ?> p) {
         final MantisProjectProperty mpp = p.getProperty(MantisProjectProperty.class);
         if (mpp != null) {
@@ -88,9 +109,28 @@ public final class MantisSite {
         return basicPassword;
     }
 
+    public String getProxyHost() {
+        return proxyHost;
+    }
+
+    public String getProxyPort() {
+        return proxyPort;
+    }
+
+    public String getProxyUserName() {
+        return proxyUserName;
+    }
+
+    public String getProxyPassword() {
+        return Scrambler.descramble(proxyPassword);
+    }
+
     @DataBoundConstructor
-    public MantisSite(final URL url, final String userName, final String password,
-            final String basicUserName, final String basicPassword) {
+    public MantisSite(final URL url,
+            final String userName, final String password,
+            final String basicUserName, final String basicPassword,
+            final String proxyHost, final String proxyPort,
+            final String proxyUserName, final String proxyPassword) {
         if (!url.toExternalForm().endsWith("/")) {
             try {
                 this.url = new URL(url.toExternalForm() + '/');
@@ -105,6 +145,10 @@ public final class MantisSite {
         this.password = Util.fixEmptyAndTrim(password);
         this.basicUserName = Util.fixEmptyAndTrim(basicUserName);
         this.basicPassword = Util.fixEmptyAndTrim(basicPassword);
+        this.proxyHost = Util.fixEmptyAndTrim(proxyHost);
+        this.proxyPort = Util.fixEmptyAndTrim(proxyPort);
+        this.proxyUserName = Util.fixEmptyAndTrim(proxyUserName);
+        this.proxyPassword = Scrambler.scramble(Util.fixEmptyAndTrim(proxyPassword));
     }
 
     public boolean isConnect() {

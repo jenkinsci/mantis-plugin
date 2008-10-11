@@ -3,16 +3,40 @@
   <f:section title="Mantis">
     <f:entry title="${%Mantis sites}"
              description="${%Mantis sites that projects will want to connect}">
+
+      <script type="text/javascript">
+        function checkUrl(base) {
+            var url = escape(Form.findMatchingInput(base,'mantis.url').value);
+            var userName = escape(Form.findMatchingInput(base,'mantis.userName').value);
+            var password = escape(Form.findMatchingInput(base,'mantis.password').value);
+            var basicUserName = escape(Form.findMatchingInput(base,'mantis.basicUserName').value);
+            var basicPassword = escape(Form.findMatchingInput(base,'mantis.basicPassword').value);
+            var proxyHost = escape(Form.findMatchingInput(base,'mantis.proxyHost').value);
+            var proxyPort = escape(Form.findMatchingInput(base,'mantis.proxyPort').value);
+            var proxyUserName = escape(Form.findMatchingInput(base,'mantis.proxyUserName').value);
+            var proxyPassword = escape(Form.findMatchingInput(base,'mantis.proxyPassword').value);
+
+            var u = "${rootURL}/jobProperty/MantisProjectProperty/loginCheck?";
+            u += "url="+url;
+            u += "&amp;userName="+userName+"&amp;password="+password;
+            u += "&amp;basicUserName="+basicUserName+"&amp;basicPassord="+basicPassword;
+            u += "&amp;proxyHost="+proxyHost+"&amp;proxyPort="+proxyPort;
+            u += "&amp;proxyUserName="+proxyUserName+"&amp;proxyPassword="+proxyPassword;
+
+            return u;
+        }
+      </script>
+
       <f:repeatable name="mantissite" var="site" items="${descriptor.sites}">
 
         <table width="100%">
 
           <f:entry title="${%URL}" help="/plugin/mantis/help-url.html">
-            <f:textbox name="mantis.url" value="${site.url}" 
-               checkUrl="'${rootURL}/jobProperty/MantisProjectProperty/loginCheck?url='+escape(this.value)+'&amp;user='+escape(Form.findMatchingInput(this,'mantis.userName').value)+'&amp;pass='+escape(Form.findMatchingInput(this,'mantis.password').value)+'&amp;buser='+escape(Form.findMatchingInput(this,'mantis.basicUserName').value)+'&amp;bpass='+escape(Form.findMatchingInput(this,'mantis.basicPassword').value)" />
+            <f:textbox name="mantis.url" value="${site.url}"
+               checkUrl="checkUrl(this)" />
           </f:entry>
 
-          <f:entry title="${%User Name}" help="/plugin/mantis/help-login.html">
+          <f:entry title="${%User name}" help="/plugin/mantis/help-login.html">
             <f:textbox name="mantis.userName" value="${site.userName}"
                 checkMethod="post"
                 onchange="Form.findMatchingInput(this,'mantis.url').onchange()" />
@@ -25,15 +49,35 @@
           </f:entry>
 
           <f:advanced>
-            <f:section title="${%HTTP Basic Authentication}" 
-                       help="/plugin/mantis/help-useBasicAuth.html">
-              <f:entry title="${%User Name}">
+            
+            <f:section title="${%HTTP Basic Authentication}" >
+              <f:entry title="${%User name}">
                 <f:textbox name="mantis.basicUserName" value="${site.basicUserName}"                
                            onchange="Form.findMatchingInput(this,'mantis.url').onchange()" />
               </f:entry>
               <f:entry title="${%Password}">
                 <input class="setting-input" name="mantis.basicPassword"
                        type="password" value="${site.basicPassword}"
+                       onchange="Form.findMatchingInput(this,'mantis.url').onchange()" />
+              </f:entry>
+            
+            </f:section>
+            <f:section title="${%HTTP Proxy}" >
+              <f:entry title="${%Host}">
+                <f:textbox name="mantis.proxyHost" value="${site.proxyHost}"
+                           onchange="Form.findMatchingInput(this,'mantis.url').onchange()" />
+              </f:entry>
+              <f:entry title="${%Port}">
+                <f:textbox name="mantis.proxyPort" value="${site.proxyPort}"
+                           onchange="Form.findMatchingInput(this,'mantis.url').onchange()" />
+              </f:entry>
+              <f:entry title="${%User name}">
+                <f:textbox name="mantis.proxyUserName" value="${site.proxyUserName}"
+                           onchange="Form.findMatchingInput(this,'mantis.url').onchange()" />
+              </f:entry>
+              <f:entry title="${%Password}">
+                <input class="setting-input" name="mantis.proxyPassword"
+                       type="password" value="${site.proxyPassword}"
                        onchange="Form.findMatchingInput(this,'mantis.url').onchange()" />
               </f:entry>
             </f:section>

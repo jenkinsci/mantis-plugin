@@ -10,6 +10,7 @@ import hudson.util.FormFieldValidator;
 
 import java.io.IOException;
 import java.net.URL;
+import java.util.logging.Logger;
 import java.util.regex.Pattern;
 
 import javax.servlet.ServletException;
@@ -157,13 +158,23 @@ public final class MantisProjectProperty extends JobProperty<AbstractProject<?, 
                         error(Messages.MantisProjectProperty_MantisUrlMandatory());
                         return;
                     }
-                    final String user = Util.fixEmptyAndTrim(req.getParameter("user"));
-                    final String pass = Util.fixEmptyAndTrim(req.getParameter("pass"));
-                    final String bUser = Util.fixEmptyAndTrim(req.getParameter("buser"));
-                    final String bPass = Util.fixEmptyAndTrim(req.getParameter("bpass"));
+                    final String userName = Util.fixEmptyAndTrim(req.getParameter("userName"));
+                    final String password = Util.fixEmptyAndTrim(req.getParameter("password"));
+                    final String basicUserName = Util.fixEmptyAndTrim(req.getParameter("basicUserName"));
+                    final String basicPassword = Util.fixEmptyAndTrim(req.getParameter("basicPassword"));
+                    final String proxyHost = Util.fixEmptyAndTrim(req.getParameter("proxyHost"));
+                    final String proxyPort = Util.fixEmptyAndTrim(req.getParameter("proxyPort"));
+                    final String proxyUserName = Util.fixEmptyAndTrim(req.getParameter("proxyUserName"));
+                    final String proxyPassword = Util.fixEmptyAndTrim(req.getParameter("proxyPassword"));
+
+                    if (proxyPort != null && !Utility.isValidPort(proxyPort)) {
+                        error(Messages.MantisProjectProperty_InvalidHTTPProxyPort());
+                        return;
+                    }
 
                     final MantisSite site =
-                            new MantisSite(new URL(url), user, pass, bUser, bPass);
+                            new MantisSite(new URL(url), userName, password, basicUserName, basicPassword, 
+                            proxyHost, proxyPort, proxyUserName, proxyPassword);
                     if (!site.isConnect()) {
                         error(Messages.MantisProjectProperty_UnableToLogin());
                         return;
@@ -192,4 +203,6 @@ public final class MantisProjectProperty extends JobProperty<AbstractProject<?, 
             }.process();
         }
     }
+
+    private static final Logger LOGGER = Logger.getLogger(MantisProjectProperty.class.getName());
 }

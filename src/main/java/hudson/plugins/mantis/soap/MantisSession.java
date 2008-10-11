@@ -10,6 +10,7 @@ import java.net.MalformedURLException;
 import java.net.URL;
 import java.rmi.RemoteException;
 
+import java.util.logging.Logger;
 import javax.xml.rpc.ServiceException;
 
 import org.apache.axis.AxisProperties;
@@ -40,7 +41,16 @@ public final class MantisSession {
             // Allowing unsigned server certs
             AxisProperties.setProperty("axis.socketSecureFactory",
                     "org.apache.axis.components.net.SunFakeTrustSocketFactory");
-
+            // Support HTTP Proxy
+            // Use Hudson global settings which is configured in PluginManager
+            if (site.getProxyHost() != null && site.getProxyHost() != null) {
+                AxisProperties.setProperty("http.proxyHost", site.getProxyHost());
+                AxisProperties.setProperty("http.proxyPort", site.getProxyPort());
+            }
+            if (site.getProxyUserName() != null && site.getProxyPassword() != null) {
+                AxisProperties.setProperty("http.proxyUser", site.getProxyUserName());
+                AxisProperties.setProperty("http.proxyPassword", site.getProxyPassword());
+            }
         } catch (final ServiceException e) {
             throw new MantisHandlingException(e);
         } catch (final MalformedURLException e) {
@@ -91,4 +101,6 @@ public final class MantisSession {
             throw new MantisHandlingException(e);
         }
     }
+
+    private static final Logger LOGGER = Logger.getLogger(MantisSession.class.getName());
 }
