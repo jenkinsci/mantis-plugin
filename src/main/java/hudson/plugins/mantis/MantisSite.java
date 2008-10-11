@@ -67,7 +67,7 @@ public final class MantisSite {
      * HTTP-Proxy Password which is scrambled.
      */
     private final String proxyPassword;
-    
+
     public static MantisSite get(final AbstractProject<?, ?> p) {
         final MantisProjectProperty mpp = p.getProperty(MantisProjectProperty.class);
         if (mpp != null) {
@@ -94,7 +94,7 @@ public final class MantisSite {
     }
 
     public String getPassword() {
-        return password;
+        return Scrambler.descramble(password);
     }
 
     public String getName() {
@@ -142,9 +142,9 @@ public final class MantisSite {
         }
 
         this.userName = Util.fixEmptyAndTrim(userName);
-        this.password = Util.fixEmptyAndTrim(password);
+        this.password = Scrambler.scramble(Util.fixEmptyAndTrim(password));
         this.basicUserName = Util.fixEmptyAndTrim(basicUserName);
-        this.basicPassword = Util.fixEmptyAndTrim(basicPassword);
+        this.basicPassword = Scrambler.scramble(Util.fixEmptyAndTrim(basicPassword));
         this.proxyHost = Util.fixEmptyAndTrim(proxyHost);
         this.proxyPort = Util.fixEmptyAndTrim(proxyPort);
         this.proxyUserName = Util.fixEmptyAndTrim(proxyUserName);
