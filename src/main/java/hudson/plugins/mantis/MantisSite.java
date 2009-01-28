@@ -7,7 +7,6 @@ import hudson.plugins.mantis.model.MantisNote;
 import hudson.plugins.mantis.model.MantisViewState;
 import hudson.plugins.mantis.soap.MantisSession;
 
-import hudson.util.Scrambler;
 import java.net.MalformedURLException;
 import java.net.URL;
 import java.util.logging.Level;
@@ -48,26 +47,6 @@ public final class MantisSite {
      */
     private final String basicPassword;
 
-    /**
-     * HTTP-Proxy Host.
-     */
-    private final String proxyHost;
-
-    /**
-     * HTTP-Proxy Port.
-     */
-    private final String proxyPort;
-
-    /**
-     * HTTP-Proxy Username.
-     */
-    private final String proxyUserName;
-
-    /**
-     * HTTP-Proxy Password which is scrambled.
-     */
-    private final String proxyPassword;
-
     public static MantisSite get(final AbstractProject<?, ?> p) {
         final MantisProjectProperty mpp = p.getProperty(MantisProjectProperty.class);
         if (mpp != null) {
@@ -94,7 +73,7 @@ public final class MantisSite {
     }
 
     public String getPassword() {
-        return Scrambler.descramble(password);
+        return password;
     }
 
     public String getName() {
@@ -109,28 +88,9 @@ public final class MantisSite {
         return basicPassword;
     }
 
-    public String getProxyHost() {
-        return proxyHost;
-    }
-
-    public String getProxyPort() {
-        return proxyPort;
-    }
-
-    public String getProxyUserName() {
-        return proxyUserName;
-    }
-
-    public String getProxyPassword() {
-        return Scrambler.descramble(proxyPassword);
-    }
-
     @DataBoundConstructor
-    public MantisSite(final URL url,
-            final String userName, final String password,
-            final String basicUserName, final String basicPassword,
-            final String proxyHost, final String proxyPort,
-            final String proxyUserName, final String proxyPassword) {
+    public MantisSite(final URL url, final String userName, final String password,
+            final String basicUserName, final String basicPassword) {
         if (!url.toExternalForm().endsWith("/")) {
             try {
                 this.url = new URL(url.toExternalForm() + '/');
@@ -142,13 +102,9 @@ public final class MantisSite {
         }
 
         this.userName = Util.fixEmptyAndTrim(userName);
-        this.password = Scrambler.scramble(Util.fixEmptyAndTrim(password));
+        this.password = Util.fixEmptyAndTrim(password);
         this.basicUserName = Util.fixEmptyAndTrim(basicUserName);
-        this.basicPassword = Scrambler.scramble(Util.fixEmptyAndTrim(basicPassword));
-        this.proxyHost = Util.fixEmptyAndTrim(proxyHost);
-        this.proxyPort = Util.fixEmptyAndTrim(proxyPort);
-        this.proxyUserName = Util.fixEmptyAndTrim(proxyUserName);
-        this.proxyPassword = Scrambler.scramble(Util.fixEmptyAndTrim(proxyPassword));
+        this.basicPassword = Util.fixEmptyAndTrim(basicPassword);
     }
 
     public boolean isConnect() {

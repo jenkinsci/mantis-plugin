@@ -112,21 +112,4 @@ public final class Utility {
 
         return buf.toString();
     }
-
-    public static boolean isValidPort(final String port) {
-        if (port == null || port.length() == 0) {
-            return false;
-        }
-        int portNumber;
-        try {
-            portNumber = Integer.parseInt(port);
-        } catch (final NumberFormatException nfe) {
-            return false;
-        }
-        if (portNumber < 0 || 65535 < portNumber) {
-            return false;
-        }
-        return true;
-    }
-
 }
