@@ -6,6 +6,7 @@ import hudson.plugins.mantis.model.MantisIssue;
 import hudson.plugins.mantis.model.MantisNote;
 import hudson.plugins.mantis.model.MantisViewState;
 import hudson.plugins.mantis.soap.MantisSession;
+import hudson.plugins.mantis.soap.MantisSessionFactory;
 
 import java.net.MalformedURLException;
 import java.net.URL;
@@ -26,6 +27,11 @@ public final class MantisSite {
      * the root URL of Mantis installation.
      */
     private final URL url;
+
+    /**
+     * MantisVersion of Mantis.
+     */
+    private MantisVersion version = MantisVersion.V110;
 
     /**
      * user name for Mantis installation.
@@ -68,6 +74,10 @@ public final class MantisSite {
         return url;
     }
 
+    public MantisVersion getVersion() {
+        return version;
+    }
+
     public String getUserName() {
         return userName;
     }
@@ -89,8 +99,8 @@ public final class MantisSite {
     }
 
     @DataBoundConstructor
-    public MantisSite(final URL url, final String userName, final String password,
-            final String basicUserName, final String basicPassword) {
+    public MantisSite(final URL url, final String version, final String userName,
+            final String password, final String basicUserName, final String basicPassword) {
         if (!url.toExternalForm().endsWith("/")) {
             try {
                 this.url = new URL(url.toExternalForm() + '/');
@@ -100,7 +110,7 @@ public final class MantisSite {
         } else {
             this.url = url;
         }
-
+        this.version = MantisVersion.getVersionSafely(version, MantisVersion.V110);
         this.userName = Util.fixEmptyAndTrim(userName);
         this.password = Util.fixEmptyAndTrim(password);
         this.basicUserName = Util.fixEmptyAndTrim(basicUserName);
@@ -111,7 +121,8 @@ public final class MantisSite {
         final String urlString = url.toExternalForm();
         try {
             final MantisSession session = createSession();
-            session.getConfigString("default_language");
+            final String v = session.getVersion();
+            LOGGER.info(Messages.MantisSite_DetectedVersion(v));
         } catch (final MantisHandlingException e) {
             LOGGER.log(Level.WARNING,
                     Messages.MantisSite_FailedToConnectToMantis(urlString, e.getMessage()));
@@ -140,7 +151,40 @@ public final class MantisSite {
     }
 
     private MantisSession createSession() throws MantisHandlingException {
-        return MantisSession.create(this);
+        return MantisSessionFactory.getSession(this);
+    }
+
+    public enum MantisVersion {
+        /**
+         * 1.1.X.
+         */
+        V110(Messages.MantisSite_MantisVersion_V110()),
+        /**
+         * 1.2.0a4 and later.
+         */
+        V120(Messages.MantisSite_MantisVersion_V120());
+
+        private final String displayName;
+
+        private MantisVersion(final String displayName) {
+            this.displayName = displayName;
+        }
+
+        public static MantisVersion getVersionSafely(
+                final String version, final MantisVersion def) {
+            MantisVersion ret = def;
+            for (final MantisVersion v : MantisVersion.values()) {
+                if (v.name().equalsIgnoreCase(version)) {
+                    ret = v;
+                    break;
+                }
+            }
+            return ret;
+        }
+
+        public String getDisplayName() {
+            return displayName;
+        }
     }
 
     private static final Logger LOGGER = Logger.getLogger(MantisSite.class.getName());

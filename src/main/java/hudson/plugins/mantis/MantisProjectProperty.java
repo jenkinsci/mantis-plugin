@@ -5,6 +5,7 @@ import hudson.model.AbstractProject;
 import hudson.model.Job;
 import hudson.model.JobProperty;
 import hudson.model.JobPropertyDescriptor;
+import hudson.plugins.mantis.MantisSite.MantisVersion;
 import hudson.util.CopyOnWriteList;
 import hudson.util.FormFieldValidator;
 
@@ -101,8 +102,8 @@ public final class MantisProjectProperty extends JobProperty<AbstractProject<?, 
             buf.append(DEFAULT_PATTERN);
         }
         buf.append(")");
-        final String regExp = buf.toString().replace(ISSUE_ID_STRING, ")(\\d+)(?=");
-        return Pattern.compile(regExp);
+        final String regexp = buf.toString().replace(ISSUE_ID_STRING, ")(\\d+)(?=");
+        return Pattern.compile(regexp);
     }
 
     public static final class DescriptorImpl extends JobPropertyDescriptor {
@@ -128,6 +129,10 @@ public final class MantisProjectProperty extends JobProperty<AbstractProject<?, 
 
         public MantisSite[] getSites() {
             return sites.toArray(new MantisSite[0]);
+        }
+
+        public MantisVersion[] getMantisVersions() {
+            return MantisSite.MantisVersion.values();
         }
 
         @Override
@@ -157,13 +162,18 @@ public final class MantisProjectProperty extends JobProperty<AbstractProject<?, 
                         error(Messages.MantisProjectProperty_MantisUrlMandatory());
                         return;
                     }
+                    
                     final String user = Util.fixEmptyAndTrim(req.getParameter("user"));
                     final String pass = Util.fixEmptyAndTrim(req.getParameter("pass"));
                     final String bUser = Util.fixEmptyAndTrim(req.getParameter("buser"));
                     final String bPass = Util.fixEmptyAndTrim(req.getParameter("bpass"));
-
+                    final String ver = Util.fixEmptyAndTrim(req.getParameter("version"));
+                    
+                    MantisVersion version = MantisVersion.getVersionSafely(
+                            ver, MantisVersion.V110);
+                    
                     final MantisSite site =
-                            new MantisSite(new URL(url), user, pass, bUser, bPass);
+                            new MantisSite(new URL(url), version.name(), user, pass, bUser, bPass);
                     if (!site.isConnect()) {
                         error(Messages.MantisProjectProperty_UnableToLogin());
                         return;
