@@ -5,7 +5,7 @@ import hudson.plugins.mantis.MantisSite;
 import hudson.plugins.mantis.model.MantisIssue;
 import hudson.plugins.mantis.model.MantisNote;
 
-import hudson.plugins.mantis.soap.MantisSession;
+import hudson.plugins.mantis.soap.AbstractMantisSession;
 import java.math.BigInteger;
 import java.net.MalformedURLException;
 import java.net.URL;
@@ -15,15 +15,13 @@ import java.util.logging.Logger;
 import javax.xml.rpc.ServiceException;
 
 import org.apache.axis.AxisProperties;
+import org.apache.axis.EngineConfiguration;
+import org.apache.axis.client.AxisClient;
 import org.apache.axis.client.Stub;
 
-public final class MantisSessionImpl implements MantisSession {
-
-    private static final String END_POINT = "api/soap/mantisconnect.php";
+public final class MantisSessionImpl extends AbstractMantisSession {
 
     private final MantisConnectPortType portType;
-
-    private final MantisSite site;
 
     public MantisSessionImpl(final MantisSite site) throws MantisHandlingException {
         LOGGER.info("Mantis version is 1.1.X");
@@ -31,6 +29,12 @@ public final class MantisSessionImpl implements MantisSession {
         try {
             final URL endpoint = new URL(site.getUrl(), END_POINT);
             final MantisConnectLocator locator = new MantisConnectLocator();
+
+			// Set Handler
+			final EngineConfiguration config = createClientConfig();
+			locator.setEngineConfiguration(config);
+			locator.setEngine(new AxisClient(config));
+			
             portType = locator.getMantisConnectPort(endpoint);
 
             // Basic Authentication if they are specified
