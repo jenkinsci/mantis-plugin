@@ -13,6 +13,8 @@ import hudson.scm.ChangeLogSet.Entry;
 import java.io.PrintStream;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -72,6 +74,7 @@ final class Updater {
                 issues.add(issue);
             } catch (final MantisHandlingException e) {
                 Utility.log(logger, Messages.Updater_FailedToAddNote(id, e.getMessage()));
+				LOGGER.log(Level.WARNING, Messages.Updater_FailedToAddNote_StarckTrace(id), e);
                 build.setResult(Result.FAILURE);
             }
         }
@@ -140,4 +143,5 @@ final class Updater {
         return ids;
     }
 
+	private static final Logger LOGGER = Logger.getLogger(Updater.class.getName());
 }
