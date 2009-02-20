@@ -2,6 +2,7 @@ package hudson.plugins.mantis;
 
 import hudson.Util;
 import hudson.model.AbstractProject;
+import hudson.model.Hudson;
 import hudson.model.Job;
 import hudson.model.JobProperty;
 import hudson.model.JobPropertyDescriptor;
@@ -154,6 +155,9 @@ public final class MantisProjectProperty extends JobProperty<AbstractProject<?, 
 
         public void doLoginCheck(final StaplerRequest req, final StaplerResponse res)
                 throws IOException, ServletException {
+            // only administrator allowed
+            Hudson.getInstance().checkPermission(Hudson.ADMINISTER);
+            
             new FormFieldValidator(req, res, false) {
                 @Override
                 protected void check() throws IOException, ServletException {
@@ -185,6 +189,9 @@ public final class MantisProjectProperty extends JobProperty<AbstractProject<?, 
 
         public void doPatternCheck(final StaplerRequest req, final StaplerResponse res)
                 throws IOException, ServletException {
+            // only administrator allowed
+            Hudson.getInstance().checkPermission(Hudson.ADMINISTER);
+
             new FormFieldValidator(req, res, false) {
                 @Override
                 protected void check() throws IOException, ServletException {
