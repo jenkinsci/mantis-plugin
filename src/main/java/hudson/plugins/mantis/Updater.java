@@ -75,7 +75,6 @@ final class Updater {
             } catch (final MantisHandlingException e) {
                 Utility.log(logger, Messages.Updater_FailedToAddNote(id, e.getMessage()));
 				LOGGER.log(Level.WARNING, Messages.Updater_FailedToAddNote_StarckTrace(id), e);
-                build.setResult(Result.FAILURE);
             }
         }
 
