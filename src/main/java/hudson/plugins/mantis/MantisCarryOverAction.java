@@ -4,7 +4,9 @@ import hudson.model.InvisibleAction;
 
 /**
  * Remembers Mantis IDs that need to be updated later, when we get a successfull build.
- *
+ * 
+ * @deprecated
+ * @see MantisCarryOverChangeSetAction
  * @author Seiji Sogabe
  */
 public final class MantisCarryOverAction extends InvisibleAction {

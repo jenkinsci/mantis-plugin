@@ -1,6 +1,5 @@
 package hudson.plugins.mantis;
 
-import hudson.Util;
 import hudson.model.AbstractBuild;
 import hudson.model.BuildListener;
 import hudson.model.Hudson;
@@ -25,6 +24,8 @@ import java.util.regex.Pattern;
  */
 final class Updater {
 
+    private static final String CRLF = System.getProperty("line.separator");
+    
     private final MantisIssueUpdater property;
 
     Updater(final MantisIssueUpdater property) {
@@ -49,8 +50,8 @@ final class Updater {
             return true;
         }
 
-        final int[] ids = findIssueIdsRecursive(build);
-        if (ids.length == 0) {
+        final List<ChangeSet> chnageSets = findIssueIdsRecursive(build);
+        if (chnageSets.isEmpty()) {
             Utility.log(logger, Messages.Updater_NoIssuesFound());
             return true;
         }
@@ -59,22 +60,22 @@ final class Updater {
         if (!update) {
             // Keep id for next build
             Utility.log(logger, Messages.Updater_KeepMantisIssueIdsForNextBuild());
-            build.addAction(new MantisCarryOverAction(ids));
+            build.addAction(new MantisCarryOverChangeSetAction(chnageSets));
         }
 
         final List<MantisIssue> issues = new ArrayList<MantisIssue>();
-        for (final int id : ids) {
+        for (final ChangeSet changeSet : chnageSets) {
             try {
-                final MantisIssue issue = site.getIssue(id);
+                final MantisIssue issue = site.getIssue(changeSet.getId());
                 if (update) {
-                    final String text = createUpdateText(build, rootUrl);
-                    site.updateIssue(id, text, property.isKeepNotePrivate());
-                    Utility.log(logger, Messages.Updater_Updating(id));
+                    final String text = createUpdateText(build, changeSet, rootUrl);
+                    site.updateIssue(changeSet.getId(), text, property.isKeepNotePrivate());
+                    Utility.log(logger, Messages.Updater_Updating(changeSet));
                 }
                 issues.add(issue);
             } catch (final MantisHandlingException e) {
-                Utility.log(logger, Messages.Updater_FailedToAddNote(id, e.getMessage()));
-				LOGGER.log(Level.WARNING, Messages.Updater_FailedToAddNote_StarckTrace(id), e);
+                Utility.log(logger, Messages.Updater_FailedToAddNote(changeSet, e.getMessage()));
+                LOGGER.log(Level.WARNING, Messages.Updater_FailedToAddNote_StarckTrace(changeSet), e);
             }
         }
 
@@ -84,63 +85,73 @@ final class Updater {
         return true;
     }
 
-    private String createUpdateText(final AbstractBuild<?, ?> build,
-            final String rootUrl) {
+    private String createUpdateText(final AbstractBuild<?, ?> build, final ChangeSet changeSet, final String rootUrl) {
         final String prjName = build.getProject().getName();
         final int prjNumber = build.getNumber();
-        final String url = Util.encode(rootUrl + build.getUrl());
-        final String text =
-                Messages.Updater_IssueIntegrated(prjName, prjNumber, url);
-        return text;
+        final String url = rootUrl + build.getUrl();
+
+        final StringBuilder text = new StringBuilder();
+        text.append(Messages.Updater_IssueIntegrated(prjName, prjNumber, url));
+        text.append(CRLF).append(CRLF);
+        
+        text.append(Messages.Updater_ChangeSet_Revision(changeSet.getRevision(), changeSet.getChangeSetLink())).append(CRLF);
+        text.append(Messages.Updater_ChangeSet_Author(changeSet.getAuthor())).append(CRLF);
+        text.append(Messages.Updater_ChangeSet_Log(changeSet.getMsg())).append(CRLF);
+        text.append(Messages.Updater_ChangeSet_Files_Header()).append(CRLF);
+        for (final ChangeSet.AffectedPath path : changeSet.getAffectedPaths()) {
+            text.append(Messages.Updater_ChangeSet_Files_File(path.getMark(), path.getPath())).append(CRLF);
+        }
+        text.append(CRLF);
+        return text.toString();
     }
 
-    private int[] findIssueIdsRecursive(final AbstractBuild<?, ?> build) {
-        final List<Integer> ids = new ArrayList<Integer>();
+    private List<ChangeSet> findIssueIdsRecursive(final AbstractBuild<?, ?> build) {
+        final List<ChangeSet> chnageSets = new ArrayList<ChangeSet>();
 
         final Run<?, ?> prev = build.getPreviousBuild();
         if (prev != null) {
-            final MantisCarryOverAction action =
-                    prev.getAction(MantisCarryOverAction.class);
+            final MantisCarryOverAction action = prev.getAction(MantisCarryOverAction.class);
             if (action != null) {
                 for (int id : action.getIDs()) {
-                    ids.add(id);
+                    chnageSets.add(new ChangeSet(id));
+                }
+            }
+            final MantisCarryOverChangeSetAction changeSetAction = prev.getAction(MantisCarryOverChangeSetAction.class);
+            if (changeSetAction != null) {
+                for (final ChangeSet changeSet : changeSetAction.getChangeSets()) {
+                    chnageSets.add(changeSet);
                 }
             }
         }
 
-        ids.addAll(findIssuesIds(build));
+        chnageSets.addAll(findIssuesIds(build));
 
         for (final DependencyChange depc : build.getDependencyChanges(
                 build.getPreviousBuild()).values()) {
             for (final AbstractBuild<?, ?> b : depc.getBuilds()) {
-                ids.addAll(findIssuesIds(b));
+                chnageSets.addAll(findIssuesIds(b));
             }
         }
 
-        final int[] array = new int[ids.size()];
-        for (int i = 0, size = ids.size(); i < size; i++) {
-            array[i] = ids.get(i);
-        }
-
-        return array;
+        return chnageSets;
     }
 
-    private List<Integer> findIssuesIds(final AbstractBuild<?, ?> build) {
-        final List<Integer> ids = new ArrayList<Integer>();
+    private List<ChangeSet> findIssuesIds(final AbstractBuild<?, ?> build) {
+        final List<ChangeSet> changeSets = new ArrayList<ChangeSet>();
         final MantisProjectProperty mpp =
-            build.getParent().getProperty(MantisProjectProperty.class);
+                build.getParent().getProperty(MantisProjectProperty.class);
         if (mpp == null || mpp.getSite() == null) {
-            return ids;
+            return changeSets;
         }
         final Pattern pattern = mpp.getRegExp();
         for (final Entry change : build.getChangeSet()) {
             final Matcher matcher = pattern.matcher(change.getMsg());
             while (matcher.find()) {
-                ids.add(Integer.valueOf(matcher.group()));
+                changeSets.add(new ChangeSet(Integer.parseInt(matcher.group()), build, change));
             }
         }
-        return ids;
+        return changeSets;
     }
 
-	private static final Logger LOGGER = Logger.getLogger(Updater.class.getName());
+    private static final Logger LOGGER = Logger.getLogger(Updater.class.getName());
 }
