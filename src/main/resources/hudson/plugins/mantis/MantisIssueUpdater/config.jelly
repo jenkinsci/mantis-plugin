@@ -5,4 +5,10 @@
     ${%Keep note private}
   </label>
 </f:entry>
+<f:entry title="">
+  <label>
+    <f:checkbox name="recordChangelog" checked="${instance.recordChangelog}" />
+    ${%Record changelog to note}
+  </label>
+</f:entry>
 </j:jelly>

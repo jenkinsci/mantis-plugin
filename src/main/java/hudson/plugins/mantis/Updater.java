@@ -94,14 +94,16 @@ final class Updater {
         text.append(Messages.Updater_IssueIntegrated(prjName, prjNumber, url));
         text.append(CRLF).append(CRLF);
         
-        text.append(Messages.Updater_ChangeSet_Revision(changeSet.getRevision(), changeSet.getChangeSetLink())).append(CRLF);
-        text.append(Messages.Updater_ChangeSet_Author(changeSet.getAuthor())).append(CRLF);
-        text.append(Messages.Updater_ChangeSet_Log(changeSet.getMsg())).append(CRLF);
-        text.append(Messages.Updater_ChangeSet_Files_Header()).append(CRLF);
-        for (final ChangeSet.AffectedPath path : changeSet.getAffectedPaths()) {
-            text.append(Messages.Updater_ChangeSet_Files_File(path.getMark(), path.getPath())).append(CRLF);
+        if (property.isRecordChangelog()) {
+            text.append(Messages.Updater_ChangeSet_Revision(changeSet.getRevision(), changeSet.getChangeSetLink())).append(CRLF);
+            text.append(Messages.Updater_ChangeSet_Author(changeSet.getAuthor())).append(CRLF);
+            text.append(Messages.Updater_ChangeSet_Log(changeSet.getMsg())).append(CRLF);
+            text.append(Messages.Updater_ChangeSet_Files_Header()).append(CRLF);
+            for (final ChangeSet.AffectedPath path : changeSet.getAffectedPaths()) {
+                text.append(Messages.Updater_ChangeSet_Files_File(path.getMark(), path.getPath())).append(CRLF);
+            }
+            text.append(CRLF);
         }
-        text.append(CRLF);
         return text.toString();
     }
 

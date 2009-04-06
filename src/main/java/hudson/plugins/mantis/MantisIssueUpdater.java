@@ -3,9 +3,9 @@ package hudson.plugins.mantis;
 import hudson.Launcher;
 import hudson.model.AbstractBuild;
 import hudson.model.BuildListener;
+
 import hudson.model.Descriptor;
 import hudson.tasks.Publisher;
-
 import java.io.IOException;
 
 import net.sf.json.JSONObject;
@@ -23,16 +23,24 @@ public final class MantisIssueUpdater extends Publisher {
     public static final DescriptorImpl DESCRIPTOR = new DescriptorImpl();
 
     private final boolean keepNotePrivate;
+
+    private final boolean recordChangelog;
     
     @DataBoundConstructor
-    public MantisIssueUpdater(final boolean keepNotePrivate) {
+    public MantisIssueUpdater(final boolean keepNotePrivate, final boolean recordChangelog) {
         this.keepNotePrivate = keepNotePrivate;
+        this.recordChangelog = recordChangelog;
     }
 
     public boolean isKeepNotePrivate() {
         return keepNotePrivate;
     }
 
+    public boolean isRecordChangelog() {
+        return recordChangelog;
+    }
+
+    @Override
     public DescriptorImpl getDescriptor() {
         return DESCRIPTOR;
     }
