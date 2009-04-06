@@ -50,7 +50,7 @@ final class Updater {
             return true;
         }
 
-        final List<ChangeSet> chnageSets = findIssueIdsRecursive(build);
+        final List<ChangeSet> chnageSets = findChangeSets(build);
         if (chnageSets.isEmpty()) {
             Utility.log(logger, Messages.Updater_NoIssuesFound());
             return true;
@@ -70,7 +70,7 @@ final class Updater {
                 if (update) {
                     final String text = createUpdateText(build, changeSet, rootUrl);
                     site.updateIssue(changeSet.getId(), text, property.isKeepNotePrivate());
-                    Utility.log(logger, Messages.Updater_Updating(changeSet));
+                    Utility.log(logger, Messages.Updater_Updating(changeSet.getId()));
                 }
                 issues.add(issue);
             } catch (final MantisHandlingException e) {
@@ -95,19 +95,24 @@ final class Updater {
         text.append(CRLF).append(CRLF);
         
         if (property.isRecordChangelog()) {
-            text.append(Messages.Updater_ChangeSet_Revision(changeSet.getRevision(), changeSet.getChangeSetLink())).append(CRLF);
-            text.append(Messages.Updater_ChangeSet_Author(changeSet.getAuthor())).append(CRLF);
-            text.append(Messages.Updater_ChangeSet_Log(changeSet.getMsg())).append(CRLF);
-            text.append(Messages.Updater_ChangeSet_Files_Header()).append(CRLF);
+            text.append(Messages.Updater_ChangeSet_Revision(changeSet.getRevision(), changeSet.getChangeSetLink()));
+            text.append(CRLF);
+            text.append(Messages.Updater_ChangeSet_Author(changeSet.getAuthor()));
+            text.append(CRLF);
+            text.append(Messages.Updater_ChangeSet_Log(changeSet.getMsg()));
+            text.append(CRLF);
+            text.append(Messages.Updater_ChangeSet_Files_Header());
+            text.append(CRLF);
             for (final ChangeSet.AffectedPath path : changeSet.getAffectedPaths()) {
-                text.append(Messages.Updater_ChangeSet_Files_File(path.getMark(), path.getPath())).append(CRLF);
+                text.append(Messages.Updater_ChangeSet_Files_File(path.getMark(), path.getPath()));
+                text.append(CRLF);
             }
             text.append(CRLF);
         }
         return text.toString();
     }
 
-    private List<ChangeSet> findIssueIdsRecursive(final AbstractBuild<?, ?> build) {
+    private List<ChangeSet> findChangeSets(final AbstractBuild<?, ?> build) {
         final List<ChangeSet> chnageSets = new ArrayList<ChangeSet>();
 
         final Run<?, ?> prev = build.getPreviousBuild();
@@ -126,19 +131,19 @@ final class Updater {
             }
         }
 
-        chnageSets.addAll(findIssuesIds(build));
+        chnageSets.addAll(findChangeSetsFromSCM(build));
 
         for (final DependencyChange depc : build.getDependencyChanges(
                 build.getPreviousBuild()).values()) {
             for (final AbstractBuild<?, ?> b : depc.getBuilds()) {
-                chnageSets.addAll(findIssuesIds(b));
+                chnageSets.addAll(findChangeSetsFromSCM(b));
             }
         }
 
         return chnageSets;
     }
 
-    private List<ChangeSet> findIssuesIds(final AbstractBuild<?, ?> build) {
+    private List<ChangeSet> findChangeSetsFromSCM(final AbstractBuild<?, ?> build) {
         final List<ChangeSet> changeSets = new ArrayList<ChangeSet>();
         final MantisProjectProperty mpp =
                 build.getParent().getProperty(MantisProjectProperty.class);
