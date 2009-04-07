@@ -6,6 +6,9 @@ import hudson.model.Hudson;
 import hudson.model.Result;
 import hudson.model.Run;
 import hudson.model.AbstractBuild.DependencyChange;
+import hudson.plugins.mantis.changeset.AffectedPath;
+import hudson.plugins.mantis.changeset.ChangeSet;
+import hudson.plugins.mantis.changeset.ChangeSetFactory;
 import hudson.plugins.mantis.model.MantisIssue;
 import hudson.scm.ChangeLogSet.Entry;
 
@@ -103,7 +106,7 @@ final class Updater {
             text.append(CRLF);
             text.append(Messages.Updater_ChangeSet_Files_Header());
             text.append(CRLF);
-            for (final ChangeSet.AffectedPath path : changeSet.getAffectedPaths()) {
+            for (final AffectedPath path : changeSet.getAffectedPaths()) {
                 text.append(Messages.Updater_ChangeSet_Files_File(path.getMark(), path.getPath()));
                 text.append(CRLF);
             }
@@ -120,7 +123,7 @@ final class Updater {
             final MantisCarryOverAction action = prev.getAction(MantisCarryOverAction.class);
             if (action != null) {
                 for (int id : action.getIDs()) {
-                    chnageSets.add(new ChangeSet(id));
+                    chnageSets.add(ChangeSetFactory.newInstance(id));
                 }
             }
             final MantisCarryOverChangeSetAction changeSetAction = prev.getAction(MantisCarryOverChangeSetAction.class);
@@ -154,7 +157,8 @@ final class Updater {
         for (final Entry change : build.getChangeSet()) {
             final Matcher matcher = pattern.matcher(change.getMsg());
             while (matcher.find()) {
-                changeSets.add(new ChangeSet(Integer.parseInt(matcher.group()), build, change));
+                final int id = Integer.parseInt(matcher.group());
+                changeSets.add(ChangeSetFactory.newInstance(id, build, change));
             }
         }
         return changeSets;
