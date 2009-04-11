@@ -35,12 +35,16 @@ public abstract class AbstractChangeSet implements ChangeSet, Serializable {
 
     public abstract String createChangeLog();
 
-    protected String getChangeSetLink() {
+    protected RepositoryBrowser getRepositoryBrowser() {
         if (build == null) {
-            return UNKNOWN_CHANGESETLINK;
+            return null;
         }
         final SCM scm = build.getProject().getScm();
-        final RepositoryBrowser browser = scm.getBrowser();
+        return scm.getBrowser();
+    }
+
+    protected String getChangeSetLink() {
+        final RepositoryBrowser browser = getRepositoryBrowser();
         if (browser == null) {
             return UNKNOWN_CHANGESETLINK;
         }

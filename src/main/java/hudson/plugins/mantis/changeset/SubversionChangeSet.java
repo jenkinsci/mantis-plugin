@@ -4,7 +4,6 @@ import hudson.model.AbstractBuild;
 import hudson.scm.EditType;
 import hudson.scm.SubversionChangeLogSet;
 import java.util.ArrayList;
-import java.util.Collections;
 import java.util.List;
 
 /**
@@ -50,7 +49,7 @@ public class SubversionChangeSet extends AbstractChangeSet {
         for (final SubversionChangeLogSet.Path path : ((SubversionChangeLogSet.LogEntry) entry).getPaths()) {
             paths.add(new AffectedPath(path.getEditType(), path.getValue()));
         }
-        return Collections.unmodifiableList(paths);
+        return paths;
     }
 
     private static class AffectedPath {
@@ -78,10 +77,6 @@ public class SubversionChangeSet extends AbstractChangeSet {
             } else {
                 mark = MARK_UNKNOWN;
             }
-        }
-
-        public AffectedPath(final String path) {
-            this(null, path);
         }
 
         public String getMark() {

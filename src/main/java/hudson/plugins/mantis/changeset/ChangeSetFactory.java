@@ -1,6 +1,7 @@
 package hudson.plugins.mantis.changeset;
 
 import hudson.model.AbstractBuild;
+import hudson.scm.CVSChangeLogSet;
 import hudson.scm.ChangeLogSet.Entry;
 import hudson.scm.SubversionChangeLogSet;
 
@@ -28,6 +29,11 @@ public final class ChangeSetFactory {
         if (entry instanceof SubversionChangeLogSet.LogEntry) {
             return new SubversionChangeSet(id, build, (SubversionChangeLogSet.LogEntry) entry);
         }
+        // CVS
+        if (entry instanceof CVSChangeLogSet.CVSChangeLog) {
+            return new CVSChangeSet(id, build, (CVSChangeLogSet.CVSChangeLog) entry);
+        }
+        
         // else
         return new DefaultChangeSet(id, build, entry);
     }
