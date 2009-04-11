@@ -13,30 +13,30 @@ import org.apache.axis.handlers.BasicHandler;
  */
 public class LogHandler extends BasicHandler {
 
-	private static final long serialVersionUID = 1L;
+    private static final long serialVersionUID = 1L;
 
-	public void invoke(final MessageContext ctx) throws AxisFault {
+    public void invoke(final MessageContext ctx) throws AxisFault {
 
-		if (ctx == null) {
-			return;
-		}
+        if (ctx == null) {
+            return;
+        }
 
-		final Message req = ctx.getRequestMessage();
-		final Message res = ctx.getResponseMessage();
+        final Message req = ctx.getRequestMessage();
+        final Message res = ctx.getResponseMessage();
 
-		if (req != null) {
-			LOGGER.fine("Request: " + Util.escape(req.getSOAPPartAsString()));
-		} else {
-			LOGGER.fine("Request: (null)");
-		}
+        if (req != null) {
+            LOGGER.fine("Request: " + Util.escape(req.getSOAPPartAsString()));
+        } else {
+            LOGGER.fine("Request: (null)");
+        }
 
-		if (res != null) {
-			LOGGER.fine("Response: " + Util.escape(res.getSOAPPartAsString()));
-		} else {
-			LOGGER.fine("Response: (null)");
-		}
+        if (res != null) {
+            LOGGER.fine("Response: " + Util.escape(res.getSOAPPartAsString()));
+        } else {
+            LOGGER.fine("Response: (null)");
+        }
 
-	}
+    }
 
-	private static final Logger LOGGER = Logger.getLogger(LogHandler.class.getName());
+    private static final Logger LOGGER = Logger.getLogger(LogHandler.class.getName());
 }

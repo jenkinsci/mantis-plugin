@@ -9,10 +9,14 @@ import hudson.scm.SubversionChangeLogSet;
  * @author Seiji Sogabe
  * @since 0.7
  */
-public class ChangeSetFactory {
+public final class ChangeSetFactory {
+
+    private ChangeSetFactory() {
+        // hide default constructor
+    }
 
     public static ChangeSet newInstance(final int id) {
-        return new EmptyChangeSet(id);
+        return new CompatibleChangeSet(id);
     }
 
     public static ChangeSet newInstance(final int id, final AbstractBuild<?, ?> build,

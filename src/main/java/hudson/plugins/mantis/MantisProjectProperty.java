@@ -95,7 +95,7 @@ public final class MantisProjectProperty extends JobProperty<AbstractProject<?, 
     }
 
     private Pattern createRegExp(final String p) {
-        final StringBuffer buf =new StringBuffer();
+        final StringBuffer buf = new StringBuffer();
         buf.append("(?<=");
         if (p != null) {
             buf.append(Utility.escapeRegExp(p));

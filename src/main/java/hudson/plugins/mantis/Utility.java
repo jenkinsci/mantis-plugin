@@ -12,7 +12,7 @@ import java.util.Arrays;
  */
 public final class Utility {
 
-    private final static char[] REGEXP_CHARS = new char[] {
+    private static final char[] REGEXP_CHARS = new char[] {
         '\\', '[', ']', '(', ')', '{', '}', '^', '$', '|', '?', '*', '+', '-', ':', ',', '.', '&'
     };
 
@@ -95,7 +95,7 @@ public final class Utility {
         logger.println(buf.toString());
     }
 
-    public static final String escapeRegExp(final String str) {
+    public static String escapeRegExp(final String str) {
         if (str == null) {
             return null;
         }

@@ -1,7 +1,5 @@
 package hudson.plugins.mantis.changeset;
 
-import java.util.List;
-
 /**
  * ChangeSet interface.
  * @author Seiji Sogabe
@@ -9,15 +7,17 @@ import java.util.List;
  */
 public interface ChangeSet {
 
-    List<AffectedPath> getAffectedPaths();
+    String UNKNOWN_AUTHOR = "-";
 
-    String getAuthor();
+    String UNKNOWN_MSG = "-";
 
-    String getChangeSetLink();
+    String UNKNOWN_REVISION = "-";
+
+    String UNKNOWN_CHANGESETLINK = "";
+
+    String CRLF = System.getProperty("line.separator");
 
     int getId();
 
-    String getMsg();
-
-    String getRevision();
+    String createChangeLog();
 }

@@ -22,25 +22,25 @@ public abstract class AbstractMantisSession implements MantisSession {
 
     protected MantisSite site;
 
-	public abstract void addNote(int id, MantisNote note) throws MantisHandlingException;
+    public abstract void addNote(int id, MantisNote note) throws MantisHandlingException;
 
-	public abstract MantisIssue getIssue(int id) throws MantisHandlingException;
+    public abstract MantisIssue getIssue(int id) throws MantisHandlingException;
 
-	public abstract String getVersion() throws MantisHandlingException;
+    public abstract String getVersion() throws MantisHandlingException;
 
-	protected EngineConfiguration createClientConfig() {
-		final SimpleProvider config = new SimpleProvider();
-		final Handler handler = (Handler) new LogHandler();
-		final SimpleChain reqChain = new SimpleChain();
-		final SimpleChain resChain = new SimpleChain();
+    protected EngineConfiguration createClientConfig() {
+        final SimpleProvider config = new SimpleProvider();
+        final Handler handler = (Handler) new LogHandler();
+        final SimpleChain reqChain = new SimpleChain();
+        final SimpleChain resChain = new SimpleChain();
 
-		reqChain.addHandler(handler);
-		resChain.addHandler(handler);
+        reqChain.addHandler(handler);
+        resChain.addHandler(handler);
 
-		final Handler pivot = (Handler) new HTTPSender();
-		final Handler transport = new SimpleTargetedChain(reqChain, pivot, resChain);
-		config.deployTransport(HTTPTransport.DEFAULT_TRANSPORT_NAME, transport);
+        final Handler pivot = (Handler) new HTTPSender();
+        final Handler transport = new SimpleTargetedChain(reqChain, pivot, resChain);
+        config.deployTransport(HTTPTransport.DEFAULT_TRANSPORT_NAME, transport);
 
-		return config;
-	}
+        return config;
+    }
 }

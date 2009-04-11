@@ -6,7 +6,6 @@ import hudson.model.Hudson;
 import hudson.model.Result;
 import hudson.model.Run;
 import hudson.model.AbstractBuild.DependencyChange;
-import hudson.plugins.mantis.changeset.AffectedPath;
 import hudson.plugins.mantis.changeset.ChangeSet;
 import hudson.plugins.mantis.changeset.ChangeSetFactory;
 import hudson.plugins.mantis.model.MantisIssue;
@@ -98,19 +97,7 @@ final class Updater {
         text.append(CRLF).append(CRLF);
         
         if (property.isRecordChangelog()) {
-            text.append(Messages.Updater_ChangeSet_Revision(changeSet.getRevision(), changeSet.getChangeSetLink()));
-            text.append(CRLF);
-            text.append(Messages.Updater_ChangeSet_Author(changeSet.getAuthor()));
-            text.append(CRLF);
-            text.append(Messages.Updater_ChangeSet_Log(changeSet.getMsg()));
-            text.append(CRLF);
-            text.append(Messages.Updater_ChangeSet_Files_Header());
-            text.append(CRLF);
-            for (final AffectedPath path : changeSet.getAffectedPaths()) {
-                text.append(Messages.Updater_ChangeSet_Files_File(path.getMark(), path.getPath()));
-                text.append(CRLF);
-            }
-            text.append(CRLF);
+            text.append(changeSet.createChangeLog());
         }
         return text.toString();
     }

@@ -9,7 +9,11 @@ import hudson.plugins.mantis.soap.mantis120.MantisSessionImpl;
  * Mantis Session factory.
  * @author Seiji Sogabe
  */
-public class MantisSessionFactory {
+public final class MantisSessionFactory {
+
+    private MantisSessionFactory() {
+        // Hide default consturctor
+    }
 
     public static MantisSession getSession(final MantisSite site)
             throws MantisHandlingException {

@@ -30,10 +30,10 @@ public final class MantisSessionImpl extends AbstractMantisSession {
             final URL endpoint = new URL(site.getUrl(), END_POINT);
             final MantisConnectLocator locator = new MantisConnectLocator();
 
-			// Set Handler
-			final EngineConfiguration config = createClientConfig();
-			locator.setEngineConfiguration(config);
-			locator.setEngine(new AxisClient(config));
+            // Set Handler
+            final EngineConfiguration config = createClientConfig();
+            locator.setEngineConfiguration(config);
+            locator.setEngine(new AxisClient(config));
 
             portType = locator.getMantisConnectPort(endpoint);
 
