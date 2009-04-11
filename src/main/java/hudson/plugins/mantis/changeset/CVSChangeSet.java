@@ -12,7 +12,7 @@ import java.util.List;
 /**
  * ChangeSet of CVS
  * @author Seiji Sogabe
- * @since 0.7.0
+ * @since 0.7
  */
 public class CVSChangeSet extends AbstractChangeSet {
 
@@ -34,7 +34,7 @@ public class CVSChangeSet extends AbstractChangeSet {
         text.append(CRLF);
         for (final AffectedPath path : getAffectedPaths()) {
             text.append(Messages.ChangeSet_ChangedPaths_CVS_Path(
-                    path.getRevision(), path.getMark(), path.getPath(), path.getDiffLink()));
+                    path.getMark(), path.getPath(), path.getRevision(), path.getDiffLink()));
             text.append(CRLF);
         }
         text.append(CRLF);

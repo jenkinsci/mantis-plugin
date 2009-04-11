@@ -12,7 +12,7 @@ import java.net.URL;
 /**
  * AbstractChangeSet
  * @author Seiji Sogabe
- * @since 0.7.0
+ * @since 0.7
  */
 public abstract class AbstractChangeSet implements ChangeSet, Serializable {
 

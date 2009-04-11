@@ -4,7 +4,7 @@ package hudson.plugins.mantis.changeset;
  * This changeSet has only id.
  * 
  * @author Seiji Sogabe
- * @since 0.7.0
+ * @since 0.7
  */
 public class CompatibleChangeSet extends AbstractChangeSet {
 
