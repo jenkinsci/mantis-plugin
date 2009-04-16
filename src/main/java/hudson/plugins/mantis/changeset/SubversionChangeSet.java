@@ -54,29 +54,13 @@ public class SubversionChangeSet extends AbstractChangeSet {
 
     private static class AffectedPath {
 
-        private static final String MARK_ADD = "A";
-
-        private static final String MARK_DELETE = "D";
-
-        private static final String MARK_EDIT = "M";
-
-        private static final String MARK_UNKNOWN = " ";
-
         private final String mark;
 
         private final String path;
 
         public AffectedPath(final EditType type, final String path) {
             this.path = path;
-            if (EditType.ADD.equals(type)) {
-                mark = MARK_ADD;
-            } else if (EditType.DELETE.equals(type)) {
-                mark = MARK_DELETE;
-            } else if (EditType.EDIT.equals(type)) {
-                mark = MARK_EDIT;
-            } else {
-                mark = MARK_UNKNOWN;
-            }
+            this.mark = ChangeSetUtil.getEditTypeMark(type);
         }
 
         public String getMark() {

@@ -19,6 +19,7 @@ public class DefaultChangeSet extends AbstractChangeSet {
         super(id, build, entry);
     }
 
+    @Override
     public String createChangeLog() {
         final StringBuilder text = new StringBuilder();
         text.append(Messages.ChangeSet_Revision(UNKNOWN_REVISION, getChangeSetLink()));

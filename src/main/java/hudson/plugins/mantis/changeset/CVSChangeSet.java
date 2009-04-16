@@ -57,14 +57,6 @@ public class CVSChangeSet extends AbstractChangeSet {
 
     private static class AffectedPath {
 
-        private static final String MARK_ADD = "A";
-
-        private static final String MARK_DELETE = "D";
-
-        private static final String MARK_EDIT = "M";
-
-        private static final String MARK_UNKNOWN = " ";
-
         private final CVSChangeLogSet.File file;
 
         private final CVSRepositoryBrowser browser;
@@ -76,15 +68,8 @@ public class CVSChangeSet extends AbstractChangeSet {
         }
 
         public String getMark() {
-            EditType type = file.getEditType();
-            if (EditType.ADD.equals(type)) {
-                return MARK_ADD;
-            } else if (EditType.DELETE.equals(type)) {
-                return MARK_DELETE;
-            } else if (EditType.EDIT.equals(type)) {
-                return MARK_EDIT;
-            }
-            return MARK_UNKNOWN;
+            final EditType type = file.getEditType();
+            return ChangeSetUtil.getEditTypeMark(type);
         }
 
         public String getPath() {
