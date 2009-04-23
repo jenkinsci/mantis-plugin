@@ -13,7 +13,7 @@
     <packaging>hpi</packaging>
     <name>Hudson Mantis plugin</name>
     <description>Integrates Hudson to Mantis</description>
-    <url>http://hudson.gotdns.com/wiki/display/HUDSON/Mantis+Plugin</url>
+    <url>http://wiki.hudson-ci.org/display/HUDSON/Mantis+Plugin</url>
 
     <build>
         <plugins>
