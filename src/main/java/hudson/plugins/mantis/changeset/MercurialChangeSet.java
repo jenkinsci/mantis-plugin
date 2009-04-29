@@ -2,22 +2,21 @@ package hudson.plugins.mantis.changeset;
 
 import hudson.model.AbstractBuild;
 import hudson.scm.EditType;
-import hudson.scm.SubversionChangeLogSet;
 import java.util.ArrayList;
 import java.util.List;
 
 /**
- * ChangeSet of subversion.
+ * ChangeSet of Mecrutial.
  *
  * @author Seiji Sogabe
- * @since 0.7
+ * @since 0.7.1
  */
-public class SubversionChangeSet extends AbstractChangeSet<SubversionChangeLogSet.LogEntry> {
+public class MercurialChangeSet extends AbstractChangeSet<hudson.plugins.mercurial.MercurialChangeSet> {
 
     private static final long serialVersionUID = 1L;
 
-    public SubversionChangeSet(final int id, final AbstractBuild<?, ?> build,
-            final SubversionChangeLogSet.LogEntry entry) {
+    public MercurialChangeSet(final int id, final AbstractBuild<?, ?> build,
+            final hudson.plugins.mercurial.MercurialChangeSet entry) {
         super(id, build, entry);
     }
 
@@ -41,15 +40,27 @@ public class SubversionChangeSet extends AbstractChangeSet<SubversionChangeLogSe
     }
 
     protected String getRevision() {
-        return String.valueOf(entry.getRevision());
+        return String.valueOf(entry.getRev()) + ":" + entry.getShortNode();
     }
 
     private List<AffectedPath> getAffectedPaths() {
-        final List<AffectedPath> paths = new ArrayList<AffectedPath>();
-        for (final SubversionChangeLogSet.Path path : entry.getPaths()) {
-            paths.add(new AffectedPath(path.getEditType(), path.getValue()));
+        final List<AffectedPath> affectedPaths = new ArrayList<AffectedPath>();
+        for (final EditType type : new EditType[] { EditType.ADD, EditType.EDIT, EditType.DELETE } ) {
+            affectedPaths.addAll(getAffectedPathsByEditType(type));
         }
-        return paths;
+        return affectedPaths;
+    }
+
+    private List<AffectedPath> getAffectedPathsByEditType(final EditType type) {
+        final List<AffectedPath> affectedPaths = new ArrayList<AffectedPath>();
+        final List<String> paths = entry.getPaths(type);
+        if (paths == null) {
+            return affectedPaths;
+        }
+        for (final String path : paths) {
+            affectedPaths.add(new AffectedPath(type, path));
+        }
+        return affectedPaths;
     }
 
     private static class AffectedPath {

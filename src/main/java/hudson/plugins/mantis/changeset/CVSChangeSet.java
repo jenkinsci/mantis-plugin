@@ -14,7 +14,7 @@ import java.util.List;
  * @author Seiji Sogabe
  * @since 0.7
  */
-public class CVSChangeSet extends AbstractChangeSet {
+public class CVSChangeSet extends AbstractChangeSet<CVSChangeLogSet.CVSChangeLog> {
 
     private static final long serialVersionUID = 1L;
 
@@ -34,7 +34,7 @@ public class CVSChangeSet extends AbstractChangeSet {
         text.append(CRLF);
         for (final AffectedPath path : getAffectedPaths()) {
             text.append(Messages.ChangeSet_ChangedPaths_CVS_Path(
-                    path.getMark(), path.getPath(), path.getRevision(), path.getDiffLink()));
+                    path.getMark(), path.getRevision(), path.getPath(), path.getDiffLink()));
             text.append(CRLF);
         }
         text.append(CRLF);
@@ -49,7 +49,7 @@ public class CVSChangeSet extends AbstractChangeSet {
     private List<AffectedPath> getAffectedPaths() {
         final List<AffectedPath> paths = new ArrayList<AffectedPath>();
         final CVSRepositoryBrowser browser = (CVSRepositoryBrowser) getRepositoryBrowser();
-        for (final CVSChangeLogSet.File file : ((CVSChangeLogSet.CVSChangeLog) entry).getFiles()) {
+        for (final CVSChangeLogSet.File file : entry.getFiles()) {
             paths.add(new AffectedPath(file, browser));
         }
         return paths;

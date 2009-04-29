@@ -147,5 +147,11 @@
             <artifactId>commons-discovery</artifactId>
             <version>0.4</version>
         </dependency>
+        <dependency>
+            <groupId>org.jvnet.hudson.plugins</groupId>
+            <artifactId>mercurial</artifactId>
+            <version>1.15</version>
+            <optional>true</optional>
+        </dependency>
     </dependencies>
 </project>

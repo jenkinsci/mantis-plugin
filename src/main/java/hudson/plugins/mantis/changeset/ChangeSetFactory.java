@@ -1,6 +1,7 @@
 package hudson.plugins.mantis.changeset;
 
 import hudson.model.AbstractBuild;
+import hudson.model.Hudson;
 import hudson.scm.CVSChangeLogSet;
 import hudson.scm.ChangeLogSet.Entry;
 import hudson.scm.SubversionChangeLogSet;
@@ -33,7 +34,12 @@ public final class ChangeSetFactory {
         if (entry instanceof CVSChangeLogSet.CVSChangeLog) {
             return new CVSChangeSet(id, build, (CVSChangeLogSet.CVSChangeLog) entry);
         }
-        
+        // Mercurial
+        if (Hudson.getInstance().getPlugin("mercurial") != null) {
+            if (entry instanceof hudson.plugins.mercurial.MercurialChangeSet) {
+                return new MercurialChangeSet(id, build, (hudson.plugins.mercurial.MercurialChangeSet) entry);
+            }
+        }
         // else
         return new DefaultChangeSet(id, build, entry);
     }

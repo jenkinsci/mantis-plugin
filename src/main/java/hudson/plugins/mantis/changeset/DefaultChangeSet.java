@@ -11,7 +11,7 @@ import java.util.List;
  * @author Seiji Sogabe
  * @since 0.7
  */
-public class DefaultChangeSet extends AbstractChangeSet {
+public class DefaultChangeSet extends AbstractChangeSet<Entry> {
 
     private static final long serialVersionUID = 1L;
 

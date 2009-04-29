@@ -14,16 +14,16 @@ import java.net.URL;
  * @author Seiji Sogabe
  * @since 0.7
  */
-public abstract class AbstractChangeSet implements ChangeSet, Serializable {
+public abstract class AbstractChangeSet<T extends Entry> implements ChangeSet, Serializable {
 
     protected int id;
 
     protected AbstractBuild<?, ?> build;
 
-    protected Entry entry;
+    protected T entry;
 
     public AbstractChangeSet(final int id, final AbstractBuild<?, ?> build,
-            final Entry entry) {
+            final T entry) {
         this.id = id;
         this.build = build;
         this.entry = entry;
