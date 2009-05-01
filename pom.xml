@@ -153,5 +153,11 @@
             <version>1.15</version>
             <optional>true</optional>
         </dependency>
+        <dependency>
+            <groupId>org.jvnet.hudson.plugins</groupId>
+            <artifactId>git</artifactId>
+            <version>0.5</version>
+            <optional>true</optional>
+        </dependency>
     </dependencies>
 </project>

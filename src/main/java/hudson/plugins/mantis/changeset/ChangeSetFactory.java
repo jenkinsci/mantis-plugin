@@ -40,6 +40,12 @@ public final class ChangeSetFactory {
                 return new MercurialChangeSet(id, build, (hudson.plugins.mercurial.MercurialChangeSet) entry);
             }
         }
+        // Git
+        if (Hudson.getInstance().getPlugin("git") != null) {
+            if (entry instanceof hudson.plugins.git.GitChangeSet) {
+                return new GitChangeSet(id, build, (hudson.plugins.git.GitChangeSet) entry);
+            }
+        }
         // else
         return new DefaultChangeSet(id, build, entry);
     }
