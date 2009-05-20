@@ -107,12 +107,6 @@ final class Updater {
 
         final Run<?, ?> prev = build.getPreviousBuild();
         if (prev != null) {
-            final MantisCarryOverAction action = prev.getAction(MantisCarryOverAction.class);
-            if (action != null) {
-                for (int id : action.getIDs()) {
-                    chnageSets.add(ChangeSetFactory.newInstance(id));
-                }
-            }
             final MantisCarryOverChangeSetAction changeSetAction = prev.getAction(MantisCarryOverChangeSetAction.class);
             if (changeSetAction != null) {
                 for (final ChangeSet changeSet : changeSetAction.getChangeSets()) {

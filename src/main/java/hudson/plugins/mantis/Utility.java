@@ -1,6 +1,5 @@
 package hudson.plugins.mantis;
 
-import hudson.Util;
 
 import java.io.PrintStream;
 import java.util.Arrays;
@@ -61,32 +60,6 @@ public final class Utility {
         }
 
         return buf.toString();
-    }
-
-    public static String join(final int[] values, final String separator) {
-        boolean first = true;
-        final StringBuffer sb = new StringBuffer();
-        for (final int value : values) {
-            if (first) {
-                first = false;
-            } else {
-                sb.append(separator);
-            }
-            sb.append(String.valueOf(value));
-        }
-        return sb.toString();
-    }
-
-    public static int[] tokenize(final String str, final String delimiter) {
-        if (str == null || delimiter == null) {
-            return new int[0];
-        }
-        final String[] s = Util.tokenize(str, delimiter);
-        final int[] values = new int[s.length];
-        for (int i = 0; i < s.length; i++) {
-            values[i] = Integer.valueOf(s[i]);
-        }
-        return values;
     }
 
     public static void log(final PrintStream logger, final String message) {
