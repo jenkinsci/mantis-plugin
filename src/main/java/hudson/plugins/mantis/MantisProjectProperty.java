@@ -39,12 +39,14 @@ public final class MantisProjectProperty extends JobProperty<AbstractProject<?, 
 
     private final String pattern;
 
+    private final String regexpPattern;
+
     private final Pattern regExp;
 
     private final boolean linkEnabled;
 
     @DataBoundConstructor
-    public MantisProjectProperty(final String siteName, final String pattern, final boolean linkEnabled) {
+    public MantisProjectProperty(final String siteName, final String pattern, final String regexpPattern, final boolean linkEnabled) {
         String name = siteName;
         if (siteName == null) {
             final MantisSite[] sites = DESCRIPTOR.getSites();
@@ -54,7 +56,12 @@ public final class MantisProjectProperty extends JobProperty<AbstractProject<?, 
         }
         this.siteName = Util.fixEmptyAndTrim(name);
         this.pattern = Util.fixEmptyAndTrim(pattern);
-        this.regExp = createRegExp(this.pattern);
+        this.regexpPattern = Util.fixEmptyAndTrim(regexpPattern);
+        if  (this.regexpPattern == null) {
+            this.regExp = createRegExp(this.pattern);
+        } else {
+            this.regExp = Pattern.compile(this.regexpPattern);
+        }
         this.linkEnabled = linkEnabled;
     }
 
@@ -64,6 +71,10 @@ public final class MantisProjectProperty extends JobProperty<AbstractProject<?, 
 
     public String getPattern() {
         return pattern;
+    }
+
+    public String getRegexpPattern() {
+        return regexpPattern;
     }
 
     public Pattern getRegExp() {
@@ -109,8 +120,7 @@ public final class MantisProjectProperty extends JobProperty<AbstractProject<?, 
 
     public static final class DescriptorImpl extends JobPropertyDescriptor {
 
-        private final CopyOnWriteList<MantisSite> sites =
-                new CopyOnWriteList<MantisSite>();
+        private final CopyOnWriteList<MantisSite> sites = new CopyOnWriteList<MantisSite>();
 
         public DescriptorImpl() {
             super(MantisProjectProperty.class);
@@ -138,8 +148,7 @@ public final class MantisProjectProperty extends JobProperty<AbstractProject<?, 
 
         @Override
         public JobProperty<?> newInstance(final StaplerRequest req, final JSONObject formData) throws FormException {
-            MantisProjectProperty mpp =
-                    req.bindParameters(MantisProjectProperty.class, "mantis.");
+            MantisProjectProperty mpp = req.bindParameters(MantisProjectProperty.class, "mantis.");
             if (mpp.siteName == null) {
                 mpp = null;
             }
@@ -173,11 +182,9 @@ public final class MantisProjectProperty extends JobProperty<AbstractProject<?, 
                     final String bPass = Util.fixEmptyAndTrim(req.getParameter("bpass"));
                     final String ver = Util.fixEmptyAndTrim(req.getParameter("version"));
                     
-                    MantisVersion version = MantisVersion.getVersionSafely(
-                            ver, MantisVersion.V110);
+                    MantisVersion version = MantisVersion.getVersionSafely(ver, MantisVersion.V110);
                     
-                    final MantisSite site =
-                            new MantisSite(new URL(url), version.name(), user, pass, bUser, bPass);
+                    final MantisSite site = new MantisSite(new URL(url), version.name(), user, pass, bUser, bPass);
                     if (!site.isConnect()) {
                         error(Messages.MantisProjectProperty_UnableToLogin());
                         return;

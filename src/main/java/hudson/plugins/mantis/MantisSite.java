@@ -124,13 +124,11 @@ public final class MantisSite {
             final String v = session.getVersion();
             LOGGER.info(Messages.MantisSite_DetectedVersion(v));
         } catch (final MantisHandlingException e) {
-            LOGGER.log(Level.WARNING,
-                    Messages.MantisSite_FailedToConnectToMantis(urlString, e.getMessage()));
+            LOGGER.log(Level.WARNING, Messages.MantisSite_FailedToConnectToMantis(urlString, e.getMessage()));
             return false;
         }
 
-        LOGGER.log(Level.INFO,
-                Messages.MantisSite_SucceedInConnectingToMantis(urlString));
+        LOGGER.log(Level.INFO, Messages.MantisSite_SucceedInConnectingToMantis(urlString));
         return true;
     }
 
@@ -142,8 +140,7 @@ public final class MantisSite {
     public void updateIssue(final int id, final String text, final boolean keepNotePrivate)
             throws MantisHandlingException {
 
-        final MantisViewState viewState = keepNotePrivate ? MantisViewState.PRIVATE
-                : MantisViewState.PUBLIC;
+        final MantisViewState viewState = keepNotePrivate ? MantisViewState.PRIVATE : MantisViewState.PUBLIC;
         final MantisNote note = new MantisNote(text, viewState);
 
         final MantisSession session = createSession();
@@ -170,8 +167,7 @@ public final class MantisSite {
             this.displayName = displayName;
         }
 
-        public static MantisVersion getVersionSafely(
-                final String version, final MantisVersion def) {
+        public static MantisVersion getVersionSafely(final String version, final MantisVersion def) {
             MantisVersion ret = def;
             for (final MantisVersion v : MantisVersion.values()) {
                 if (v.name().equalsIgnoreCase(version)) {

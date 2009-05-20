@@ -23,10 +23,8 @@ import java.util.regex.Pattern;
 public final class MantisLinkAnnotator extends ChangeLogAnnotator {
 
     @Override
-    public void annotate(final AbstractBuild<?, ?> build, final Entry change,
-            final MarkupText text) {
-        final MantisProjectProperty mpp =
-                build.getParent().getProperty(MantisProjectProperty.class);
+    public void annotate(final AbstractBuild<?, ?> build, final Entry change, final MarkupText text) {
+        final MantisProjectProperty mpp = build.getParent().getProperty(MantisProjectProperty.class);
         if (mpp == null || mpp.getSite() == null) {
             return;
         }
@@ -35,47 +33,60 @@ public final class MantisLinkAnnotator extends ChangeLogAnnotator {
         }
 
         final MantisBuildAction action = build.getAction(MantisBuildAction.class);
-
         final String url = mpp.getSite().getUrl().toExternalForm();
         final Pattern pattern = mpp.getRegExp();
-        final List<MantisIssue> list = new ArrayList<MantisIssue>();
-        for (final SubText st : text.findTokens(pattern)) {
-            final int id = Integer.valueOf(st.group(1));
-            final String newUrl = Util.encode(url + "view.php?id=$1");
+        final List<MantisIssue> notSavedIssues = new ArrayList<MantisIssue>();
 
-            MantisIssue issue = null;
+        for (final SubText st : text.findTokens(pattern)) {
+            // retrieve id from changelog
+            int id;
+            try {
+                id = Integer.valueOf(st.group(1));
+            } catch (final NumberFormatException e) {
+                LOGGER.log(Level.WARNING, Messages.MantisLinkAnnotator_IllegalMantisId(st.group(1)));
+                continue;
+            }
+
+            // get the issue from saved one or Mantis
+            MantisIssue issue;
             if (action != null) {
                 issue = action.getIssue(id);
             } else {
-                issue = getIssue(build, id);
+                issue = getIssueFromMantis(build, id);
                 if (issue != null) {
-                    list.add(issue);
+                    notSavedIssues.add(issue);
                 }
             }
 
+            // decorate changelog woth hyperlink
+            final String newUrl = Util.encode(url + "view.php?id=$1");
             if (issue == null) {
                 LOGGER.log(Level.WARNING, Messages.MantisLinkAnnotator_FailedToGetMantisIssue(id));
                 st.surroundWith("<a href='" + newUrl + "'>", "</a>");
             } else {
                 final String summary = Utility.escape(issue.getSummary());
-                st.surroundWith(String.format("<a href='%s' tooltip='%s'>", newUrl,
-                        summary), "</a>");
+                st.surroundWith(String.format("<a href='%s' tooltip='%s'>", newUrl, summary), "</a>");
             }
         }
 
-        if (!list.isEmpty()) {
-            build.getActions().add(new MantisBuildAction(list.toArray(new MantisIssue[list.size()])));
-            try {
-                build.save();
-            } catch (final IOException e) {
-                LOGGER.log(Level.WARNING, Messages.MantisLinkAnnotator_FailedToSave(), e);
-            }
+        if (!notSavedIssues.isEmpty()) {
+            saveIssues(build, notSavedIssues);
         }
     }
 
-    private MantisIssue getIssue(final AbstractBuild<?, ?> build, final int id) {
-        MantisIssue issue = null;
+    private void saveIssues(AbstractBuild<?, ?> build, final List<MantisIssue> issues) {
+        final MantisBuildAction action = new MantisBuildAction(issues.toArray(new MantisIssue[0]));
+        build.getActions().add(action);
+        try {
+            build.save();
+        } catch (final IOException e) {
+            LOGGER.log(Level.WARNING, Messages.MantisLinkAnnotator_FailedToSave(), e);
+        }
+    }
+
+    private MantisIssue getIssueFromMantis(final AbstractBuild<?, ?> build, final int id) {
         MantisSite site = MantisSite.get(build.getProject());
+        MantisIssue issue = null;
         try {
             issue = site.getIssue(id);
         } catch (final MantisHandlingException e) {

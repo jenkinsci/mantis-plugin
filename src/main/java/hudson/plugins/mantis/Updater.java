@@ -144,7 +144,14 @@ final class Updater {
         for (final Entry change : build.getChangeSet()) {
             final Matcher matcher = pattern.matcher(change.getMsg());
             while (matcher.find()) {
-                final int id = Integer.parseInt(matcher.group());
+                int id;
+                try {
+                    id = Integer.parseInt(matcher.group(1));
+                } catch (final NumberFormatException e) {
+                    // if id is not number, skip
+                    LOGGER.log(Level.WARNING, Messages.Updater_IllegalMantisId(matcher.group(1)));
+                    continue;
+                }
                 changeSets.add(ChangeSetFactory.newInstance(id, build, change));
             }
         }

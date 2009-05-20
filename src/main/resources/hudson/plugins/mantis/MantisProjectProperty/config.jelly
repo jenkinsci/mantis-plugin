@@ -8,7 +8,7 @@
           </j:forEach>
         </select>
       </f:entry>
-      <f:entry title="${%Issue ID Pattern}" help="/plugin/mantis/help-pattern.html">
+      <f:entry title="${%Issue id pattern}" help="/plugin/mantis/help-pattern.html">
         <f:textbox name="mantis.pattern" value="${instance.pattern}" 
           checkUrl="'${rootURL}/jobProperty/MantisProjectProperty/patternCheck?pattern='+escape(this.value)" />
       </f:entry>
@@ -16,6 +16,11 @@
         <f:checkbox name="mantis.linkEnabled" id="linkEnabled" checked="${instance.linkEnabled}" />
         <label for="linkEnabled">${%Enable hyperlink to the issue}</label>
       </f:entry>
+      <f:advanced>
+        <f:entry title="${%Regexp pattern}" help="/plugin/mantis/help-regexp.html">
+          <f:textbox name="mantis.regexpPattern" value="${instance.regexpPattern}" />
+        </f:entry>
+      </f:advanced>
     </f:section>
   </j:if>  
 </j:jelly>

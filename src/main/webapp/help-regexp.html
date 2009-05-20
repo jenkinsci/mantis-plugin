@@ -1,0 +1,19 @@
+This is alternative to "Issue id pattern". Unlike it, This pattern is regular expressions,
+which is used to match issue IDs in SCM changeset comments.
+<p>
+If empty, "Issue id pattern" is used.
+<p>
+For example, if you enter "(?i)(?:mantis|issue|case|bug)\s*[:#.]?\s*(\d+)", you can use following changeset comments.
+<ul>
+    <li>mantis: 123</li>
+    <li>ISSUE 456</li>
+    <li>case#789</li>
+</ul>
+<p>
+Note:
+<ul>
+    <li>"(\d+)" means Mantis issue id, so regular expressions have to contain it.</li>
+    <li>If you use "Logical OR", you have to use "non-caputuring group" such as "(<b>?:</b>X|Y)".</li>
+</ul>
+<p>
+See <a href="http://java.sun.com/javase/6/docs/api/java/util/regex/Pattern.html">Summary of regular-expression constructs</a> for details.
