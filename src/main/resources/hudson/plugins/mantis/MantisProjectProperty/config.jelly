@@ -17,8 +17,8 @@
         <label for="linkEnabled">${%Enable hyperlink to the issue}</label>
       </f:entry>
       <f:advanced>
-        <f:entry title="${%Regexp pattern}" help="/plugin/mantis/help-regexp.html">
-          <f:textbox name="mantis.regexpPattern" value="${instance.regexpPattern}" />
+        <f:entry title="${%Regexp pattern}" help="/plugin/mantis/help-regex.html">
+          <f:textbox name="mantis.regex" value="${instance.regex}" />
         </f:entry>
       </f:advanced>
     </f:section>

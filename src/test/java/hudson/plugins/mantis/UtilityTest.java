@@ -17,15 +17,15 @@ public class UtilityTest {
      */
     @Test
     public void testEscapeRegExp() {
-        assertNull(Utility.escapeRegExp(null));
-        assertEquals("\\\\", Utility.escapeRegExp("\\"));
-        assertEquals("\\[\\]", Utility.escapeRegExp("[]"));
-        assertEquals("\\{\\}", Utility.escapeRegExp("{}"));
-        assertEquals("\\(\\)", Utility.escapeRegExp("()"));
-        assertEquals("\\^\\,\\|\\&\\$", Utility.escapeRegExp("^,|&$"));
-        assertEquals("\\+\\*\\,\\.", Utility.escapeRegExp("+*,."));
-        assertEquals("ABCD", Utility.escapeRegExp("ABCD"));
-        assertEquals("%ID%", Utility.escapeRegExp("%ID%"));
+        assertNull(Utility.escapeRegexp(null));
+        assertEquals("\\\\", Utility.escapeRegexp("\\"));
+        assertEquals("\\[\\]", Utility.escapeRegexp("[]"));
+        assertEquals("\\{\\}", Utility.escapeRegexp("{}"));
+        assertEquals("\\(\\)", Utility.escapeRegexp("()"));
+        assertEquals("\\^\\,\\|\\&\\$", Utility.escapeRegexp("^,|&$"));
+        assertEquals("\\+\\*\\,\\.", Utility.escapeRegexp("+*,."));
+        assertEquals("ABCD", Utility.escapeRegexp("ABCD"));
+        assertEquals("%ID%", Utility.escapeRegexp("%ID%"));
     }
 
 }

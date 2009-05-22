@@ -134,7 +134,7 @@ final class Updater {
         if (mpp == null || mpp.getSite() == null) {
             return changeSets;
         }
-        final Pattern pattern = mpp.getRegExp();
+        final Pattern pattern = mpp.getRegexpPattern();
         for (final Entry change : build.getChangeSet()) {
             final Matcher matcher = pattern.matcher(change.getMsg());
             while (matcher.find()) {

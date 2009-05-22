@@ -34,7 +34,7 @@ public final class MantisLinkAnnotator extends ChangeLogAnnotator {
 
         final MantisBuildAction action = build.getAction(MantisBuildAction.class);
         final String url = mpp.getSite().getUrl().toExternalForm();
-        final Pattern pattern = mpp.getRegExp();
+        final Pattern pattern = mpp.getRegexpPattern();
         final List<MantisIssue> notSavedIssues = new ArrayList<MantisIssue>();
 
         for (final SubText st : text.findTokens(pattern)) {
@@ -52,17 +52,17 @@ public final class MantisLinkAnnotator extends ChangeLogAnnotator {
             if (action != null) {
                 issue = action.getIssue(id);
             } else {
-                issue = getIssueFromMantis(build, id);
+                issue = getIssue(build, id);
                 if (issue != null) {
                     notSavedIssues.add(issue);
                 }
             }
 
-            // decorate changelog woth hyperlink
+            // add hyperlink to Mantis
             final String newUrl = Util.encode(url + "view.php?id=$1");
             if (issue == null) {
                 LOGGER.log(Level.WARNING, Messages.MantisLinkAnnotator_FailedToGetMantisIssue(id));
-                st.surroundWith("<a href='" + newUrl + "'>", "</a>");
+                st.surroundWith(String.format("<a href='%s'>", newUrl), "</a>");
             } else {
                 final String summary = Utility.escape(issue.getSummary());
                 st.surroundWith(String.format("<a href='%s' tooltip='%s'>", newUrl, summary), "</a>");
@@ -74,7 +74,7 @@ public final class MantisLinkAnnotator extends ChangeLogAnnotator {
         }
     }
 
-    private void saveIssues(AbstractBuild<?, ?> build, final List<MantisIssue> issues) {
+    private void saveIssues(final AbstractBuild<?, ?> build, final List<MantisIssue> issues) {
         final MantisBuildAction action = new MantisBuildAction(issues.toArray(new MantisIssue[0]));
         build.getActions().add(action);
         try {
@@ -84,8 +84,8 @@ public final class MantisLinkAnnotator extends ChangeLogAnnotator {
         }
     }
 
-    private MantisIssue getIssueFromMantis(final AbstractBuild<?, ?> build, final int id) {
-        MantisSite site = MantisSite.get(build.getProject());
+    private MantisIssue getIssue(final AbstractBuild<?, ?> build, final int id) {
+        final MantisSite site = MantisSite.get(build.getProject());
         MantisIssue issue = null;
         try {
             issue = site.getIssue(id);

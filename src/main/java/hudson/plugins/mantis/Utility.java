@@ -68,7 +68,7 @@ public final class Utility {
         logger.println(buf.toString());
     }
 
-    public static String escapeRegExp(final String str) {
+    public static String escapeRegexp(final String str) {
         if (str == null) {
             return null;
         }
