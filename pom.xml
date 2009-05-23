@@ -9,7 +9,7 @@
     </parent>
 
     <artifactId>mantis</artifactId>
-    <version>0.8.0</version>
+    <version>0.8.1-SNAPSHOT</version>
     <packaging>hpi</packaging>
     <name>Hudson Mantis plugin</name>
     <description>Integrates Hudson to Mantis</description>
@@ -161,10 +161,4 @@
             <optional>true</optional>
         </dependency>
     </dependencies>
-
-  <scm>
-    <connection>scm:svn:https://guest@svn.dev.java.net/svn/hudson/tags/mantis-0.8.0</connection>
-    <developerConnection>scm:svn:https://svn.dev.java.net/svn/hudson/tags/mantis-0.8.0</developerConnection>
-    <url>https://hudson.dev.java.net/source/browse/hudson/hudson/plugins/mantis/tags/mantis-0.8.0</url>
-  </scm>
 </project>
