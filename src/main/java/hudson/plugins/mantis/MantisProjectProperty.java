@@ -153,6 +153,8 @@ public final class MantisProjectProperty extends JobProperty<AbstractProject<?, 
 
         @Override
         public JobProperty<?> newInstance(final StaplerRequest req, final JSONObject formData) throws FormException {
+            // only administrator allowed
+            Hudson.getInstance().checkPermission(Hudson.ADMINISTER);
             MantisProjectProperty mpp = req.bindParameters(MantisProjectProperty.class, "mantis.");
             if (mpp.siteName == null) {
                 mpp = null;
@@ -162,6 +164,8 @@ public final class MantisProjectProperty extends JobProperty<AbstractProject<?, 
 
         @Override
         public boolean configure(final StaplerRequest req) {
+            // only administrator allowed
+            Hudson.getInstance().checkPermission(Hudson.ADMINISTER);
             sites.replaceBy(req.bindParametersToList(MantisSite.class, "mantis."));
             save();
             return true;

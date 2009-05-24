@@ -5,6 +5,7 @@ import hudson.model.AbstractBuild;
 import hudson.model.BuildListener;
 
 import hudson.model.Descriptor;
+import hudson.model.Hudson;
 import hudson.tasks.Publisher;
 import java.io.IOException;
 
@@ -70,6 +71,8 @@ public final class MantisIssueUpdater extends Publisher {
 
         @Override
         public Publisher newInstance(final StaplerRequest req, final JSONObject formData) {
+            // only administrator allowed
+            Hudson.getInstance().checkPermission(Hudson.ADMINISTER);
             return req.bindJSON(MantisIssueUpdater.class, formData);
         }
     }
