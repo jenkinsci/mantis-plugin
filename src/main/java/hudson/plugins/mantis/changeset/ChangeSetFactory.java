@@ -26,25 +26,27 @@ public final class ChangeSetFactory {
         if (build == null || entry == null) {
             throw new IllegalArgumentException();
         }
-        // Subversion
-        if (entry instanceof SubversionChangeLogSet.LogEntry) {
-            return new SubversionChangeSet(id, build, (SubversionChangeLogSet.LogEntry) entry);
-        }
+        
+        final Hudson hudson = Hudson.getInstance();
+
         // CVS
         if (entry instanceof CVSChangeLogSet.CVSChangeLog) {
             return new CVSChangeSet(id, build, (CVSChangeLogSet.CVSChangeLog) entry);
         }
+        // Subversion
+        if (hudson.getPlugin("subversion") != null &&
+             entry instanceof SubversionChangeLogSet.LogEntry) {
+                return new SubversionChangeSet(id, build, (SubversionChangeLogSet.LogEntry) entry);
+        }
         // Mercurial
-        if (Hudson.getInstance().getPlugin("mercurial") != null) {
-            if (entry instanceof hudson.plugins.mercurial.MercurialChangeSet) {
+        if (hudson.getPlugin("mercurial") != null &&
+            entry instanceof hudson.plugins.mercurial.MercurialChangeSet) {
                 return new MercurialChangeSet(id, build, (hudson.plugins.mercurial.MercurialChangeSet) entry);
-            }
         }
         // Git
-        if (Hudson.getInstance().getPlugin("git") != null) {
-            if (entry instanceof hudson.plugins.git.GitChangeSet) {
+        if (hudson.getPlugin("git") != null &&
+            entry instanceof hudson.plugins.git.GitChangeSet) {
                 return new GitChangeSet(id, build, (hudson.plugins.git.GitChangeSet) entry);
-            }
         }
         // else
         return new DefaultChangeSet(id, build, entry);

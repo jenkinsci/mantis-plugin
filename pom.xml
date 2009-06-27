@@ -150,14 +150,20 @@
         </dependency>
         <dependency>
             <groupId>org.jvnet.hudson.plugins</groupId>
+            <artifactId>subversion</artifactId>
+            <version>1.2</version>
+            <optional>true</optional>
+        </dependency>
+        <dependency>
+            <groupId>org.jvnet.hudson.plugins</groupId>
             <artifactId>mercurial</artifactId>
-            <version>1.15</version>
+            <version>1.16</version>
             <optional>true</optional>
         </dependency>
         <dependency>
             <groupId>org.jvnet.hudson.plugins</groupId>
             <artifactId>git</artifactId>
-            <version>0.5</version>
+            <version>0.7.3</version>
             <optional>true</optional>
         </dependency>
     </dependencies>

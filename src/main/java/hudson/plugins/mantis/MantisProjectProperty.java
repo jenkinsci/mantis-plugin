@@ -45,20 +45,13 @@ public final class MantisProjectProperty extends JobProperty<AbstractProject<?, 
 
     private final boolean linkEnabled;
 
-    @Deprecated
-    private String regExp;
-
     @DataBoundConstructor
     public MantisProjectProperty(final String siteName, final String pattern, final String regex, final boolean linkEnabled) {
         final String name = (siteName != null) ? siteName : defaultSiteName();
         this.siteName = Util.fixEmptyAndTrim(name);
         this.pattern = Util.fixEmptyAndTrim(pattern);
         this.regex = Util.fixEmptyAndTrim(regex);
-        if (this.regex == null) {
-            this.regexpPattern = createRegexp(this.pattern);
-        } else {
-            this.regexpPattern = Pattern.compile(this.regex);
-        }
+        this.regexpPattern = (this.regex != null) ? Pattern.compile(this.regex) : createRegexp(this.pattern);
         this.linkEnabled = linkEnabled;
     }
 

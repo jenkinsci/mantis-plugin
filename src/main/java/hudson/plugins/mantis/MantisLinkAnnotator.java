@@ -34,8 +34,9 @@ public final class MantisLinkAnnotator extends ChangeLogAnnotator {
 
         final MantisBuildAction action = build.getAction(MantisBuildAction.class);
         final String url = mpp.getSite().getUrl().toExternalForm();
-        final Pattern pattern = mpp.getRegexpPattern();
         final List<MantisIssue> notSavedIssues = new ArrayList<MantisIssue>();
+
+        final Pattern pattern = findRegexPattern(action, mpp);
 
         for (final SubText st : text.findTokens(pattern)) {
             // retrieve id from changelog
@@ -70,12 +71,23 @@ public final class MantisLinkAnnotator extends ChangeLogAnnotator {
         }
 
         if (!notSavedIssues.isEmpty()) {
-            saveIssues(build, notSavedIssues);
+            saveIssues(build, pattern, notSavedIssues);
         }
     }
 
-    private void saveIssues(final AbstractBuild<?, ?> build, final List<MantisIssue> issues) {
-        final MantisBuildAction action = new MantisBuildAction(issues.toArray(new MantisIssue[0]));
+    private Pattern findRegexPattern(final MantisBuildAction action, final MantisProjectProperty mpp) {
+        Pattern pattern = null;
+        if (action != null) {
+            pattern = action.getPattern();
+        }
+        if (pattern == null) {
+            pattern = mpp.getRegexpPattern();
+        }
+        return pattern;
+    }
+
+    private void saveIssues(final AbstractBuild<?, ?> build, final Pattern pattern, final List<MantisIssue> issues) {
+        final MantisBuildAction action = new MantisBuildAction(pattern, issues.toArray(new MantisIssue[0]));
         build.getActions().add(action);
         try {
             build.save();

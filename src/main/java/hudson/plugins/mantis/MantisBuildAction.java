@@ -2,6 +2,7 @@ package hudson.plugins.mantis;
 
 import hudson.model.Action;
 import hudson.plugins.mantis.model.MantisIssue;
+import java.util.regex.Pattern;
 
 /**
  * Mantis issues related to the build.
@@ -14,11 +15,14 @@ public final class MantisBuildAction implements Action {
 
     private final MantisIssue[] issues;
 
+    private final Pattern pattern;
+
     public MantisIssue[] getIssues() {
         return issues;
     }
 
-    public MantisBuildAction(final MantisIssue[] issues) {
+    public MantisBuildAction(final Pattern pattern, final MantisIssue[] issues) {
+        this.pattern = pattern;
         this.issues = issues;
     }
 
@@ -28,6 +32,10 @@ public final class MantisBuildAction implements Action {
 
     public String getUrlName() {
         return "mantis";
+    }
+
+    public Pattern getPattern() {
+        return pattern;
     }
 
     public MantisIssue getIssue(final int id) {

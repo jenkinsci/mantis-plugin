@@ -81,8 +81,10 @@ final class Updater {
             }
         }
 
+        final MantisProjectProperty mpp =
+                build.getParent().getProperty(MantisProjectProperty.class);
         build.getActions().add(
-                new MantisBuildAction(issues.toArray(new MantisIssue[issues.size()])));
+                new MantisBuildAction(mpp.getRegexpPattern(), issues.toArray(new MantisIssue[0])));
 
         return true;
     }
@@ -129,11 +131,8 @@ final class Updater {
 
     private List<ChangeSet> findChangeSetsFromSCM(final AbstractBuild<?, ?> build) {
         final List<ChangeSet> changeSets = new ArrayList<ChangeSet>();
-        final MantisProjectProperty mpp =
-                build.getParent().getProperty(MantisProjectProperty.class);
-        if (mpp == null || mpp.getSite() == null) {
-            return changeSets;
-        }
+        final MantisProjectProperty mpp = build.getParent().getProperty(MantisProjectProperty.class);
+
         final Pattern pattern = mpp.getRegexpPattern();
         for (final Entry change : build.getChangeSet()) {
             final Matcher matcher = pattern.matcher(change.getMsg());
