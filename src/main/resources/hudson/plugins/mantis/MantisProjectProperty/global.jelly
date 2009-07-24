@@ -6,16 +6,16 @@
 
           <script type="text/javascript">
           function checkUrl(base) {
-            var url = escape(Form.findMatchingInput(base,'mantis.url').value);
-            var userName = escape(Form.findMatchingInput(base,'mantis.userName').value);
-            var password = escape(Form.findMatchingInput(base,'mantis.password').value);
-            var basicUserName = escape(Form.findMatchingInput(base,'mantis.basicUserName').value);
-            var basicPassword = escape(Form.findMatchingInput(base,'mantis.basicPassword').value);
+            var url = encodeURIComponent(Form.findMatchingInput(base,'mantis.url').value);
+            var userName = encodeURIComponent(Form.findMatchingInput(base,'mantis.userName').value);
+            var password = encodeURIComponent(Form.findMatchingInput(base,'mantis.password').value);
+            var basicUserName = encodeURIComponent(Form.findMatchingInput(base,'mantis.basicUserName').value);
+            var basicPassword = encodeURIComponent(Form.findMatchingInput(base,'mantis.basicPassword').value);
 
             var verObj = Form.findMatchingInput(base,'mantis.version');
-            var version = escape(verObj.options[verObj.selectedIndex].value);
+            var version = encodeURIComponent(verObj.options[verObj.selectedIndex].value);
 
-            var u = "${rootURL}/jobProperty/MantisProjectProperty/loginCheck?";
+            var u = "descriptorByName/MantisProjectProperty/checkLogin?";
             u += "url="+url;
             u += "&amp;version="+version;
             u += "&amp;user="+userName+"&amp;pass="+password;

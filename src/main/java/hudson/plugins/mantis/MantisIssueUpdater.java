@@ -2,10 +2,11 @@ package hudson.plugins.mantis;
 
 import hudson.Launcher;
 import hudson.model.AbstractBuild;
+import hudson.model.AbstractProject;
 import hudson.model.BuildListener;
 
-import hudson.model.Descriptor;
-import hudson.model.Hudson;
+import hudson.tasks.BuildStepDescriptor;
+import hudson.tasks.Notifier;
 import hudson.tasks.Publisher;
 import java.io.IOException;
 
@@ -19,7 +20,7 @@ import org.kohsuke.stapler.StaplerRequest;
  * 
  * @author Seiji Sogabe
  */
-public final class MantisIssueUpdater extends Publisher {
+public final class MantisIssueUpdater extends Notifier {
 
     public static final DescriptorImpl DESCRIPTOR = new DescriptorImpl();
 
@@ -53,7 +54,7 @@ public final class MantisIssueUpdater extends Publisher {
         return updater.perform(build, listener);
     }
 
-    public static final class DescriptorImpl extends Descriptor<Publisher> {
+    public static final class DescriptorImpl extends BuildStepDescriptor<Publisher> {
 
         private DescriptorImpl() {
             super(MantisIssueUpdater.class);
@@ -70,9 +71,12 @@ public final class MantisIssueUpdater extends Publisher {
         }
 
         @Override
+        public boolean isApplicable(Class<? extends AbstractProject> jobType) {
+            return true;
+        }
+
+        @Override
         public Publisher newInstance(final StaplerRequest req, final JSONObject formData) {
-            // only administrator allowed
-            Hudson.getInstance().checkPermission(Hudson.ADMINISTER);
             return req.bindJSON(MantisIssueUpdater.class, formData);
         }
     }

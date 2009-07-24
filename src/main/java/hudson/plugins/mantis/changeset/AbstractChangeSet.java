@@ -17,25 +17,22 @@ import java.net.URL;
 public abstract class AbstractChangeSet<T extends Entry> implements ChangeSet, Serializable {
 
     protected int id;
-
     protected AbstractBuild<?, ?> build;
-
     protected T entry;
 
-    public AbstractChangeSet(final int id, final AbstractBuild<?, ?> build,
-            final T entry) {
+    public AbstractChangeSet(final int id, final AbstractBuild<?, ?> build, final T entry) {
         this.id = id;
         this.build = build;
         this.entry = entry;
     }
-    
+
     public int getId() {
         return id;
     }
 
     public abstract String createChangeLog();
 
-    protected RepositoryBrowser getRepositoryBrowser() {
+    protected RepositoryBrowser<T> getRepositoryBrowser() {
         if (build == null) {
             return null;
         }
@@ -44,7 +41,7 @@ public abstract class AbstractChangeSet<T extends Entry> implements ChangeSet, S
     }
 
     protected String getChangeSetLink() {
-        final RepositoryBrowser browser = getRepositoryBrowser();
+        final RepositoryBrowser<T> browser = getRepositoryBrowser();
         if (browser == null) {
             return UNKNOWN_CHANGESETLINK;
         }

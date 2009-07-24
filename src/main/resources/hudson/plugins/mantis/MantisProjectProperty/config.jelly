@@ -10,7 +10,7 @@
       </f:entry>
       <f:entry title="${%Issue id pattern}" help="/plugin/mantis/help-pattern.html">
         <f:textbox name="mantis.pattern" value="${instance.pattern}" 
-          checkUrl="'${rootURL}/jobProperty/MantisProjectProperty/patternCheck?pattern='+escape(this.value)" />
+          checkUrl="'descriptorByName/MantisProjectProperty/checkPattern?pattern='+encodeURIComponent(this.value)" />
       </f:entry>
       <f:entry>
         <f:checkbox name="mantis.linkEnabled" id="linkEnabled" checked="${instance.linkEnabled}" />
