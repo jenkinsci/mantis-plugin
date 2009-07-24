@@ -33,7 +33,7 @@ public abstract class AbstractChangeSet<T extends Entry> implements ChangeSet, S
     public abstract String createChangeLog();
 
     protected RepositoryBrowser<T> getRepositoryBrowser() {
-        if (build == null) {
+        if (build == null || build.getProject() == null) {
             return null;
         }
         final SCM scm = build.getProject().getScm();
