@@ -183,8 +183,8 @@ public final class MantisProjectProperty extends JobProperty<AbstractProject<?, 
         public FormValidation doCheckPattern(@AncestorInPath final AbstractProject<?, ?> project,
                 @QueryParameter final String pattern) throws IOException, ServletException {
             project.checkPermission(Job.CONFIGURE);
-
-            if (pattern != null && pattern.indexOf(ISSUE_ID_STRING) == -1) {
+            final String p = Util.fixEmptyAndTrim(pattern);
+            if (p != null && p.indexOf(ISSUE_ID_STRING) == -1) {
                 return FormValidation.error(Messages.MantisProjectProperty_InvalidPattern(ISSUE_ID_STRING));
             }
             
