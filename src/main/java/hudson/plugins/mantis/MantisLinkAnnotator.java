@@ -1,5 +1,6 @@
 package hudson.plugins.mantis;
 
+import hudson.Extension;
 import hudson.MarkupText;
 import hudson.Util;
 import hudson.MarkupText.SubText;
@@ -20,6 +21,7 @@ import java.util.regex.Pattern;
  *
  * @author Seiji Sogabe
  */
+@Extension
 public final class MantisLinkAnnotator extends ChangeLogAnnotator {
 
     @Override

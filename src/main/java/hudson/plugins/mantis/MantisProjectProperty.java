@@ -1,5 +1,6 @@
 package hudson.plugins.mantis;
 
+import hudson.Extension;
 import hudson.Util;
 import hudson.model.AbstractProject;
 import hudson.model.Hudson;
@@ -31,6 +32,7 @@ import org.kohsuke.stapler.StaplerResponse;
  */
 public final class MantisProjectProperty extends JobProperty<AbstractProject<?, ?>> {
 
+    @Extension
     public static final DescriptorImpl DESCRIPTOR = new DescriptorImpl();
     private static final String ISSUE_ID_STRING = "%ID%";
     private static final String DEFAULT_PATTERN = "issue #?" + ISSUE_ID_STRING;
@@ -83,11 +85,6 @@ public final class MantisProjectProperty extends JobProperty<AbstractProject<?, 
             }
         }
         return null;
-    }
-
-    @Override
-    public JobPropertyDescriptor getDescriptor() {
-        return DESCRIPTOR;
     }
 
     private String defaultSiteName() {

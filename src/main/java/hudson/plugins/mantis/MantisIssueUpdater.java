@@ -1,13 +1,14 @@
 package hudson.plugins.mantis;
 
+import hudson.Extension;
 import hudson.Launcher;
 import hudson.model.AbstractBuild;
 import hudson.model.AbstractProject;
 import hudson.model.BuildListener;
 
 import hudson.tasks.BuildStepDescriptor;
-import hudson.tasks.Notifier;
 import hudson.tasks.Publisher;
+import hudson.tasks.Recorder;
 import java.io.IOException;
 
 import net.sf.json.JSONObject;
@@ -20,9 +21,7 @@ import org.kohsuke.stapler.StaplerRequest;
  * 
  * @author Seiji Sogabe
  */
-public final class MantisIssueUpdater extends Notifier {
-
-    public static final DescriptorImpl DESCRIPTOR = new DescriptorImpl();
+public final class MantisIssueUpdater extends Recorder {
 
     private final boolean keepNotePrivate;
 
@@ -43,20 +42,16 @@ public final class MantisIssueUpdater extends Notifier {
     }
 
     @Override
-    public DescriptorImpl getDescriptor() {
-        return DESCRIPTOR;
-    }
-
-    @Override
     public boolean perform(final AbstractBuild<?, ?> build, final Launcher launcher,
             final BuildListener listener) throws InterruptedException, IOException {
         final Updater updater = new Updater(this);
         return updater.perform(build, listener);
     }
 
+    @Extension
     public static final class DescriptorImpl extends BuildStepDescriptor<Publisher> {
 
-        private DescriptorImpl() {
+        public DescriptorImpl() {
             super(MantisIssueUpdater.class);
         }
 
