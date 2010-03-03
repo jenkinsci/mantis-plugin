@@ -9,11 +9,19 @@
     </parent>
 
     <artifactId>mantis</artifactId>
-    <version>0.8.4-SNAPSHOT</version>
+    <version>0.9-SNAPSHOT</version>
     <packaging>hpi</packaging>
     <name>Hudson Mantis plugin</name>
     <description>Integrates Hudson to Mantis</description>
     <url>http://wiki.hudson-ci.org/display/HUDSON/Mantis+Plugin</url>
+
+    <developers>
+        <developer>
+            <id>sogabe</id>
+            <name>Seiji Sogabe</name>
+            <email>sogabe@dev.java.net</email>
+        </developer>
+    </developers>
 
     <build>
         <plugins>
