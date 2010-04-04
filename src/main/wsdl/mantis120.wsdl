@@ -1,10 +1,9 @@
 <?xml version="1.0" encoding="ISO-8859-1"?>
 <definitions xmlns:SOAP-ENV="http://schemas.xmlsoap.org/soap/envelope/" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:SOAP-ENC="http://schemas.xmlsoap.org/soap/encoding/" xmlns:tns="http://futureware.biz/mantisconnect" xmlns:soap="http://schemas.xmlsoap.org/wsdl/soap/" xmlns:wsdl="http://schemas.xmlsoap.org/wsdl/" xmlns="http://schemas.xmlsoap.org/wsdl/" targetNamespace="http://futureware.biz/mantisconnect">
 <types>
-<xsd:schema targetNamespace="http://futureware.biz/mantisconnect"
->
- <xsd:import namespace="http://schemas.xmlsoap.org/soap/encoding/" />
- <xsd:import namespace="http://schemas.xmlsoap.org/wsdl/" />
+<xsd:schema targetNamespace="http://futureware.biz/mantisconnect">
+ <xsd:import namespace="http://schemas.xmlsoap.org/soap/encoding/"/>
+ <xsd:import namespace="http://schemas.xmlsoap.org/wsdl/"/>
  <xsd:complexType name="StringArray">
   <xsd:complexContent>
    <xsd:restriction base="SOAP-ENC:Array">
@@ -98,6 +97,7 @@
    <xsd:element name="view_state" type="tns:ObjectRef" minOccurs="0"/>
    <xsd:element name="date_submitted" type="xsd:dateTime" minOccurs="0"/>
    <xsd:element name="last_modified" type="xsd:dateTime" minOccurs="0"/>
+   <xsd:element name="time_tracking" type="xsd:integer" minOccurs="0"/>
   </xsd:all>
  </xsd:complexType>
  <xsd:complexType name="IssueNoteDataArray">
@@ -140,6 +140,7 @@
    <xsd:element name="relationships" type="tns:RelationshipDataArray" minOccurs="0"/>
    <xsd:element name="notes" type="tns:IssueNoteDataArray" minOccurs="0"/>
    <xsd:element name="custom_fields" type="tns:CustomFieldValueForIssueDataArray" minOccurs="0"/>
+   <xsd:element name="due_date" type="xsd:dateTime" minOccurs="0"/>
   </xsd:all>
  </xsd:complexType>
  <xsd:complexType name="IssueDataArray">
@@ -286,322 +287,322 @@
  </xsd:complexType>
 </xsd:schema>
 </types>
-<message name="mc_versionRequest"></message>
+<message name="mc_versionRequest"/>
 <message name="mc_versionResponse">
-  <part name="return" type="xsd:string" /></message>
+  <part name="return" type="xsd:string"/></message>
 <message name="mc_enum_statusRequest">
-  <part name="username" type="xsd:string" />
-  <part name="password" type="xsd:string" /></message>
+  <part name="username" type="xsd:string"/>
+  <part name="password" type="xsd:string"/></message>
 <message name="mc_enum_statusResponse">
-  <part name="return" type="tns:ObjectRefArray" /></message>
+  <part name="return" type="tns:ObjectRefArray"/></message>
 <message name="mc_enum_prioritiesRequest">
-  <part name="username" type="xsd:string" />
-  <part name="password" type="xsd:string" /></message>
+  <part name="username" type="xsd:string"/>
+  <part name="password" type="xsd:string"/></message>
 <message name="mc_enum_prioritiesResponse">
-  <part name="return" type="tns:ObjectRefArray" /></message>
+  <part name="return" type="tns:ObjectRefArray"/></message>
 <message name="mc_enum_severitiesRequest">
-  <part name="username" type="xsd:string" />
-  <part name="password" type="xsd:string" /></message>
+  <part name="username" type="xsd:string"/>
+  <part name="password" type="xsd:string"/></message>
 <message name="mc_enum_severitiesResponse">
-  <part name="return" type="tns:ObjectRefArray" /></message>
+  <part name="return" type="tns:ObjectRefArray"/></message>
 <message name="mc_enum_reproducibilitiesRequest">
-  <part name="username" type="xsd:string" />
-  <part name="password" type="xsd:string" /></message>
+  <part name="username" type="xsd:string"/>
+  <part name="password" type="xsd:string"/></message>
 <message name="mc_enum_reproducibilitiesResponse">
-  <part name="return" type="tns:ObjectRefArray" /></message>
+  <part name="return" type="tns:ObjectRefArray"/></message>
 <message name="mc_enum_projectionsRequest">
-  <part name="username" type="xsd:string" />
-  <part name="password" type="xsd:string" /></message>
+  <part name="username" type="xsd:string"/>
+  <part name="password" type="xsd:string"/></message>
 <message name="mc_enum_projectionsResponse">
-  <part name="return" type="tns:ObjectRefArray" /></message>
+  <part name="return" type="tns:ObjectRefArray"/></message>
 <message name="mc_enum_etasRequest">
-  <part name="username" type="xsd:string" />
-  <part name="password" type="xsd:string" /></message>
+  <part name="username" type="xsd:string"/>
+  <part name="password" type="xsd:string"/></message>
 <message name="mc_enum_etasResponse">
-  <part name="return" type="tns:ObjectRefArray" /></message>
+  <part name="return" type="tns:ObjectRefArray"/></message>
 <message name="mc_enum_resolutionsRequest">
-  <part name="username" type="xsd:string" />
-  <part name="password" type="xsd:string" /></message>
+  <part name="username" type="xsd:string"/>
+  <part name="password" type="xsd:string"/></message>
 <message name="mc_enum_resolutionsResponse">
-  <part name="return" type="tns:ObjectRefArray" /></message>
+  <part name="return" type="tns:ObjectRefArray"/></message>
 <message name="mc_enum_access_levelsRequest">
-  <part name="username" type="xsd:string" />
-  <part name="password" type="xsd:string" /></message>
+  <part name="username" type="xsd:string"/>
+  <part name="password" type="xsd:string"/></message>
 <message name="mc_enum_access_levelsResponse">
-  <part name="return" type="tns:ObjectRefArray" /></message>
+  <part name="return" type="tns:ObjectRefArray"/></message>
 <message name="mc_enum_project_statusRequest">
-  <part name="username" type="xsd:string" />
-  <part name="password" type="xsd:string" /></message>
+  <part name="username" type="xsd:string"/>
+  <part name="password" type="xsd:string"/></message>
 <message name="mc_enum_project_statusResponse">
-  <part name="return" type="tns:ObjectRefArray" /></message>
+  <part name="return" type="tns:ObjectRefArray"/></message>
 <message name="mc_enum_project_view_statesRequest">
-  <part name="username" type="xsd:string" />
-  <part name="password" type="xsd:string" /></message>
+  <part name="username" type="xsd:string"/>
+  <part name="password" type="xsd:string"/></message>
 <message name="mc_enum_project_view_statesResponse">
-  <part name="return" type="tns:ObjectRefArray" /></message>
+  <part name="return" type="tns:ObjectRefArray"/></message>
 <message name="mc_enum_view_statesRequest">
-  <part name="username" type="xsd:string" />
-  <part name="password" type="xsd:string" /></message>
+  <part name="username" type="xsd:string"/>
+  <part name="password" type="xsd:string"/></message>
 <message name="mc_enum_view_statesResponse">
-  <part name="return" type="tns:ObjectRefArray" /></message>
+  <part name="return" type="tns:ObjectRefArray"/></message>
 <message name="mc_enum_custom_field_typesRequest">
-  <part name="username" type="xsd:string" />
-  <part name="password" type="xsd:string" /></message>
+  <part name="username" type="xsd:string"/>
+  <part name="password" type="xsd:string"/></message>
 <message name="mc_enum_custom_field_typesResponse">
-  <part name="return" type="tns:ObjectRefArray" /></message>
+  <part name="return" type="tns:ObjectRefArray"/></message>
 <message name="mc_enum_getRequest">
-  <part name="username" type="xsd:string" />
-  <part name="password" type="xsd:string" />
-  <part name="enumeration" type="xsd:string" /></message>
+  <part name="username" type="xsd:string"/>
+  <part name="password" type="xsd:string"/>
+  <part name="enumeration" type="xsd:string"/></message>
 <message name="mc_enum_getResponse">
-  <part name="return" type="xsd:string" /></message>
+  <part name="return" type="xsd:string"/></message>
 <message name="mc_issue_existsRequest">
-  <part name="username" type="xsd:string" />
-  <part name="password" type="xsd:string" />
-  <part name="issue_id" type="xsd:integer" /></message>
+  <part name="username" type="xsd:string"/>
+  <part name="password" type="xsd:string"/>
+  <part name="issue_id" type="xsd:integer"/></message>
 <message name="mc_issue_existsResponse">
-  <part name="return" type="xsd:boolean" /></message>
+  <part name="return" type="xsd:boolean"/></message>
 <message name="mc_issue_getRequest">
-  <part name="username" type="xsd:string" />
-  <part name="password" type="xsd:string" />
-  <part name="issue_id" type="xsd:integer" /></message>
+  <part name="username" type="xsd:string"/>
+  <part name="password" type="xsd:string"/>
+  <part name="issue_id" type="xsd:integer"/></message>
 <message name="mc_issue_getResponse">
-  <part name="return" type="tns:IssueData" /></message>
+  <part name="return" type="tns:IssueData"/></message>
 <message name="mc_issue_get_biggest_idRequest">
-  <part name="username" type="xsd:string" />
-  <part name="password" type="xsd:string" />
-  <part name="project_id" type="xsd:integer" /></message>
+  <part name="username" type="xsd:string"/>
+  <part name="password" type="xsd:string"/>
+  <part name="project_id" type="xsd:integer"/></message>
 <message name="mc_issue_get_biggest_idResponse">
-  <part name="return" type="xsd:integer" /></message>
+  <part name="return" type="xsd:integer"/></message>
 <message name="mc_issue_get_id_from_summaryRequest">
-  <part name="username" type="xsd:string" />
-  <part name="password" type="xsd:string" />
-  <part name="summary" type="xsd:string" /></message>
+  <part name="username" type="xsd:string"/>
+  <part name="password" type="xsd:string"/>
+  <part name="summary" type="xsd:string"/></message>
 <message name="mc_issue_get_id_from_summaryResponse">
-  <part name="return" type="xsd:integer" /></message>
+  <part name="return" type="xsd:integer"/></message>
 <message name="mc_issue_addRequest">
-  <part name="username" type="xsd:string" />
-  <part name="password" type="xsd:string" />
-  <part name="issue" type="tns:IssueData" /></message>
+  <part name="username" type="xsd:string"/>
+  <part name="password" type="xsd:string"/>
+  <part name="issue" type="tns:IssueData"/></message>
 <message name="mc_issue_addResponse">
-  <part name="return" type="xsd:integer" /></message>
+  <part name="return" type="xsd:integer"/></message>
 <message name="mc_issue_updateRequest">
-  <part name="username" type="xsd:string" />
-  <part name="password" type="xsd:string" />
-  <part name="issueId" type="xsd:integer" />
-  <part name="issue" type="tns:IssueData" /></message>
+  <part name="username" type="xsd:string"/>
+  <part name="password" type="xsd:string"/>
+  <part name="issueId" type="xsd:integer"/>
+  <part name="issue" type="tns:IssueData"/></message>
 <message name="mc_issue_updateResponse">
-  <part name="return" type="xsd:boolean" /></message>
+  <part name="return" type="xsd:boolean"/></message>
 <message name="mc_issue_deleteRequest">
-  <part name="username" type="xsd:string" />
-  <part name="password" type="xsd:string" />
-  <part name="issue_id" type="xsd:integer" /></message>
+  <part name="username" type="xsd:string"/>
+  <part name="password" type="xsd:string"/>
+  <part name="issue_id" type="xsd:integer"/></message>
 <message name="mc_issue_deleteResponse">
-  <part name="return" type="xsd:boolean" /></message>
+  <part name="return" type="xsd:boolean"/></message>
 <message name="mc_issue_note_addRequest">
-  <part name="username" type="xsd:string" />
-  <part name="password" type="xsd:string" />
-  <part name="issue_id" type="xsd:integer" />
-  <part name="note" type="tns:IssueNoteData" /></message>
+  <part name="username" type="xsd:string"/>
+  <part name="password" type="xsd:string"/>
+  <part name="issue_id" type="xsd:integer"/>
+  <part name="note" type="tns:IssueNoteData"/></message>
 <message name="mc_issue_note_addResponse">
-  <part name="return" type="xsd:integer" /></message>
+  <part name="return" type="xsd:integer"/></message>
 <message name="mc_issue_note_deleteRequest">
-  <part name="username" type="xsd:string" />
-  <part name="password" type="xsd:string" />
-  <part name="issue_note_id" type="xsd:integer" /></message>
+  <part name="username" type="xsd:string"/>
+  <part name="password" type="xsd:string"/>
+  <part name="issue_note_id" type="xsd:integer"/></message>
 <message name="mc_issue_note_deleteResponse">
-  <part name="return" type="xsd:boolean" /></message>
+  <part name="return" type="xsd:boolean"/></message>
 <message name="mc_issue_relationship_addRequest">
-  <part name="username" type="xsd:string" />
-  <part name="password" type="xsd:string" />
-  <part name="issue_id" type="xsd:integer" />
-  <part name="relationship" type="tns:RelationshipData" /></message>
+  <part name="username" type="xsd:string"/>
+  <part name="password" type="xsd:string"/>
+  <part name="issue_id" type="xsd:integer"/>
+  <part name="relationship" type="tns:RelationshipData"/></message>
 <message name="mc_issue_relationship_addResponse">
-  <part name="return" type="xsd:integer" /></message>
+  <part name="return" type="xsd:integer"/></message>
 <message name="mc_issue_relationship_deleteRequest">
-  <part name="username" type="xsd:string" />
-  <part name="password" type="xsd:string" />
-  <part name="issue_id" type="xsd:integer" />
-  <part name="relationship_id" type="xsd:integer" /></message>
+  <part name="username" type="xsd:string"/>
+  <part name="password" type="xsd:string"/>
+  <part name="issue_id" type="xsd:integer"/>
+  <part name="relationship_id" type="xsd:integer"/></message>
 <message name="mc_issue_relationship_deleteResponse">
-  <part name="return" type="xsd:boolean" /></message>
+  <part name="return" type="xsd:boolean"/></message>
 <message name="mc_issue_attachment_addRequest">
-  <part name="username" type="xsd:string" />
-  <part name="password" type="xsd:string" />
-  <part name="issue_id" type="xsd:integer" />
-  <part name="name" type="xsd:string" />
-  <part name="file_type" type="xsd:string" />
-  <part name="content" type="xsd:base64Binary" /></message>
+  <part name="username" type="xsd:string"/>
+  <part name="password" type="xsd:string"/>
+  <part name="issue_id" type="xsd:integer"/>
+  <part name="name" type="xsd:string"/>
+  <part name="file_type" type="xsd:string"/>
+  <part name="content" type="xsd:base64Binary"/></message>
 <message name="mc_issue_attachment_addResponse">
-  <part name="return" type="xsd:integer" /></message>
+  <part name="return" type="xsd:integer"/></message>
 <message name="mc_issue_attachment_deleteRequest">
-  <part name="username" type="xsd:string" />
-  <part name="password" type="xsd:string" />
-  <part name="issue_attachment_id" type="xsd:integer" /></message>
+  <part name="username" type="xsd:string"/>
+  <part name="password" type="xsd:string"/>
+  <part name="issue_attachment_id" type="xsd:integer"/></message>
 <message name="mc_issue_attachment_deleteResponse">
-  <part name="return" type="xsd:boolean" /></message>
+  <part name="return" type="xsd:boolean"/></message>
 <message name="mc_issue_attachment_getRequest">
-  <part name="username" type="xsd:string" />
-  <part name="password" type="xsd:string" />
-  <part name="issue_attachment_id" type="xsd:integer" /></message>
+  <part name="username" type="xsd:string"/>
+  <part name="password" type="xsd:string"/>
+  <part name="issue_attachment_id" type="xsd:integer"/></message>
 <message name="mc_issue_attachment_getResponse">
-  <part name="return" type="xsd:base64Binary" /></message>
+  <part name="return" type="xsd:base64Binary"/></message>
 <message name="mc_project_addRequest">
-  <part name="username" type="xsd:string" />
-  <part name="password" type="xsd:string" />
-  <part name="project" type="tns:ProjectData" /></message>
+  <part name="username" type="xsd:string"/>
+  <part name="password" type="xsd:string"/>
+  <part name="project" type="tns:ProjectData"/></message>
 <message name="mc_project_addResponse">
-  <part name="return" type="xsd:integer" /></message>
+  <part name="return" type="xsd:integer"/></message>
 <message name="mc_project_deleteRequest">
-  <part name="username" type="xsd:string" />
-  <part name="password" type="xsd:string" />
-  <part name="project_id" type="xsd:integer" /></message>
+  <part name="username" type="xsd:string"/>
+  <part name="password" type="xsd:string"/>
+  <part name="project_id" type="xsd:integer"/></message>
 <message name="mc_project_deleteResponse">
-  <part name="return" type="xsd:boolean" /></message>
+  <part name="return" type="xsd:boolean"/></message>
 <message name="mc_project_get_issuesRequest">
-  <part name="username" type="xsd:string" />
-  <part name="password" type="xsd:string" />
-  <part name="project_id" type="xsd:integer" />
-  <part name="page_number" type="xsd:integer" />
-  <part name="per_page" type="xsd:integer" /></message>
+  <part name="username" type="xsd:string"/>
+  <part name="password" type="xsd:string"/>
+  <part name="project_id" type="xsd:integer"/>
+  <part name="page_number" type="xsd:integer"/>
+  <part name="per_page" type="xsd:integer"/></message>
 <message name="mc_project_get_issuesResponse">
-  <part name="return" type="tns:IssueDataArray" /></message>
+  <part name="return" type="tns:IssueDataArray"/></message>
 <message name="mc_project_get_issue_headersRequest">
-  <part name="username" type="xsd:string" />
-  <part name="password" type="xsd:string" />
-  <part name="project_id" type="xsd:integer" />
-  <part name="page_number" type="xsd:integer" />
-  <part name="per_page" type="xsd:integer" /></message>
+  <part name="username" type="xsd:string"/>
+  <part name="password" type="xsd:string"/>
+  <part name="project_id" type="xsd:integer"/>
+  <part name="page_number" type="xsd:integer"/>
+  <part name="per_page" type="xsd:integer"/></message>
 <message name="mc_project_get_issue_headersResponse">
-  <part name="return" type="tns:IssueHeaderDataArray" /></message>
+  <part name="return" type="tns:IssueHeaderDataArray"/></message>
 <message name="mc_project_get_usersRequest">
-  <part name="username" type="xsd:string" />
-  <part name="password" type="xsd:string" />
-  <part name="project_id" type="xsd:integer" />
-  <part name="access" type="xsd:integer" /></message>
+  <part name="username" type="xsd:string"/>
+  <part name="password" type="xsd:string"/>
+  <part name="project_id" type="xsd:integer"/>
+  <part name="access" type="xsd:integer"/></message>
 <message name="mc_project_get_usersResponse">
-  <part name="return" type="tns:AccountDataArray" /></message>
+  <part name="return" type="tns:AccountDataArray"/></message>
 <message name="mc_projects_get_user_accessibleRequest">
-  <part name="username" type="xsd:string" />
-  <part name="password" type="xsd:string" /></message>
+  <part name="username" type="xsd:string"/>
+  <part name="password" type="xsd:string"/></message>
 <message name="mc_projects_get_user_accessibleResponse">
-  <part name="return" type="tns:ProjectDataArray" /></message>
+  <part name="return" type="tns:ProjectDataArray"/></message>
 <message name="mc_project_get_categoriesRequest">
-  <part name="username" type="xsd:string" />
-  <part name="password" type="xsd:string" />
-  <part name="project_id" type="xsd:integer" /></message>
+  <part name="username" type="xsd:string"/>
+  <part name="password" type="xsd:string"/>
+  <part name="project_id" type="xsd:integer"/></message>
 <message name="mc_project_get_categoriesResponse">
-  <part name="return" type="tns:StringArray" /></message>
+  <part name="return" type="tns:StringArray"/></message>
 <message name="mc_project_get_versionsRequest">
-  <part name="username" type="xsd:string" />
-  <part name="password" type="xsd:string" />
-  <part name="project_id" type="xsd:integer" /></message>
+  <part name="username" type="xsd:string"/>
+  <part name="password" type="xsd:string"/>
+  <part name="project_id" type="xsd:integer"/></message>
 <message name="mc_project_get_versionsResponse">
-  <part name="return" type="tns:ProjectVersionDataArray" /></message>
+  <part name="return" type="tns:ProjectVersionDataArray"/></message>
 <message name="mc_project_version_addRequest">
-  <part name="username" type="xsd:string" />
-  <part name="password" type="xsd:string" />
-  <part name="version" type="tns:ProjectVersionData" /></message>
+  <part name="username" type="xsd:string"/>
+  <part name="password" type="xsd:string"/>
+  <part name="version" type="tns:ProjectVersionData"/></message>
 <message name="mc_project_version_addResponse">
-  <part name="return" type="xsd:integer" /></message>
+  <part name="return" type="xsd:integer"/></message>
 <message name="mc_project_version_updateRequest">
-  <part name="username" type="xsd:string" />
-  <part name="password" type="xsd:string" />
-  <part name="version_id" type="xsd:integer" />
-  <part name="version" type="tns:ProjectVersionData" /></message>
+  <part name="username" type="xsd:string"/>
+  <part name="password" type="xsd:string"/>
+  <part name="version_id" type="xsd:integer"/>
+  <part name="version" type="tns:ProjectVersionData"/></message>
 <message name="mc_project_version_updateResponse">
-  <part name="return" type="xsd:boolean" /></message>
+  <part name="return" type="xsd:boolean"/></message>
 <message name="mc_project_version_deleteRequest">
-  <part name="username" type="xsd:string" />
-  <part name="password" type="xsd:string" />
-  <part name="version_id" type="xsd:integer" /></message>
+  <part name="username" type="xsd:string"/>
+  <part name="password" type="xsd:string"/>
+  <part name="version_id" type="xsd:integer"/></message>
 <message name="mc_project_version_deleteResponse">
-  <part name="return" type="xsd:boolean" /></message>
+  <part name="return" type="xsd:boolean"/></message>
 <message name="mc_project_get_released_versionsRequest">
-  <part name="username" type="xsd:string" />
-  <part name="password" type="xsd:string" />
-  <part name="project_id" type="xsd:integer" /></message>
+  <part name="username" type="xsd:string"/>
+  <part name="password" type="xsd:string"/>
+  <part name="project_id" type="xsd:integer"/></message>
 <message name="mc_project_get_released_versionsResponse">
-  <part name="return" type="tns:ProjectVersionDataArray" /></message>
+  <part name="return" type="tns:ProjectVersionDataArray"/></message>
 <message name="mc_project_get_unreleased_versionsRequest">
-  <part name="username" type="xsd:string" />
-  <part name="password" type="xsd:string" />
-  <part name="project_id" type="xsd:integer" /></message>
+  <part name="username" type="xsd:string"/>
+  <part name="password" type="xsd:string"/>
+  <part name="project_id" type="xsd:integer"/></message>
 <message name="mc_project_get_unreleased_versionsResponse">
-  <part name="return" type="tns:ProjectVersionDataArray" /></message>
+  <part name="return" type="tns:ProjectVersionDataArray"/></message>
 <message name="mc_project_get_attachmentsRequest">
-  <part name="username" type="xsd:string" />
-  <part name="password" type="xsd:string" />
-  <part name="project_id" type="xsd:integer" /></message>
+  <part name="username" type="xsd:string"/>
+  <part name="password" type="xsd:string"/>
+  <part name="project_id" type="xsd:integer"/></message>
 <message name="mc_project_get_attachmentsResponse">
-  <part name="return" type="tns:ProjectAttachmentDataArray" /></message>
+  <part name="return" type="tns:ProjectAttachmentDataArray"/></message>
 <message name="mc_project_get_custom_fieldsRequest">
-  <part name="username" type="xsd:string" />
-  <part name="password" type="xsd:string" />
-  <part name="project_id" type="xsd:integer" /></message>
+  <part name="username" type="xsd:string"/>
+  <part name="password" type="xsd:string"/>
+  <part name="project_id" type="xsd:integer"/></message>
 <message name="mc_project_get_custom_fieldsResponse">
-  <part name="return" type="tns:CustomFieldDefinitionDataArray" /></message>
+  <part name="return" type="tns:CustomFieldDefinitionDataArray"/></message>
 <message name="mc_project_attachment_getRequest">
-  <part name="username" type="xsd:string" />
-  <part name="password" type="xsd:string" />
-  <part name="project_attachment_id" type="xsd:integer" /></message>
+  <part name="username" type="xsd:string"/>
+  <part name="password" type="xsd:string"/>
+  <part name="project_attachment_id" type="xsd:integer"/></message>
 <message name="mc_project_attachment_getResponse">
-  <part name="return" type="xsd:base64Binary" /></message>
+  <part name="return" type="xsd:base64Binary"/></message>
 <message name="mc_project_attachment_addRequest">
-  <part name="username" type="xsd:string" />
-  <part name="password" type="xsd:string" />
-  <part name="project_id" type="xsd:integer" />
-  <part name="name" type="xsd:string" />
-  <part name="title" type="xsd:string" />
-  <part name="description" type="xsd:string" />
-  <part name="file_type" type="xsd:string" />
-  <part name="content" type="xsd:base64Binary" /></message>
+  <part name="username" type="xsd:string"/>
+  <part name="password" type="xsd:string"/>
+  <part name="project_id" type="xsd:integer"/>
+  <part name="name" type="xsd:string"/>
+  <part name="title" type="xsd:string"/>
+  <part name="description" type="xsd:string"/>
+  <part name="file_type" type="xsd:string"/>
+  <part name="content" type="xsd:base64Binary"/></message>
 <message name="mc_project_attachment_addResponse">
-  <part name="return" type="xsd:integer" /></message>
+  <part name="return" type="xsd:integer"/></message>
 <message name="mc_project_attachment_deleteRequest">
-  <part name="username" type="xsd:string" />
-  <part name="password" type="xsd:string" />
-  <part name="project_attachment_id" type="xsd:integer" /></message>
+  <part name="username" type="xsd:string"/>
+  <part name="password" type="xsd:string"/>
+  <part name="project_attachment_id" type="xsd:integer"/></message>
 <message name="mc_project_attachment_deleteResponse">
-  <part name="return" type="xsd:boolean" /></message>
+  <part name="return" type="xsd:boolean"/></message>
 <message name="mc_filter_getRequest">
-  <part name="username" type="xsd:string" />
-  <part name="password" type="xsd:string" />
-  <part name="project_id" type="xsd:integer" /></message>
+  <part name="username" type="xsd:string"/>
+  <part name="password" type="xsd:string"/>
+  <part name="project_id" type="xsd:integer"/></message>
 <message name="mc_filter_getResponse">
-  <part name="return" type="tns:FilterDataArray" /></message>
+  <part name="return" type="tns:FilterDataArray"/></message>
 <message name="mc_filter_get_issuesRequest">
-  <part name="username" type="xsd:string" />
-  <part name="password" type="xsd:string" />
-  <part name="project_id" type="xsd:integer" />
-  <part name="filter_id" type="xsd:integer" />
-  <part name="page_number" type="xsd:integer" />
-  <part name="per_page" type="xsd:integer" /></message>
+  <part name="username" type="xsd:string"/>
+  <part name="password" type="xsd:string"/>
+  <part name="project_id" type="xsd:integer"/>
+  <part name="filter_id" type="xsd:integer"/>
+  <part name="page_number" type="xsd:integer"/>
+  <part name="per_page" type="xsd:integer"/></message>
 <message name="mc_filter_get_issuesResponse">
-  <part name="return" type="tns:IssueDataArray" /></message>
+  <part name="return" type="tns:IssueDataArray"/></message>
 <message name="mc_filter_get_issue_headersRequest">
-  <part name="username" type="xsd:string" />
-  <part name="password" type="xsd:string" />
-  <part name="project_id" type="xsd:integer" />
-  <part name="filter_id" type="xsd:integer" />
-  <part name="page_number" type="xsd:integer" />
-  <part name="per_page" type="xsd:integer" /></message>
+  <part name="username" type="xsd:string"/>
+  <part name="password" type="xsd:string"/>
+  <part name="project_id" type="xsd:integer"/>
+  <part name="filter_id" type="xsd:integer"/>
+  <part name="page_number" type="xsd:integer"/>
+  <part name="per_page" type="xsd:integer"/></message>
 <message name="mc_filter_get_issue_headersResponse">
-  <part name="return" type="tns:IssueHeaderDataArray" /></message>
+  <part name="return" type="tns:IssueHeaderDataArray"/></message>
 <message name="mc_config_get_stringRequest">
-  <part name="username" type="xsd:string" />
-  <part name="password" type="xsd:string" />
-  <part name="config_var" type="xsd:string" /></message>
+  <part name="username" type="xsd:string"/>
+  <part name="password" type="xsd:string"/>
+  <part name="config_var" type="xsd:string"/></message>
 <message name="mc_config_get_stringResponse">
-  <part name="return" type="xsd:string" /></message>
+  <part name="return" type="xsd:string"/></message>
 <message name="mc_issue_checkinRequest">
-  <part name="username" type="xsd:string" />
-  <part name="password" type="xsd:string" />
-  <part name="issue_id" type="xsd:integer" />
-  <part name="comment" type="xsd:string" />
-  <part name="fixed" type="xsd:boolean" /></message>
+  <part name="username" type="xsd:string"/>
+  <part name="password" type="xsd:string"/>
+  <part name="issue_id" type="xsd:integer"/>
+  <part name="comment" type="xsd:string"/>
+  <part name="fixed" type="xsd:boolean"/></message>
 <message name="mc_issue_checkinResponse">
-  <part name="return" type="xsd:boolean" /></message>
+  <part name="return" type="xsd:boolean"/></message>
 <portType name="MantisConnectPortType">
   <operation name="mc_version">
     <input message="tns:mc_versionRequest"/>
@@ -853,7 +854,7 @@
     <output message="tns:mc_config_get_stringResponse"/>
   </operation>
   <operation name="mc_issue_checkin">
-    <documentation>Notifies Mantis of a check-in for the issue with the specified id.</documentation>
+    <documentation>Notifies MantisBT of a check-in for the issue with the specified id.</documentation>
     <input message="tns:mc_issue_checkinRequest"/>
     <output message="tns:mc_issue_checkinResponse"/>
   </operation>
