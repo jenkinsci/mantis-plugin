@@ -32,7 +32,7 @@ public abstract class AbstractChangeSet<T extends Entry> implements ChangeSet, S
 
     public abstract String createChangeLog();
 
-    protected RepositoryBrowser<T> getRepositoryBrowser() {
+    protected RepositoryBrowser getRepositoryBrowser() {
         if (build == null || build.getProject() == null) {
             return null;
         }
@@ -41,6 +41,7 @@ public abstract class AbstractChangeSet<T extends Entry> implements ChangeSet, S
     }
 
     protected String getChangeSetLink() {
+        @SuppressWarnings("unchecked")
         final RepositoryBrowser<T> browser = getRepositoryBrowser();
         if (browser == null) {
             return UNKNOWN_CHANGESETLINK;

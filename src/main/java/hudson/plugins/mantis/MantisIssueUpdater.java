@@ -7,6 +7,7 @@ import hudson.model.AbstractProject;
 import hudson.model.BuildListener;
 
 import hudson.tasks.BuildStepDescriptor;
+import hudson.tasks.BuildStepMonitor;
 import hudson.tasks.Publisher;
 import hudson.tasks.Recorder;
 import java.io.IOException;
@@ -22,6 +23,8 @@ import org.kohsuke.stapler.StaplerRequest;
  * @author Seiji Sogabe
  */
 public final class MantisIssueUpdater extends Recorder {
+
+    private static BuildStepDescriptor<Publisher> DESCRIPTOR = new DescriptorImpl();
 
     private final boolean keepNotePrivate;
 
@@ -41,11 +44,20 @@ public final class MantisIssueUpdater extends Recorder {
         return recordChangelog;
     }
 
+    public BuildStepMonitor getRequiredMonitorService() {
+        return BuildStepMonitor.NONE;
+    }
+
     @Override
     public boolean perform(final AbstractBuild<?, ?> build, final Launcher launcher,
             final BuildListener listener) throws InterruptedException, IOException {
         final Updater updater = new Updater(this);
         return updater.perform(build, listener);
+    }
+
+    @Override
+    public BuildStepDescriptor<Publisher> getDescriptor() {
+        return DESCRIPTOR;
     }
 
     @Extension
