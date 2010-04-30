@@ -24,8 +24,6 @@ import org.kohsuke.stapler.StaplerRequest;
  */
 public final class MantisIssueUpdater extends Recorder {
 
-    private static BuildStepDescriptor<Publisher> DESCRIPTOR = new DescriptorImpl();
-
     private final boolean keepNotePrivate;
 
     private final boolean recordChangelog;
@@ -53,11 +51,6 @@ public final class MantisIssueUpdater extends Recorder {
             final BuildListener listener) throws InterruptedException, IOException {
         final Updater updater = new Updater(this);
         return updater.perform(build, listener);
-    }
-
-    @Override
-    public BuildStepDescriptor<Publisher> getDescriptor() {
-        return DESCRIPTOR;
     }
 
     @Extension
