@@ -14,7 +14,7 @@
       </f:entry>
       <f:entry>
         <f:checkbox name="mantis.linkEnabled" id="linkEnabled" checked="${instance.linkEnabled}" />
-        <label for="linkEnabled">${%Enable hyperlink to the issue}</label>
+        <label class="attach-previous">${%Enable hyperlink to the issue}</label>
       </f:entry>
       <f:advanced>
         <f:entry title="${%Regexp pattern}" help="/plugin/mantis/help-regex.html">

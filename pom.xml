@@ -4,7 +4,7 @@
     <parent>
         <groupId>org.jvnet.hudson.plugins</groupId>
         <artifactId>plugin</artifactId>
-        <version>1.355</version>
+        <version>1.369</version>
         <relativePath>../pom.xml</relativePath>
     </parent>
 
@@ -159,25 +159,25 @@
         <dependency>
             <groupId>org.jvnet.hudson.plugins</groupId>
             <artifactId>subversion</artifactId>
-            <version>1.9</version>
+            <version>1.17</version>
             <optional>true</optional>
         </dependency>
         <dependency>
             <groupId>org.jvnet.hudson.plugins</groupId>
             <artifactId>mercurial</artifactId>
-            <version>1.27</version>
+            <version>1.31</version>
             <optional>true</optional>
         </dependency>
         <dependency>
             <groupId>org.jvnet.hudson.plugins</groupId>
             <artifactId>git</artifactId>
-            <version>0.8.1</version>
+            <version>1.0</version>
             <optional>true</optional>
         </dependency>
         <dependency>
             <groupId>org.jvnet.hudson.plugins</groupId>
             <artifactId>cvs</artifactId>
-            <version>1.1</version>
+            <version>1.2</version>
             <optional>true</optional>
         </dependency>
     </dependencies>
