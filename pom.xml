@@ -11,9 +11,9 @@
     <artifactId>mantis</artifactId>
     <version>0.10.2-SNAPSHOT</version>
     <packaging>hpi</packaging>
-    <name>Hudson Mantis plugin</name>
+    <name>Jenkins Mantis plugin</name>
     <description>Integrates Hudson to Mantis</description>
-    <url>http://wiki.hudson-ci.org/display/HUDSON/Mantis+Plugin</url>
+    <url>http://wiki.jenkins-ci.org/display/JENKINS/Mantis+Plugin</url>
 
     <developers>
         <developer>
@@ -203,15 +203,15 @@
 
     <distributionManagement>
         <repository>
-            <id>java.net-m2-repository</id>
-            <url>http://maven.hudson-labs.org:8081/content/repositories/releases/</url>
+            <id>maven.jenkins-ci.org</id>
+            <url>http://maven.jenkins-ci.org:8081/content/repositories/releases/</url>
         </repository>
     </distributionManagement>
 
     <scm>
-        <connection>scm:git:git://github.com/hudson/mantis-plugin.git</connection>
-        <developerConnection>scm:git:git@github.com:hudson/mantis-plugin.git</developerConnection>
-        <url>http://github.com/hudson/mantis-plugin</url>
+        <connection>scm:git:git://github.com/jenkinsci/mantis-plugin.git</connection>
+        <developerConnection>scm:git:git@github.com:jenkinsci/mantis-plugin.git</developerConnection>
+        <url>https://github.com/jenkinsci/mantis-plugin</url>
     </scm>
     
 </project>
