@@ -152,7 +152,8 @@ public final class MantisProjectProperty extends JobProperty<AbstractProject<?, 
             return true;
         }
 
-        public FormValidation doCheckLogin(final StaplerRequest req, final StaplerResponse res) throws IOException, ServletException {
+        public FormValidation doCheckLogin(final StaplerRequest req, final StaplerResponse res)
+                throws IOException, ServletException {
             // only administrator allowed
             Hudson.getInstance().checkPermission(Hudson.ADMINISTER);
 

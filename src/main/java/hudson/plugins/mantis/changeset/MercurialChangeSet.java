@@ -45,7 +45,7 @@ public class MercurialChangeSet extends AbstractChangeSet<hudson.plugins.mercuri
 
     private List<AffectedPath> getAffectedPaths() {
         final List<AffectedPath> affectedPaths = new ArrayList<AffectedPath>();
-        for (final EditType type : new EditType[] { EditType.ADD, EditType.EDIT, EditType.DELETE } ) {
+        for (final EditType type : new EditType[] {EditType.ADD, EditType.EDIT, EditType.DELETE}) {
             affectedPaths.addAll(getAffectedPathsByEditType(type));
         }
         return affectedPaths;

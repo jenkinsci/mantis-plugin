@@ -8,6 +8,7 @@ import hudson.scm.SCM;
 import java.io.IOException;
 import java.io.Serializable;
 import java.net.URL;
+import java.util.logging.Logger;
 
 /**
  * AbstractChangeSet
@@ -55,7 +56,7 @@ public abstract class AbstractChangeSet<T extends Entry> implements ChangeSet, S
                 link = url.toString();
             }
         } catch (final IOException e) {
-            // OK
+            LOGGER.warning(e.getMessage());
         }
         return link;
     }
@@ -68,4 +69,6 @@ public abstract class AbstractChangeSet<T extends Entry> implements ChangeSet, S
     protected String getMsg() {
         return entry == null ? UNKNOWN_MSG : entry.getMsg();
     }
+    
+    private static final Logger LOGGER = Logger.getLogger(AbstractChangeSet.class.getName());
 }

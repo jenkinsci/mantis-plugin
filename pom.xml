@@ -182,19 +182,19 @@
         <dependency>
             <groupId>org.jvnet.hudson.plugins</groupId>
             <artifactId>subversion</artifactId>
-            <version>1.20</version>
+            <version>1.23</version>
             <optional>true</optional>
         </dependency>
         <dependency>
             <groupId>org.jvnet.hudson.plugins</groupId>
             <artifactId>mercurial</artifactId>
-            <version>1.31</version>
+            <version>1.35</version>
             <optional>true</optional>
         </dependency>
         <dependency>
             <groupId>org.jvnet.hudson.plugins</groupId>
             <artifactId>git</artifactId>
-            <version>1.1.5</version>
+            <version>1.1.6</version>
             <optional>true</optional>
         </dependency>
         <dependency>
