@@ -12,6 +12,7 @@ import hudson.util.CopyOnWriteList;
 
 import hudson.util.FormValidation;
 import java.io.IOException;
+import java.net.MalformedURLException;
 import java.net.URL;
 import java.util.regex.Pattern;
 
@@ -160,6 +161,11 @@ public final class MantisProjectProperty extends JobProperty<AbstractProject<?, 
             final String url = Util.fixEmptyAndTrim(req.getParameter("url"));
             if (url == null) {
                 return FormValidation.error(Messages.MantisProjectProperty_MantisUrlMandatory());
+            }
+            try {
+                new URL(url);
+            } catch (MalformedURLException e) {
+                return FormValidation.error(Messages.MantisProjectProperty_MalformedURL());
             }
 
             final String user = Util.fixEmptyAndTrim(req.getParameter("user"));
