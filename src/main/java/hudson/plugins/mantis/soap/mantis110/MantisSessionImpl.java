@@ -19,6 +19,7 @@ import org.apache.axis.EngineConfiguration;
 import org.apache.axis.client.AxisClient;
 import org.apache.axis.client.Stub;
 
+@Deprecated
 public final class MantisSessionImpl extends AbstractMantisSession {
 
     private final MantisConnectPortType portType;
