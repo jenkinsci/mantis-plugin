@@ -48,6 +48,7 @@
    <xsd:element name="content_type" type="xsd:string" minOccurs="0"/>
    <xsd:element name="date_submitted" type="xsd:dateTime" minOccurs="0"/>
    <xsd:element name="download_url" type="xsd:anyURI" minOccurs="0"/>
+   <xsd:element name="user_id" type="xsd:integer" minOccurs="0"/>
   </xsd:all>
  </xsd:complexType>
  <xsd:complexType name="AttachmentDataArray">
@@ -67,6 +68,7 @@
    <xsd:element name="content_type" type="xsd:string" minOccurs="0"/>
    <xsd:element name="date_submitted" type="xsd:dateTime" minOccurs="0"/>
    <xsd:element name="download_url" type="xsd:anyURI" minOccurs="0"/>
+   <xsd:element name="user_id" type="xsd:integer" minOccurs="0"/>
   </xsd:all>
  </xsd:complexType>
  <xsd:complexType name="ProjectAttachmentDataArray">
@@ -99,6 +101,8 @@
    <xsd:element name="date_submitted" type="xsd:dateTime" minOccurs="0"/>
    <xsd:element name="last_modified" type="xsd:dateTime" minOccurs="0"/>
    <xsd:element name="time_tracking" type="xsd:integer" minOccurs="0"/>
+   <xsd:element name="note_type" type="xsd:integer" minOccurs="0"/>
+   <xsd:element name="note_attr" type="xsd:string" minOccurs="0"/>
   </xsd:all>
  </xsd:complexType>
  <xsd:complexType name="IssueNoteDataArray">
@@ -206,6 +210,7 @@
    <xsd:element name="date_order" type="xsd:dateTime" minOccurs="0"/>
    <xsd:element name="description" type="xsd:string" minOccurs="0"/>
    <xsd:element name="released" type="xsd:boolean" minOccurs="0"/>
+   <xsd:element name="obsolete" type="xsd:boolean" minOccurs="0"/>
   </xsd:all>
  </xsd:complexType>
  <xsd:complexType name="ProjectVersionDataArray">
@@ -414,6 +419,12 @@
   <part name="password" type="xsd:string" />
   <part name="issue_note_id" type="xsd:integer" /></message>
 <message name="mc_issue_note_deleteResponse">
+  <part name="return" type="xsd:boolean" /></message>
+<message name="mc_issue_note_updateRequest">
+  <part name="username" type="xsd:string" />
+  <part name="password" type="xsd:string" />
+  <part name="note" type="tns:IssueNoteData" /></message>
+<message name="mc_issue_note_updateResponse">
   <part name="return" type="xsd:boolean" /></message>
 <message name="mc_issue_relationship_addRequest">
   <part name="username" type="xsd:string" />
@@ -648,6 +659,13 @@
   <part name="fixed" type="xsd:boolean" /></message>
 <message name="mc_issue_checkinResponse">
   <part name="return" type="xsd:boolean" /></message>
+<message name="mc_user_pref_get_prefRequest">
+  <part name="username" type="xsd:string" />
+  <part name="password" type="xsd:string" />
+  <part name="project_id" type="xsd:integer" />
+  <part name="pref_name" type="xsd:string" /></message>
+<message name="mc_user_pref_get_prefResponse">
+  <part name="return" type="xsd:string" /></message>
 <portType name="MantisConnectPortType">
   <operation name="mc_version">
     <input message="tns:mc_versionRequest"/>
@@ -762,6 +780,11 @@
     <documentation>Delete the note with the specified id.</documentation>
     <input message="tns:mc_issue_note_deleteRequest"/>
     <output message="tns:mc_issue_note_deleteResponse"/>
+  </operation>
+  <operation name="mc_issue_note_update">
+    <documentation>Update a specific note of a specific issue.</documentation>
+    <input message="tns:mc_issue_note_updateRequest"/>
+    <output message="tns:mc_issue_note_updateResponse"/>
   </operation>
   <operation name="mc_issue_relationship_add">
     <documentation>Submit a new relationship.</documentation>
@@ -933,6 +956,11 @@
     <input message="tns:mc_issue_checkinRequest"/>
     <output message="tns:mc_issue_checkinResponse"/>
   </operation>
+  <operation name="mc_user_pref_get_pref">
+    <documentation>Get the value for the specified user preference.</documentation>
+    <input message="tns:mc_user_pref_get_prefRequest"/>
+    <output message="tns:mc_user_pref_get_prefResponse"/>
+  </operation>
 </portType>
 <binding name="MantisConnectBinding" type="tns:MantisConnectPortType">
   <soap:binding style="rpc" transport="http://schemas.xmlsoap.org/soap/http"/>
@@ -1048,6 +1076,11 @@
   </operation>
   <operation name="mc_issue_note_delete">
     <soap:operation soapAction="http://www.mantisbt.org/bugs/api/soap/mantisconnect.php/mc_issue_note_delete" style="rpc"/>
+    <input><soap:body use="encoded" namespace="http://futureware.biz/mantisconnect" encodingStyle="http://schemas.xmlsoap.org/soap/encoding/"/></input>
+    <output><soap:body use="encoded" namespace="http://futureware.biz/mantisconnect" encodingStyle="http://schemas.xmlsoap.org/soap/encoding/"/></output>
+  </operation>
+  <operation name="mc_issue_note_update">
+    <soap:operation soapAction="http://www.mantisbt.org/bugs/api/soap/mantisconnect.php/mc_issue_note_update" style="rpc"/>
     <input><soap:body use="encoded" namespace="http://futureware.biz/mantisconnect" encodingStyle="http://schemas.xmlsoap.org/soap/encoding/"/></input>
     <output><soap:body use="encoded" namespace="http://futureware.biz/mantisconnect" encodingStyle="http://schemas.xmlsoap.org/soap/encoding/"/></output>
   </operation>
@@ -1218,6 +1251,11 @@
   </operation>
   <operation name="mc_issue_checkin">
     <soap:operation soapAction="http://www.mantisbt.org/bugs/api/soap/mantisconnect.php/mc_issue_checkin" style="rpc"/>
+    <input><soap:body use="encoded" namespace="http://futureware.biz/mantisconnect" encodingStyle="http://schemas.xmlsoap.org/soap/encoding/"/></input>
+    <output><soap:body use="encoded" namespace="http://futureware.biz/mantisconnect" encodingStyle="http://schemas.xmlsoap.org/soap/encoding/"/></output>
+  </operation>
+  <operation name="mc_user_pref_get_pref">
+    <soap:operation soapAction="http://www.mantisbt.org/bugs/api/soap/mantisconnect.php/mc_user_pref_get_pref" style="rpc"/>
     <input><soap:body use="encoded" namespace="http://futureware.biz/mantisconnect" encodingStyle="http://schemas.xmlsoap.org/soap/encoding/"/></input>
     <output><soap:body use="encoded" namespace="http://futureware.biz/mantisconnect" encodingStyle="http://schemas.xmlsoap.org/soap/encoding/"/></output>
   </operation>
