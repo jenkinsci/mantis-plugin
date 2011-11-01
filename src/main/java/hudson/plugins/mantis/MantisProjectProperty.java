@@ -139,7 +139,7 @@ public final class MantisProjectProperty extends JobProperty<AbstractProject<?, 
 
         @Override
         public JobProperty<?> newInstance(final StaplerRequest req, final JSONObject formData) throws FormException {
-            MantisProjectProperty mpp = req.bindParameters(MantisProjectProperty.class, "mantis.");
+            MantisProjectProperty mpp = req.bindJSON(MantisProjectProperty.class, formData);
             if (mpp.siteName == null) {
                 mpp = null;
             }
@@ -185,9 +185,9 @@ public final class MantisProjectProperty extends JobProperty<AbstractProject<?, 
         }
 
         public FormValidation doCheckPattern(@AncestorInPath final AbstractProject<?, ?> project,
-                @QueryParameter final String pattern) throws IOException, ServletException {
+                @QueryParameter final String value) throws IOException, ServletException {
             project.checkPermission(Job.CONFIGURE);
-            final String p = Util.fixEmptyAndTrim(pattern);
+            final String p = Util.fixEmptyAndTrim(value);
             if (p != null && p.indexOf(ISSUE_ID_STRING) == -1) {
                 return FormValidation.error(Messages.MantisProjectProperty_InvalidPattern(ISSUE_ID_STRING));
             }
