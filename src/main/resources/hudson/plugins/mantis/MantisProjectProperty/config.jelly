@@ -2,11 +2,7 @@
   <j:if test="${descriptor.sites.size() &gt; 0}"> 
     <f:section title="Mantis">
       <f:entry title="${%Mantis site}" field="siteName">
-        <select class="setting-input" >
-          <j:forEach var="s" items="${descriptor.sites}">
-            <f:option selected="${s.name==instance.siteName}">${s.name}</f:option>
-          </j:forEach>
-        </select>
+        <f:select class="setting-input" />
       </f:entry>
       <f:entry title="${%Issue id pattern}" field="pattern">
         <f:textbox value="${instance.pattern}" />

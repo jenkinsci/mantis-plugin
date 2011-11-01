@@ -11,6 +11,7 @@ import hudson.plugins.mantis.MantisSite.MantisVersion;
 import hudson.util.CopyOnWriteList;
 
 import hudson.util.FormValidation;
+import hudson.util.ListBoxModel;
 import java.io.IOException;
 import java.net.MalformedURLException;
 import java.net.URL;
@@ -151,6 +152,14 @@ public final class MantisProjectProperty extends JobProperty<AbstractProject<?, 
             sites.replaceBy(req.bindParametersToList(MantisSite.class, "mantis."));
             save();
             return true;
+        }
+        
+        public ListBoxModel doFillSiteNameItems() {
+            ListBoxModel m = new ListBoxModel();
+            for (MantisSite site : getSites()) {
+                m.add(site.getName());
+            }
+            return m;
         }
 
         public FormValidation doCheckLogin(final StaplerRequest req, final StaplerResponse res)
