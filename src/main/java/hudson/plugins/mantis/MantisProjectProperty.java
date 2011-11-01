@@ -183,7 +183,7 @@ public final class MantisProjectProperty extends JobProperty<AbstractProject<?, 
             final String bPass = Util.fixEmptyAndTrim(req.getParameter("bpass"));
             final String ver = Util.fixEmptyAndTrim(req.getParameter("version"));
 
-            MantisVersion version = MantisVersion.getVersionSafely(ver, MantisVersion.V110);
+            MantisVersion version = MantisVersion.getVersionSafely(ver, MantisVersion.V120);
 
             final MantisSite site = new MantisSite(new URL(url), version.name(), user, pass, bUser, bPass);
             if (!site.isConnect()) {
