@@ -1,14 +1,15 @@
+<?jelly escape-by-default='true'?>
 <j:jelly xmlns:j="jelly:core" xmlns:st="jelly:stapler" xmlns:d="jelly:define" xmlns:l="/lib/layout" xmlns:t="/lib/hudson" xmlns:f="/lib/form">
-<f:entry title="" field="keepNotePrivate" >
-  <label>
-    <f:checkbox checked="${instance.keepNotePrivate}" />
+    <f:entry title="" field="keepNotePrivate" >
+        <label>
+            <f:checkbox checked="${instance.keepNotePrivate}" />
     ${%Keep note private}
-  </label>
-</f:entry>
-<f:entry title="" field="recordChangelog">
-  <label>
-    <f:checkbox checked="${instance.recordChangelog}" />
+        </label>
+    </f:entry>
+    <f:entry title="" field="recordChangelog">
+        <label>
+            <f:checkbox checked="${instance.recordChangelog}" />
     ${%Record changelog to note}
-  </label>
-</f:entry>
+        </label>
+    </f:entry>
 </j:jelly>

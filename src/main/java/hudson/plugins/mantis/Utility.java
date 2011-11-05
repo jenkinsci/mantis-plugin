@@ -1,6 +1,5 @@
 package hudson.plugins.mantis;
 
-
 import java.io.PrintStream;
 import java.util.Arrays;
 
@@ -11,7 +10,7 @@ import java.util.Arrays;
  */
 public final class Utility {
 
-    private static final char[] REGEXP_CHARS = new char[] {
+    private static final char[] REGEXP_CHARS = new char[]{
         '\\', '[', ']', '(', ')', '{', '}', '^', '$', '|', '?', '*', '+', '-', ':', ',', '.', '&'
     };
 

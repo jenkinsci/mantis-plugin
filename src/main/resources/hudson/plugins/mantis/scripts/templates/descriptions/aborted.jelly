@@ -1,0 +1,30 @@
+<j:jelly xmlns:j="jelly:core" xmlns:st="jelly:stapler" xmlns:d="jelly:define">
+
+GENERAL INFO
+
+Project: ${project.name}
+BUILD ${build.result}
+Build URL: ${rooturl}${build.url}
+Console Log URL: ${rooturl}${build.url}console
+Date of build: ${it.timestampString}
+Build duration: ${build.durationString}
+
+<j:set var="changeSet" value="${build.changeSet}" />
+<j:if test="${changeSet!=null}">
+  <j:whitespace>CHANGE SET&#10;</j:whitespace>
+  <j:set var="hadChanges" value="false"/>
+  <j:forEach var="cs" items="${changeSet}" varStatus="loop">
+    <j:set var="hadChanges" value="true"/>
+    <j:set var="aUser" value="${cs.hudsonUser}"/>
+    <j:whitespace>Revision ${cs.commitId?:cs.revision?:cs.changeNumber} by ${aUser!=null?aUser.displayName:cs.author.displayName}: (${cs.msgAnnotated})&#10;</j:whitespace>
+    <j:forEach var="p" items="${cs.affectedFiles}">
+      <j:whitespace>  change: ${p.editType.name} ${p.path}&#10;</j:whitespace>
+    </j:forEach>
+  </j:forEach>
+  <j:if test="${!hadChanges}">
+    <j:whitespace>No changes&#10;</j:whitespace>
+  </j:if>
+</j:if>
+ &#10;
+
+</j:jelly>

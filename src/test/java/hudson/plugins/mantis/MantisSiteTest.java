@@ -1,6 +1,8 @@
 package hudson.plugins.mantis;
 
+import hudson.plugins.mantis.model.MantisCategory;
 import hudson.plugins.mantis.model.MantisIssue;
+import hudson.plugins.mantis.model.MantisProject;
 import java.net.MalformedURLException;
 import java.net.URL;
 import org.junit.After;
@@ -73,6 +75,17 @@ public class MantisSiteTest {
     public void updateIssue() throws MantisHandlingException {
         target = createMantisSite();
         target.updateIssue(232, "Updated by Jenkins Mantis Plugin.", false);
+    }
+    
+    @Test
+    public void addIssue() throws MantisHandlingException {
+        target = createMantisSite();
+        String summary = "Build failed";
+        String description = "Added by Jenkins Mantis Plugin.";
+        MantisProject project = new MantisProject(2, "Jenkins Project");
+        MantisCategory category = new MantisCategory("plugin");
+        MantisIssue issue = new MantisIssue(project, category, summary, description);
+        target.addIssue(issue);
     }
     
     private MantisSite createMantisSite() {

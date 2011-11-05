@@ -2,15 +2,19 @@ package hudson.plugins.mantis.soap.mantis110;
 
 import hudson.plugins.mantis.MantisHandlingException;
 import hudson.plugins.mantis.MantisSite;
+import hudson.plugins.mantis.model.MantisCategory;
 import hudson.plugins.mantis.model.MantisIssue;
 import hudson.plugins.mantis.model.MantisNote;
 
+import hudson.plugins.mantis.model.MantisProject;
 import hudson.plugins.mantis.soap.AbstractMantisSession;
 import java.math.BigInteger;
 import java.net.MalformedURLException;
 import java.net.URL;
 import java.rmi.RemoteException;
 
+import java.util.ArrayList;
+import java.util.List;
 import java.util.logging.Logger;
 import javax.xml.rpc.ServiceException;
 
@@ -90,5 +94,61 @@ public final class MantisSessionImpl extends AbstractMantisSession {
         return version;
     }
 
+    public List<MantisProject> getProjects() throws MantisHandlingException {
+        List<MantisProject> projects = new ArrayList<MantisProject>();
+        ProjectData[] data;
+        try {
+            data = portType.mc_projects_get_user_accessible(site.getUserName(), site.getPassword());
+        } catch (final RemoteException e) {
+            throw new MantisHandlingException(e);
+        }
+        for (ProjectData p : data) {
+            projects.add(new MantisProject(p.getId().intValue(), p.getName()));
+        }
+        return projects;
+    }
+
+    public List<MantisCategory> getCategories(int projectId) throws MantisHandlingException {
+        List<MantisCategory> categories = new ArrayList<MantisCategory>();
+        String[] list;
+        try {
+            list = portType.mc_project_get_categories(site.getUserName(), site.getPassword(), BigInteger.valueOf(projectId));
+        } catch (final RemoteException e) {
+            throw new MantisHandlingException(e);
+        }
+        for (String category : list) {
+            categories.add(new MantisCategory(category));
+        }
+        return categories;
+    }
+    
+    public int addIssue(MantisIssue issue) throws MantisHandlingException {
+        IssueData data = new IssueData();
+        MantisProject project = issue.getProject();
+        if (project == null) {
+            throw new MantisHandlingException("project is missing.");
+        }
+        MantisCategory category = issue.getCategory();
+        if (category == null) {
+            throw new MantisHandlingException("category is missing.");
+        }
+        
+        ObjectRef pRef = new ObjectRef(BigInteger.valueOf(project.getId()), project.getName());
+        
+        data.setProject(pRef);
+        data.setCategory(category.getName());
+        data.setSummary(issue.getSummary());
+        data.setDescription(issue.getDescription());
+        
+        BigInteger addedIssueNo = null;
+        try {
+            addedIssueNo = portType.mc_issue_add(site.getUserName(), site.getPassword(), data);
+        } catch (final RemoteException e) {
+            throw new MantisHandlingException(e);
+        }
+        
+        return addedIssueNo.intValue();
+    }
+    
     private static final Logger LOGGER = Logger.getLogger(MantisSessionImpl.class.getName());
 }

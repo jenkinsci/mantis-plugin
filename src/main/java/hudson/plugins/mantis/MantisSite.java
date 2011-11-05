@@ -2,14 +2,17 @@ package hudson.plugins.mantis;
 
 import hudson.Util;
 import hudson.model.AbstractProject;
+import hudson.plugins.mantis.model.MantisCategory;
 import hudson.plugins.mantis.model.MantisIssue;
 import hudson.plugins.mantis.model.MantisNote;
+import hudson.plugins.mantis.model.MantisProject;
 import hudson.plugins.mantis.model.MantisViewState;
 import hudson.plugins.mantis.soap.MantisSession;
 import hudson.plugins.mantis.soap.MantisSessionFactory;
 
 import java.net.MalformedURLException;
 import java.net.URL;
+import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
@@ -117,6 +120,15 @@ public final class MantisSite {
         this.basicPassword = Util.fixEmptyAndTrim(basicPassword);
     }
 
+    public String getIssueLink(int issueNo) {
+        StringBuilder issueUrl = new StringBuilder();
+        String u = getUrl().toExternalForm();
+        issueUrl.append(u);
+        issueUrl.append("view.php?id=");
+        issueUrl.append(issueNo);
+        return issueUrl.toString();
+    }  
+    
     public boolean isConnect() {
         final String urlString = url.toExternalForm();
         try {
@@ -147,6 +159,21 @@ public final class MantisSite {
         session.addNote(id, note);
     }
 
+    public List<MantisProject> getProjects() throws MantisHandlingException {
+        final MantisSession session = createSession();
+        return session.getProjects();
+    }
+    
+    public List<MantisCategory> getCategories(int projectId) throws MantisHandlingException {
+        final MantisSession session = createSession();
+        return session.getCategories(projectId);
+    }
+
+    public int addIssue(MantisIssue issue) throws MantisHandlingException {
+        final MantisSession session = createSession();
+        return session.addIssue(issue);
+    }
+    
     private MantisSession createSession() throws MantisHandlingException {
         return MantisSessionFactory.getSession(this);
     }

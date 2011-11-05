@@ -8,6 +8,8 @@ import hudson.model.Job;
 import hudson.model.JobProperty;
 import hudson.model.JobPropertyDescriptor;
 import hudson.plugins.mantis.MantisSite.MantisVersion;
+import hudson.plugins.mantis.model.MantisCategory;
+import hudson.plugins.mantis.model.MantisProject;
 import hudson.util.CopyOnWriteList;
 
 import hudson.util.FormValidation;
@@ -15,6 +17,7 @@ import hudson.util.ListBoxModel;
 import java.io.IOException;
 import java.net.MalformedURLException;
 import java.net.URL;
+import java.util.List;
 import java.util.regex.Pattern;
 
 import javax.servlet.ServletException;
@@ -39,15 +42,20 @@ public final class MantisProjectProperty extends JobProperty<AbstractProject<?, 
     private static final String ISSUE_ID_STRING = "%ID%";
     private static final String DEFAULT_PATTERN = "issue #?" + ISSUE_ID_STRING;
     private final String siteName;
+    private final int projectId;
+    private final String category;
     private final String pattern;
     private final String regex;
     private Pattern regexpPattern;
     private final boolean linkEnabled;
 
     @DataBoundConstructor
-    public MantisProjectProperty(final String siteName, final String pattern, final String regex, final boolean linkEnabled) {
+    public MantisProjectProperty(String siteName, int projectId, String category, 
+            String pattern, String regex, boolean linkEnabled) {
         final String name = (siteName != null) ? siteName : defaultSiteName();
         this.siteName = Util.fixEmptyAndTrim(name);
+        this.projectId = projectId;
+        this.category = Util.fixEmptyAndTrim(category);
         this.pattern = Util.fixEmptyAndTrim(pattern);
         this.regex = Util.fixEmptyAndTrim(regex);
         this.regexpPattern = (this.regex != null) ? Pattern.compile(this.regex) : createRegexp(this.pattern);
@@ -58,6 +66,14 @@ public final class MantisProjectProperty extends JobProperty<AbstractProject<?, 
         return siteName;
     }
 
+    public int getProjectId() {
+        return projectId;
+    }
+
+    public String getCategory() {
+        return category;
+    }
+        
     public String getPattern() {
         return pattern;
     }
@@ -160,6 +176,64 @@ public final class MantisProjectProperty extends JobProperty<AbstractProject<?, 
                 m.add(site.getName());
             }
             return m;
+        }
+        
+        public ListBoxModel doFillProjectIdItems(@QueryParameter String siteName) {
+            ListBoxModel model = new ListBoxModel();
+            model.add("-", String.valueOf(MantisProject.NONE));
+            
+            MantisSite site = null;
+            for (final MantisSite s : sites) {
+                if (s.getName().equals(siteName)) {
+                    site = s;
+                    break;
+                }
+            }
+            if (site == null) {
+                return model;
+            }
+        
+            List<MantisProject> projects;
+            try {
+               projects = site.getProjects();
+            } catch (MantisHandlingException e) {
+                return model;
+            }
+            for (MantisProject p : projects) {
+               model.add(p.getName(), String.valueOf(p.getId())); 
+            }
+            
+            return model;
+        }        
+        
+        public ListBoxModel doFillCategoryItems(@QueryParameter String siteName, @QueryParameter int projectId) {
+            ListBoxModel model = new ListBoxModel();
+            model.add("-", MantisCategory.None);
+            if (projectId == MantisProject.NONE) {
+                return model;
+            }
+            
+            MantisSite site = null;
+            for (final MantisSite s : sites) {
+                if (s.getName().equals(siteName)) {
+                    site = s;
+                    break;
+                }
+            }
+            if (site == null) {
+                return model;
+            }
+            
+            List<MantisCategory> categories;
+            try {
+                categories = site.getCategories(projectId);
+            } catch (MantisHandlingException e) {
+                return model;
+            }
+            for (MantisCategory category : categories) {
+                model.add(category.getName());
+            }
+            return model;
         }
 
         public FormValidation doCheckLogin(final StaplerRequest req, final StaplerResponse res)

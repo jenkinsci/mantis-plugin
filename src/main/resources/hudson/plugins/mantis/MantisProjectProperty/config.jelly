@@ -4,6 +4,12 @@
       <f:entry title="${%Mantis site}" field="siteName">
         <f:select class="setting-input" />
       </f:entry>
+      <f:entry title="${%Project}" field="projectId">
+         <f:select />
+      </f:entry>      
+      <f:entry title="${%Category}" field="category">
+         <f:select />
+      </f:entry>      
       <f:entry title="${%Issue id pattern}" field="pattern">
         <f:textbox value="${instance.pattern}" />
       </f:entry>
