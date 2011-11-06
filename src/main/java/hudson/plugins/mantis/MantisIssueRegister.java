@@ -71,6 +71,7 @@ public final class MantisIssueRegister extends Recorder {
             no = site.addIssue(issue);
             Utility.log(logger, "file ticket #" + no + "(" + getIssueURL(site, no) + ")");
         } catch (MantisHandlingException e) {
+            Utility.log(logger, e.toString());
             build.setResult(Result.FAILURE);
             return true;
         }
