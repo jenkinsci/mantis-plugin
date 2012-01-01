@@ -9,7 +9,7 @@
     </parent>
 
     <artifactId>mantis</artifactId>
-    <version>0.21-SNAPSHOT</version>
+    <version>0.21</version>
     <packaging>hpi</packaging>
     <name>Jenkins Mantis plugin</name>
     <description>Integrates Jenkins to Mantis</description>
