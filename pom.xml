@@ -1,13 +1,13 @@
 
 <project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
     <modelVersion>4.0.0</modelVersion>
-  
+
     <parent>
         <groupId>org.jenkins-ci.plugins</groupId>
         <artifactId>plugin</artifactId>
-        <version>1.409</version>
+        <version>1.424</version>
     </parent>
-  
+
     <artifactId>mantis</artifactId>
     <version>0.21-SNAPSHOT</version>
     <packaging>hpi</packaging>
@@ -26,7 +26,7 @@
     <properties>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
     </properties>
-    
+
     <build>
         <plugins>
             <plugin>
@@ -69,46 +69,41 @@
                     <locales>ja</locales>
                     <inputEncoding>UTF-8</inputEncoding>
                     <outputEncoding>UTF-8</outputEncoding>
+                    <reportPlugins>
+                        <plugin>
+                            <groupId>org.codehaus.mojo</groupId>
+                            <artifactId>findbugs-maven-plugin</artifactId>
+                            <configuration>
+                                <findbugsXmlOutput>true</findbugsXmlOutput>
+                                <xmlOutput>true</xmlOutput>
+                                <debug>false</debug>
+                                <effort>Max</effort>
+                                <onlyAnalyze>hudson.plugins.*</onlyAnalyze>
+                            </configuration>
+                        </plugin>
+                        <plugin>
+                            <groupId>org.apache.maven.plugins</groupId>
+                            <artifactId>maven-checkstyle-plugin</artifactId>
+                            <version>2.2</version>
+                            <configuration>
+                                <consoleOutput>false</consoleOutput>
+                                <configLocation>${project.basedir}/checkstyle.xml</configLocation>
+                                <encoding>UTF-8</encoding>
+                            </configuration>
+                        </plugin>
+                        <plugin>
+                            <groupId>org.apache.maven.plugins</groupId>
+                            <artifactId>maven-pmd-plugin</artifactId>
+                            <configuration>
+                                <sourceEncoding>UTF-8</sourceEncoding>
+                                <targetJdk>1.5</targetJdk>
+                            </configuration>
+                        </plugin>
+                    </reportPlugins>
                 </configuration>
             </plugin>
         </plugins>
     </build>
-
-    <reporting>
-        <plugins>
-            <plugin>
-                <groupId>org.codehaus.mojo</groupId>
-                <artifactId>findbugs-maven-plugin</artifactId>
-                <configuration>
-                    <findbugsXmlOutput>true</findbugsXmlOutput>
-                    <xmlOutput>true</xmlOutput>
-                    <debug>false</debug>
-                    <effort>Max</effort>
-                    <onlyAnalyze>hudson.plugins.*</onlyAnalyze>
-                </configuration>
-            </plugin>
-
-            <plugin>
-                <groupId>org.apache.maven.plugins</groupId>
-                <artifactId>maven-checkstyle-plugin</artifactId>
-                <version>2.2</version>
-                <configuration>
-                    <consoleOutput>false</consoleOutput>
-                    <configLocation>${project.basedir}/checkstyle.xml</configLocation>
-                    <encoding>UTF-8</encoding>
-                </configuration>
-            </plugin>
-
-            <plugin>
-                <groupId>org.apache.maven.plugins</groupId>
-                <artifactId>maven-pmd-plugin</artifactId>
-                <configuration>
-                    <sourceEncoding>UTF-8</sourceEncoding>
-                    <targetJdk>1.5</targetJdk>
-                </configuration>
-            </plugin>
-        </plugins>
-    </reporting>
 
     <dependencies>
         <dependency>
@@ -150,13 +145,13 @@
         <dependency>
             <groupId>org.jenkins-ci.plugins</groupId>
             <artifactId>mercurial</artifactId>
-            <version>1.37</version>
+            <version>1.38</version>
             <optional>true</optional>
         </dependency>
         <dependency>
             <groupId>org.jenkinsci.plugins</groupId>
             <artifactId>git</artifactId>
-            <version>1.1.12</version>
+            <version>1.1.15</version>
             <optional>true</optional>
         </dependency>
         <dependency>
@@ -176,6 +171,10 @@
             <id>m.g.o-public</id>
             <url>http://maven.glassfish.org/content/groups/public/</url>
         </repository>
+        <repository>
+            <id>jgit-repository</id>
+            <url>http://eclipse.ialto.org/jgit/maven/</url>
+        </repository>
     </repositories>
 
     <scm>
@@ -183,5 +182,5 @@
         <developerConnection>scm:git:git@github.com:jenkinsci/mantis-plugin.git</developerConnection>
         <url>https://github.com/jenkinsci/mantis-plugin</url>
     </scm>
-    
+
 </project>
