@@ -11,19 +11,17 @@ import hudson.plugins.mantis.MantisSite.MantisVersion;
 import hudson.plugins.mantis.model.MantisCategory;
 import hudson.plugins.mantis.model.MantisProject;
 import hudson.util.CopyOnWriteList;
-
 import hudson.util.FormValidation;
 import hudson.util.ListBoxModel;
 import java.io.IOException;
 import java.net.MalformedURLException;
 import java.net.URL;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.regex.Pattern;
-
 import javax.servlet.ServletException;
-
 import net.sf.json.JSONObject;
-
+import org.apache.commons.lang.StringUtils;
 import org.kohsuke.stapler.AncestorInPath;
 import org.kohsuke.stapler.DataBoundConstructor;
 import org.kohsuke.stapler.QueryParameter;
@@ -50,7 +48,7 @@ public final class MantisProjectProperty extends JobProperty<AbstractProject<?, 
     private final boolean linkEnabled;
 
     @DataBoundConstructor
-    public MantisProjectProperty(String siteName, int projectId, String category, 
+    public MantisProjectProperty(String siteName, int projectId, String category,
             String pattern, String regex, boolean linkEnabled) {
         final String name = (siteName != null) ? siteName : defaultSiteName();
         this.siteName = Util.fixEmptyAndTrim(name);
@@ -73,7 +71,7 @@ public final class MantisProjectProperty extends JobProperty<AbstractProject<?, 
     public String getCategory() {
         return category;
     }
-        
+
     public String getPattern() {
         return pattern;
     }
@@ -169,7 +167,7 @@ public final class MantisProjectProperty extends JobProperty<AbstractProject<?, 
             save();
             return true;
         }
-        
+
         public ListBoxModel doFillSiteNameItems() {
             ListBoxModel m = new ListBoxModel();
             for (MantisSite site : getSites()) {
@@ -177,11 +175,11 @@ public final class MantisProjectProperty extends JobProperty<AbstractProject<?, 
             }
             return m;
         }
-        
+
         public ListBoxModel doFillProjectIdItems(@QueryParameter String siteName) {
             ListBoxModel model = new ListBoxModel();
             model.add("-", String.valueOf(MantisProject.NONE));
-            
+
             MantisSite site = null;
             for (final MantisSite s : sites) {
                 if (s.getName().equals(siteName)) {
@@ -192,7 +190,7 @@ public final class MantisProjectProperty extends JobProperty<AbstractProject<?, 
             if (site == null) {
                 return model;
             }
-        
+
             List<MantisProject> projects;
             try {
                projects = site.getProjects();
@@ -200,19 +198,43 @@ public final class MantisProjectProperty extends JobProperty<AbstractProject<?, 
                 return model;
             }
             for (MantisProject p : projects) {
-               model.add(p.getName(), String.valueOf(p.getId())); 
+               model.add(p.getName(), "" + p.getId());
+               for (MantisProjectItem sub : subProjects(p, 1)) {
+                   model.add(sub.name, sub.id);
+               }
             }
-            
+
             return model;
-        }        
-        
+        }
+
+        private static class MantisProjectItem {
+
+            public String name;
+
+            public String id;
+
+            public MantisProjectItem(String name, String id) {
+                this.name = name;
+                this.id = id;
+            }
+        }
+
+        private List<MantisProjectItem> subProjects(MantisProject p, int depth) {
+            List<MantisProjectItem> list = new ArrayList<MantisProjectItem>();
+            for (MantisProject sub : p.getSubProjects()) {
+                list.add(new MantisProjectItem(StringUtils.repeat("» ", depth) + sub.getName(), "" + sub.getId()));
+                list.addAll(subProjects(sub, depth + 1));
+            }
+            return list;
+        }
+
         public ListBoxModel doFillCategoryItems(@QueryParameter String siteName, @QueryParameter int projectId) {
             ListBoxModel model = new ListBoxModel();
             model.add("-", MantisCategory.None);
             if (projectId == MantisProject.NONE) {
                 return model;
             }
-            
+
             MantisSite site = null;
             for (final MantisSite s : sites) {
                 if (s.getName().equals(siteName)) {
@@ -223,7 +245,7 @@ public final class MantisProjectProperty extends JobProperty<AbstractProject<?, 
             if (site == null) {
                 return model;
             }
-            
+
             List<MantisCategory> categories;
             try {
                 categories = site.getCategories(projectId);
@@ -263,7 +285,7 @@ public final class MantisProjectProperty extends JobProperty<AbstractProject<?, 
             if (!site.isConnect()) {
                 return FormValidation.error(Messages.MantisProjectProperty_UnableToLogin());
             }
-            
+
             return FormValidation.ok();
         }
 
@@ -274,7 +296,7 @@ public final class MantisProjectProperty extends JobProperty<AbstractProject<?, 
             if (p != null && p.indexOf(ISSUE_ID_STRING) == -1) {
                 return FormValidation.error(Messages.MantisProjectProperty_InvalidPattern(ISSUE_ID_STRING));
             }
-            
+
             return FormValidation.ok();
         }
     }
