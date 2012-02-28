@@ -1,11 +1,13 @@
 package hudson.plugins.mantis;
 
+import hudson.matrix.MatrixRun;
 import hudson.model.AbstractBuild;
 import hudson.model.BuildListener;
 import hudson.model.Hudson;
 import hudson.model.Result;
 import hudson.model.Run;
 import hudson.model.AbstractBuild.DependencyChange;
+import hudson.model.Job;
 import hudson.plugins.mantis.changeset.ChangeSet;
 import hudson.plugins.mantis.changeset.ChangeSetFactory;
 import hudson.plugins.mantis.model.MantisIssue;
@@ -81,8 +83,7 @@ final class Updater {
             }
         }
 
-        final MantisProjectProperty mpp =
-                build.getParent().getProperty(MantisProjectProperty.class);
+        MantisProjectProperty mpp = getMantisProjectProperty(build);
         build.getActions().add(
                 new MantisBuildAction(mpp.getRegexpPattern(), issues.toArray(new MantisIssue[0])));
 
@@ -131,8 +132,8 @@ final class Updater {
 
     private List<ChangeSet> findChangeSetsFromSCM(final AbstractBuild<?, ?> build) {
         final List<ChangeSet> changeSets = new ArrayList<ChangeSet>();
-        final MantisProjectProperty mpp = build.getParent().getProperty(MantisProjectProperty.class);
-
+        
+        MantisProjectProperty mpp = getMantisProjectProperty(build);
         final Pattern pattern = mpp.getRegexpPattern();
         for (final Entry change : build.getChangeSet()) {
             final Matcher matcher = pattern.matcher(change.getMsg());
@@ -148,8 +149,19 @@ final class Updater {
                 changeSets.add(ChangeSetFactory.newInstance(id, build, change));
             }
         }
+        
         return changeSets;
     }
 
+    private MantisProjectProperty getMantisProjectProperty(AbstractBuild<?, ?> build) {
+        Job<?, ?> job;
+        if (build instanceof MatrixRun) {
+            job = ((MatrixRun) build).getProject().getParent();
+        } else {
+            job = build.getProject();
+        }
+        return job.getProperty(MantisProjectProperty.class);
+    }
+    
     private static final Logger LOGGER = Logger.getLogger(Updater.class.getName());
 }
