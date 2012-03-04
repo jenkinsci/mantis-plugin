@@ -3,10 +3,12 @@ package hudson.plugins.mantis;
 import hudson.Extension;
 import hudson.Launcher;
 import hudson.Util;
+import hudson.matrix.MatrixRun;
 import hudson.model.AbstractBuild;
 import hudson.model.AbstractProject;
 import hudson.model.BuildListener;
 
+import hudson.model.Job;
 import hudson.model.Result;
 import hudson.plugins.mantis.model.MantisCategory;
 import hudson.plugins.mantis.model.MantisIssue;
@@ -96,7 +98,7 @@ public final class MantisIssueRegister extends Recorder {
     }
     
     private MantisIssue createIssue(AbstractBuild<?, ?> build) throws IOException, InterruptedException {
-        MantisProjectProperty mpp = build.getParent().getProperty(MantisProjectProperty.class);
+        MantisProjectProperty mpp = getMantisProjectProperty(build);
         int projectId = mpp.getProjectId();
         String categoryName = mpp.getCategory();
         if (projectId == MantisProject.NONE || MantisCategory.None.equals(categoryName)) {
@@ -135,6 +137,16 @@ public final class MantisIssueRegister extends Recorder {
             return true;
         }
     }
+    
+    private MantisProjectProperty getMantisProjectProperty(AbstractBuild<?, ?> build) {
+        Job<?, ?> job;
+        if (build instanceof MatrixRun) {
+            job = ((MatrixRun) build).getProject().getParent();
+        } else {
+            job = build.getProject();
+        }
+        return job.getProperty(MantisProjectProperty.class);
+    }    
     
     private static final Logger LOGGER = Logger.getLogger(MantisIssueRegister.class.getName());
 }
