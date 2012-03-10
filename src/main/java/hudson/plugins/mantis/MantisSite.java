@@ -133,8 +133,7 @@ public final class MantisSite {
         final String urlString = url.toExternalForm();
         try {
             final MantisSession session = createSession();
-            final String v = session.getVersion();
-            LOGGER.info(Messages.MantisSite_DetectedVersion(v));
+            List<MantisProject> projects = session.getProjects();
         } catch (final MantisHandlingException e) {
             LOGGER.log(Level.WARNING, Messages.MantisSite_FailedToConnectToMantis(urlString, e.getMessage()));
             return false;
