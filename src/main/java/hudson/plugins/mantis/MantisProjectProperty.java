@@ -163,7 +163,7 @@ public final class MantisProjectProperty extends JobProperty<AbstractProject<?, 
 
         @Override
         public boolean configure(final StaplerRequest req, final JSONObject formData) {
-            sites.replaceBy(req.bindParametersToList(MantisSite.class, "mantis."));
+            sites.replaceBy(req.bindParametersToList(MantisSite.class, "m."));
             save();
             return true;
         }
@@ -258,37 +258,38 @@ public final class MantisProjectProperty extends JobProperty<AbstractProject<?, 
             return model;
         }
 
-        public FormValidation doCheckLogin(final StaplerRequest req, final StaplerResponse res)
+        public FormValidation doCheckRequired(@QueryParameter String value) {
+            return FormValidation.validateRequired(value);
+        }
+
+        public FormValidation doCheckLogin(
+                @QueryParameter("m.url") String url, @QueryParameter("m.version") String version, 
+                @QueryParameter("m.userName") String userName, @QueryParameter("m.password") String password, 
+                @QueryParameter("m.basicUserName") String basicUserName, @QueryParameter("m.basicPassword") String basicPassword) 
                 throws IOException, ServletException {
             // only administrator allowed
             Hudson.getInstance().checkPermission(Hudson.ADMINISTER);
 
-            final String url = Util.fixEmptyAndTrim(req.getParameter("url"));
             if (url == null) {
                 return FormValidation.error(Messages.MantisProjectProperty_MantisUrlMandatory());
             }
+            
             try {
                 new URL(url);
             } catch (MalformedURLException e) {
                 return FormValidation.error(Messages.MantisProjectProperty_MalformedURL());
             }
 
-            final String user = Util.fixEmptyAndTrim(req.getParameter("user"));
-            final String pass = Util.fixEmptyAndTrim(req.getParameter("pass"));
-            final String bUser = Util.fixEmptyAndTrim(req.getParameter("buser"));
-            final String bPass = Util.fixEmptyAndTrim(req.getParameter("bpass"));
-            final String ver = Util.fixEmptyAndTrim(req.getParameter("version"));
+            MantisVersion v = MantisVersion.getVersionSafely(version, MantisVersion.V120);
 
-            MantisVersion version = MantisVersion.getVersionSafely(ver, MantisVersion.V120);
-
-            final MantisSite site = new MantisSite(new URL(url), version.name(), user, pass, bUser, bPass);
+            final MantisSite site = new MantisSite(new URL(url), v.name(), userName, password, basicUserName, basicPassword);
             if (!site.isConnect()) {
                 return FormValidation.error(Messages.MantisProjectProperty_UnableToLogin());
             }
 
-            return FormValidation.ok();
+            return FormValidation.ok(Messages.MantisProjectProperty_Verified());
         }
-
+        
         public FormValidation doCheckPattern(@AncestorInPath final AbstractProject<?, ?> project,
                 @QueryParameter final String value) throws IOException, ServletException {
             project.checkPermission(Job.CONFIGURE);
