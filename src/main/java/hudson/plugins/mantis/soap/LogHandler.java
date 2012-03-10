@@ -25,13 +25,13 @@ public class LogHandler extends BasicHandler {
         final Message res = ctx.getResponseMessage();
 
         if (req != null) {
-            LOGGER.fine("Request: " + Util.escape(req.getSOAPPartAsString()));
+            LOGGER.fine("Request: " + req.getSOAPPartAsString());
         } else {
             LOGGER.fine("Request: (null)");
         }
 
         if (res != null) {
-            LOGGER.fine("Response: " + Util.escape(res.getSOAPPartAsString()));
+            LOGGER.fine("Response: " + res.getSOAPPartAsString());
         } else {
             LOGGER.fine("Response: (null)");
         }
