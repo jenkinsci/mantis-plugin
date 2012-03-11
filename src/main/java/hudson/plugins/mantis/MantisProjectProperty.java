@@ -147,6 +147,10 @@ public final class MantisProjectProperty extends JobProperty<AbstractProject<?, 
         public MantisSite[] getSites() {
             return sites.toArray(new MantisSite[0]);
         }
+        
+        void addSite(MantisSite site) {
+            sites.add(site);
+        }
 
         public MantisVersion[] getMantisVersions() {
             return MantisSite.MantisVersion.values();
