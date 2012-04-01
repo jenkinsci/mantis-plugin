@@ -23,14 +23,12 @@
           </f:entry>
 
           <f:entry title="${%User Name}" help="/plugin/mantis/help-login.html">
-            <f:textbox name="m.userName" value="${site.userName}" 
-                       checkUrl="'descriptorByName/MantisProjectProperty/checkRequired?value=' + encodeURIComponent(this.value)" />
+            <f:textbox name="m.userName" value="${site.userName}" />
           </f:entry>
 
           <f:entry title="${%Password}" >
             <f:password class="setting-input" 
-                   type="password" name="m.password" value="${site.password}" 
-                   checkUrl="'descriptorByName/MantisProjectProperty/checkRequired?value=' + encodeURIComponent(this.value)" />
+                   type="password" name="m.password" value="${site.password}" />
           </f:entry>
 
           <f:advanced>
