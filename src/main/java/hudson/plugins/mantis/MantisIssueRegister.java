@@ -68,10 +68,14 @@ public final class MantisIssueRegister extends Recorder {
         }
         
         int no;
-        MantisIssue issue = createIssue(build);
+        MantisIssue issue = createIssue(build, listener);
+        if (issue == null) {
+            Utility.log(logger, "skipping file a ticket ...");
+            return true;
+        }
         try {
             no = site.addIssue(issue);
-            Utility.log(logger, "file ticket #" + no + "(" + getIssueURL(site, no) + ")");
+            Utility.log(logger, "file a ticket #" + no + "(" + getIssueURL(site, no) + ")");
         } catch (MantisHandlingException e) {
             Utility.log(logger, e.toString());
             build.setResult(Result.FAILURE);
@@ -97,11 +101,13 @@ public final class MantisIssueRegister extends Recorder {
         return site.getIssueLink(no);
     }
     
-    private MantisIssue createIssue(AbstractBuild<?, ?> build) throws IOException, InterruptedException {
+    private MantisIssue createIssue(AbstractBuild<?, ?> build, BuildListener listener) 
+            throws IOException, InterruptedException {
         MantisProjectProperty mpp = getMantisProjectProperty(build);
         int projectId = mpp.getProjectId();
         String categoryName = mpp.getCategory();
         if (projectId == MantisProject.NONE || MantisCategory.None.equals(categoryName)) {
+            Utility.log(listener.getLogger(), "Neither project nor category selected.");
             return null;
         }
         

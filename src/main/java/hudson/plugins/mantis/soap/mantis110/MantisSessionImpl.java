@@ -131,6 +131,9 @@ public final class MantisSessionImpl extends AbstractMantisSession {
     }
 
     public int addIssue(MantisIssue issue) throws MantisHandlingException {
+        if (issue == null) {
+            throw new MantisHandlingException("issue should not be null.");
+        }
         IssueData data = new IssueData();
         MantisProject project = issue.getProject();
         if (project == null) {
