@@ -2,11 +2,8 @@ package hudson.plugins.mantis;
 
 import hudson.Extension;
 import hudson.Util;
-import hudson.model.AbstractProject;
-import hudson.model.Hudson;
-import hudson.model.Job;
-import hudson.model.JobProperty;
-import hudson.model.JobPropertyDescriptor;
+import hudson.matrix.MatrixRun;
+import hudson.model.*;
 import hudson.plugins.mantis.MantisSite.MantisVersion;
 import hudson.plugins.mantis.model.MantisCategory;
 import hudson.plugins.mantis.model.MantisProject;
@@ -26,7 +23,6 @@ import org.kohsuke.stapler.AncestorInPath;
 import org.kohsuke.stapler.DataBoundConstructor;
 import org.kohsuke.stapler.QueryParameter;
 import org.kohsuke.stapler.StaplerRequest;
-import org.kohsuke.stapler.StaplerResponse;
 
 /**
  * Associates {@link AbstractProject} with {@link MantisSite}.
@@ -47,6 +43,19 @@ public final class MantisProjectProperty extends JobProperty<AbstractProject<?, 
     private Pattern regexpPattern;
     private final boolean linkEnabled;
 
+    public static MantisProjectProperty get(AbstractBuild<?, ?> build) {
+        if (build == null) {
+            return null;
+        }
+        Job<?, ?> job;
+        if (build instanceof MatrixRun) {
+            job = ((MatrixRun) build).getProject().getParent();
+        } else {
+            job = build.getProject();
+        }
+        return job.getProperty(MantisProjectProperty.class);
+    }        
+    
     @DataBoundConstructor
     public MantisProjectProperty(String siteName, int projectId, String category,
             String pattern, String regex, boolean linkEnabled) {
@@ -123,7 +132,7 @@ public final class MantisProjectProperty extends JobProperty<AbstractProject<?, 
         final String pt = buf.toString().replace(ISSUE_ID_STRING, ")(\\d+)(?=");
         return Pattern.compile(pt);
     }
-
+    
     public static final class DescriptorImpl extends JobPropertyDescriptor {
 
         private final CopyOnWriteList<MantisSite> sites = new CopyOnWriteList<MantisSite>();

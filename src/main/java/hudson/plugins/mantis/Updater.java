@@ -1,13 +1,11 @@
 package hudson.plugins.mantis;
 
-import hudson.matrix.MatrixRun;
 import hudson.model.AbstractBuild;
 import hudson.model.BuildListener;
 import hudson.model.Hudson;
 import hudson.model.Result;
 import hudson.model.Run;
 import hudson.model.AbstractBuild.DependencyChange;
-import hudson.model.Job;
 import hudson.plugins.mantis.changeset.ChangeSet;
 import hudson.plugins.mantis.changeset.ChangeSetFactory;
 import hudson.plugins.mantis.model.MantisIssue;
@@ -83,7 +81,8 @@ final class Updater {
             }
         }
 
-        MantisProjectProperty mpp = getMantisProjectProperty(build);
+        // build is not null, so mpp is not null
+        MantisProjectProperty mpp = MantisProjectProperty.get(build);
         build.getActions().add(
                 new MantisBuildAction(mpp.getRegexpPattern(), issues.toArray(new MantisIssue[0])));
 
@@ -133,7 +132,7 @@ final class Updater {
     private List<ChangeSet> findChangeSetsFromSCM(final AbstractBuild<?, ?> build) {
         final List<ChangeSet> changeSets = new ArrayList<ChangeSet>();
         
-        MantisProjectProperty mpp = getMantisProjectProperty(build);
+        MantisProjectProperty mpp = MantisProjectProperty.get(build);
         final Pattern pattern = mpp.getRegexpPattern();
         for (final Entry change : build.getChangeSet()) {
             final Matcher matcher = pattern.matcher(change.getMsg());
@@ -151,16 +150,6 @@ final class Updater {
         }
         
         return changeSets;
-    }
-
-    private MantisProjectProperty getMantisProjectProperty(AbstractBuild<?, ?> build) {
-        Job<?, ?> job;
-        if (build instanceof MatrixRun) {
-            job = ((MatrixRun) build).getProject().getParent();
-        } else {
-            job = build.getProject();
-        }
-        return job.getProperty(MantisProjectProperty.class);
     }
     
     private static final Logger LOGGER = Logger.getLogger(Updater.class.getName());

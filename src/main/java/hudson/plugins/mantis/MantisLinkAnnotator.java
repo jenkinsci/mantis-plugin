@@ -26,7 +26,7 @@ public final class MantisLinkAnnotator extends ChangeLogAnnotator {
 
     @Override
     public void annotate(final AbstractBuild<?, ?> build, final Entry change, final MarkupText text) {
-        final MantisProjectProperty mpp = build.getParent().getProperty(MantisProjectProperty.class);
+        final MantisProjectProperty mpp = MantisProjectProperty.get(build);
         if (mpp == null || mpp.getSite() == null) {
             return;
         }
