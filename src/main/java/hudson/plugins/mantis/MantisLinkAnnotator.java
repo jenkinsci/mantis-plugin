@@ -9,7 +9,6 @@ import hudson.plugins.mantis.model.MantisIssue;
 import hudson.scm.ChangeLogAnnotator;
 import hudson.scm.ChangeLogSet.Entry;
 
-import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.logging.Level;
@@ -56,13 +55,10 @@ public final class MantisLinkAnnotator extends ChangeLogAnnotator {
                 issue = action.getIssue(id);
             } else {
                 issue = getIssue(build, id);
-                if (issue != null) {
-                    notSavedIssues.add(issue);
-                }
             }
 
             // add hyperlink to Mantis
-            final String newUrl = Util.encode(url + "view.php?id=$1");
+            String newUrl = Util.encode(url + "view.php?id=$1");
             if (issue == null) {
                 LOGGER.log(Level.WARNING, Messages.MantisLinkAnnotator_FailedToGetMantisIssue(id));
                 st.surroundWith(String.format("<a href='%s'>", newUrl), "</a>");
@@ -70,10 +66,6 @@ public final class MantisLinkAnnotator extends ChangeLogAnnotator {
                 final String summary = Utility.escape(issue.getSummary());
                 st.surroundWith(String.format("<a href='%s' tooltip='%s'>", newUrl, summary), "</a>");
             }
-        }
-
-        if (!notSavedIssues.isEmpty()) {
-            saveIssues(build, pattern, notSavedIssues);
         }
     }
 
@@ -86,16 +78,6 @@ public final class MantisLinkAnnotator extends ChangeLogAnnotator {
             pattern = mpp.getRegexpPattern();
         }
         return pattern;
-    }
-
-    private void saveIssues(final AbstractBuild<?, ?> build, final Pattern pattern, final List<MantisIssue> issues) {
-        final MantisBuildAction action = new MantisBuildAction(pattern, issues.toArray(new MantisIssue[0]));
-        build.getActions().add(action);
-        try {
-            build.save();
-        } catch (final IOException e) {
-            LOGGER.log(Level.WARNING, Messages.MantisLinkAnnotator_FailedToSave(), e);
-        }
     }
 
     private MantisIssue getIssue(final AbstractBuild<?, ?> build, final int id) {
