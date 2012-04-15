@@ -3,6 +3,7 @@ package hudson.plugins.mantis;
 import hudson.Extension;
 import hudson.Util;
 import hudson.matrix.MatrixRun;
+import hudson.model.Descriptor.FormException;
 import hudson.model.*;
 import hudson.plugins.mantis.MantisSite.MantisVersion;
 import hudson.plugins.mantis.model.MantisCategory;

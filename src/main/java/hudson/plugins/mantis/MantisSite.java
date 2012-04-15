@@ -121,12 +121,8 @@ public final class MantisSite {
     }
 
     public String getIssueLink(int issueNo) {
-        StringBuilder issueUrl = new StringBuilder();
         String u = getUrl().toExternalForm();
-        issueUrl.append(u);
-        issueUrl.append("view.php?id=");
-        issueUrl.append(issueNo);
-        return issueUrl.toString();
+        return String.format("%sview.php?id=%d", u, issueNo);
     }  
     
     public boolean isConnect() {
