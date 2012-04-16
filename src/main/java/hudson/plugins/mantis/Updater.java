@@ -119,13 +119,6 @@ final class Updater {
 
         chnageSets.addAll(findChangeSetsFromSCM(build));
 
-        for (final DependencyChange depc : build.getDependencyChanges(
-                build.getPreviousBuild()).values()) {
-            for (final AbstractBuild<?, ?> b : depc.getBuilds()) {
-                chnageSets.addAll(findChangeSetsFromSCM(b));
-            }
-        }
-
         return chnageSets;
     }
 
