@@ -9,8 +9,6 @@ import hudson.plugins.mantis.model.MantisIssue;
 import hudson.scm.ChangeLogAnnotator;
 import hudson.scm.ChangeLogSet.Entry;
 
-import java.util.ArrayList;
-import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import java.util.regex.Pattern;
@@ -35,8 +33,7 @@ public final class MantisLinkAnnotator extends ChangeLogAnnotator {
 
         final MantisBuildAction action = build.getAction(MantisBuildAction.class);
         final String url = mpp.getSite().getUrl().toExternalForm();
-        final List<MantisIssue> notSavedIssues = new ArrayList<MantisIssue>();
-
+        
         final Pattern pattern = findRegexPattern(action, mpp);
 
         for (final SubText st : text.findTokens(pattern)) {

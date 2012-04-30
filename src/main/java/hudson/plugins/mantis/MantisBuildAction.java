@@ -2,6 +2,7 @@ package hudson.plugins.mantis;
 
 import hudson.model.Action;
 import hudson.plugins.mantis.model.MantisIssue;
+import java.util.Arrays;
 import java.util.regex.Pattern;
 
 /**
@@ -18,12 +19,15 @@ public final class MantisBuildAction implements Action {
     private final Pattern pattern;
 
     public MantisIssue[] getIssues() {
-        return issues;
+        return Arrays.copyOf(issues, issues.length);
     }
 
     public MantisBuildAction(final Pattern pattern, final MantisIssue[] issues) {
         this.pattern = pattern;
-        this.issues = issues;
+        if (issues == null) {
+            throw new IllegalArgumentException("issues should not be null.");
+        }
+        this.issues = Arrays.copyOf(issues, issues.length);
     }
 
     public String getDisplayName() {
