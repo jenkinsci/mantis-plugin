@@ -26,6 +26,8 @@ import org.xml.sax.InputSource;
  */
 public class JellyScriptContent implements ScriptContent {
 
+    private static final int BUFFER_SIZE = 16 * 1024;
+    
     public String getContent(AbstractBuild<?, ?> build, Result result) throws IOException, InterruptedException {
         InputStream inputStream = null;
         String templateName = result.toString().toLowerCase();
@@ -71,7 +73,7 @@ public class JellyScriptContent implements ScriptContent {
     }
 
     private String convert(JellyContext context, Script script) throws JellyTagException, IOException {
-        ByteArrayOutputStream output = new ByteArrayOutputStream(16 * 1024);
+        ByteArrayOutputStream output = new ByteArrayOutputStream(BUFFER_SIZE);
         XMLOutput xmlOutput = null;
         try {
             xmlOutput = XMLOutput.createXMLOutput(output);

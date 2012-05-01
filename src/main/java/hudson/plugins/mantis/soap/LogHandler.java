@@ -1,6 +1,5 @@
 package hudson.plugins.mantis.soap;
 
-import hudson.Util;
 import java.util.logging.Logger;
 import org.apache.axis.AxisFault;
 import org.apache.axis.Message;

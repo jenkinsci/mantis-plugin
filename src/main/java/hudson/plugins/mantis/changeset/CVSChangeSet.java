@@ -8,6 +8,7 @@ import java.io.IOException;
 import java.net.URL;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.logging.Logger;
 
 /**
  * ChangeSet of CVS
@@ -89,8 +90,14 @@ public class CVSChangeSet extends AbstractChangeSet<CVSChangeLogSet.CVSChangeLog
                 link = browser.getDiffLink(file);
             } catch (final IOException e) {
                 // OK
+                LOGGER.warning(e.getMessage());
             }
-            return (link == null) ? UNKNOWN_CHANGESETLINK : link.toExternalForm();
+            if (link == null) {
+                return UNKNOWN_CHANGESETLINK;
+            }
+            return link.toExternalForm();
         }
     }
+    
+    private static final Logger LOGGER = Logger.getLogger(CVSChangeLogSet.class.getName());
 }

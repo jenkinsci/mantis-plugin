@@ -120,7 +120,8 @@ public final class MantisSessionImpl extends AbstractMantisSession {
         List<MantisCategory> categories = new ArrayList<MantisCategory>();
         String[] list;
         try {
-            list = portType.mc_project_get_categories(site.getUserName(), site.getPassword(), BigInteger.valueOf(projectId));
+            list = portType.mc_project_get_categories(
+                    site.getUserName(), site.getPassword(), BigInteger.valueOf(projectId));
         } catch (final RemoteException e) {
             throw new MantisHandlingException(e);
         }

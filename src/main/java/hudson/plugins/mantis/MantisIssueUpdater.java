@@ -53,7 +53,7 @@ public final class MantisIssueUpdater extends Recorder {
         return updater.perform(build, listener);
     }
 
-    @Extension(ordinal=1001)
+    @Extension
     public static final class DescriptorImpl extends BuildStepDescriptor<Publisher> {
 
         public DescriptorImpl() {

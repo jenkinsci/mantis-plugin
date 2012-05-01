@@ -63,11 +63,17 @@ public abstract class AbstractChangeSet<T extends Entry> implements ChangeSet, S
 
     protected String getAuthor() {
         final User user = entry.getAuthor();
-        return (user == null) ? UNKNOWN_AUTHOR : user.getId();
+        if (user == null) {
+            return UNKNOWN_AUTHOR;
+        } 
+        return user.getId();
     }
 
     protected String getMsg() {
-        return entry == null ? UNKNOWN_MSG : entry.getMsg();
+        if (entry == null) {
+            return UNKNOWN_MSG;
+        }
+        return entry.getMsg();
     }
     
     private static final Logger LOGGER = Logger.getLogger(AbstractChangeSet.class.getName());

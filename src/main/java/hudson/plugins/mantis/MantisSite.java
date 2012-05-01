@@ -147,10 +147,15 @@ public final class MantisSite {
     public void updateIssue(final int id, final String text, final boolean keepNotePrivate)
             throws MantisHandlingException {
 
-        final MantisViewState viewState = keepNotePrivate ? MantisViewState.PRIVATE : MantisViewState.PUBLIC;
-        final MantisNote note = new MantisNote(text, viewState);
+        MantisViewState viewState;
+        if (keepNotePrivate) {
+            viewState = MantisViewState.PRIVATE;
+        } else {
+            viewState = MantisViewState.PUBLIC;
+        }
+        MantisNote note = new MantisNote(text, viewState);
 
-        final MantisSession session = createSession();
+        MantisSession session = createSession();
         session.addNote(id, note);
     }
 

@@ -79,7 +79,7 @@ public final class MantisLinkAnnotator extends ChangeLogAnnotator {
 
     private MantisIssue getIssue(final AbstractBuild<?, ?> build, final int id) {
         final MantisSite site = MantisSite.get(build.getProject());
-        MantisIssue issue ;
+        MantisIssue issue;
         try {
             issue = site.getIssue(id);
         } catch (final MantisHandlingException e) {

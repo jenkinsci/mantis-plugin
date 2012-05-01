@@ -3,8 +3,13 @@ package hudson.plugins.mantis;
 import hudson.Extension;
 import hudson.Util;
 import hudson.matrix.MatrixRun;
+import hudson.model.AbstractBuild;
+import hudson.model.AbstractProject;
 import hudson.model.Descriptor.FormException;
-import hudson.model.*;
+import hudson.model.Hudson;
+import hudson.model.Job;
+import hudson.model.JobProperty;
+import hudson.model.JobPropertyDescriptor;
 import hudson.plugins.mantis.MantisSite.MantisVersion;
 import hudson.plugins.mantis.model.MantisCategory;
 import hudson.plugins.mantis.model.MantisProject;
@@ -60,13 +65,22 @@ public final class MantisProjectProperty extends JobProperty<AbstractProject<?, 
     @DataBoundConstructor
     public MantisProjectProperty(String siteName, int projectId, String category,
             String pattern, String regex, boolean linkEnabled) {
-        final String name = (siteName != null) ? siteName : defaultSiteName();
+        String name;
+        if (siteName != null) {
+             name = siteName;
+        } else {
+            name = defaultSiteName();
+        }
         this.siteName = Util.fixEmptyAndTrim(name);
         this.projectId = projectId;
         this.category = Util.fixEmptyAndTrim(category);
         this.pattern = Util.fixEmptyAndTrim(pattern);
         this.regex = Util.fixEmptyAndTrim(regex);
-        this.regexpPattern = (this.regex != null) ? Pattern.compile(this.regex) : createRegexp(this.pattern);
+        if (this.regex != null) {
+            this.regexpPattern = Pattern.compile(this.regex);
+        } else {
+            this.regexpPattern = createRegexp(this.pattern);
+        }
         this.linkEnabled = linkEnabled;
     }
 
@@ -93,7 +107,10 @@ public final class MantisProjectProperty extends JobProperty<AbstractProject<?, 
     public Pattern getRegexpPattern() {
         // If project configuration has not saved after upgrading to 0.8.0,
         // return default issue id pattern.
-        return (regexpPattern != null) ? regexpPattern : createRegexp(pattern);
+        if (regexpPattern == null) {
+            return createRegexp(pattern);
+        }
+        return regexpPattern;
     }
 
     public boolean isLinkEnabled() {
@@ -214,7 +231,7 @@ public final class MantisProjectProperty extends JobProperty<AbstractProject<?, 
             for (MantisProject p : projects) {
                model.add(p.getName(), "" + p.getId());
                for (MantisProjectItem sub : subProjects(p, 1)) {
-                   model.add(sub.name, sub.id);
+                   model.add(sub.getName(), sub.getId());
                }
             }
 
@@ -223,10 +240,18 @@ public final class MantisProjectProperty extends JobProperty<AbstractProject<?, 
 
         private static class MantisProjectItem {
 
-            public String name;
+            private String name;
 
-            public String id;
+            private String id;
 
+            public String getId() {
+                return id;
+            }
+
+            public String getName() {
+                return name;
+            }
+            
             public MantisProjectItem(String name, String id) {
                 this.name = name;
                 this.id = id;
@@ -244,7 +269,7 @@ public final class MantisProjectProperty extends JobProperty<AbstractProject<?, 
 
         public ListBoxModel doFillCategoryItems(@QueryParameter String siteName, @QueryParameter int projectId) {
             ListBoxModel model = new ListBoxModel();
-            model.add("-", MantisCategory.None);
+            model.add("-", MantisCategory.NONE);
             if (projectId == MantisProject.NONE) {
                 return model;
             }
@@ -279,7 +304,8 @@ public final class MantisProjectProperty extends JobProperty<AbstractProject<?, 
         public FormValidation doCheckLogin(
                 @QueryParameter("m.url") String url, @QueryParameter("m.version") String version, 
                 @QueryParameter("m.userName") String userName, @QueryParameter("m.password") String password, 
-                @QueryParameter("m.basicUserName") String basicUserName, @QueryParameter("m.basicPassword") String basicPassword) 
+                @QueryParameter("m.basicUserName") String basicUserName, 
+                @QueryParameter("m.basicPassword") String basicPassword) 
                 throws IOException, ServletException {
             // only administrator allowed
             Hudson.getInstance().checkPermission(Hudson.ADMINISTER);
@@ -289,14 +315,15 @@ public final class MantisProjectProperty extends JobProperty<AbstractProject<?, 
             }
             
             try {
-                new URL(url);
+                URL urL = new URL(url);
             } catch (MalformedURLException e) {
                 return FormValidation.error(Messages.MantisProjectProperty_MalformedURL());
             }
 
             MantisVersion v = MantisVersion.getVersionSafely(version, MantisVersion.V120);
 
-            final MantisSite site = new MantisSite(new URL(url), v.name(), userName, password, basicUserName, basicPassword);
+            final MantisSite site = new MantisSite(
+                    new URL(url), v.name(), userName, password, basicUserName, basicPassword);
             if (!site.isConnect()) {
                 return FormValidation.error(Messages.MantisProjectProperty_UnableToLogin());
             }

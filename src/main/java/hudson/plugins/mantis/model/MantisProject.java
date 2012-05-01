@@ -48,11 +48,11 @@ public class MantisProject implements Serializable {
         return subProjects;
     }
 
-    public void addSubProjectAll(List<MantisProject> Projects) {
-        subProjects.addAll(Projects);
+    public void addSubProjectAll(List<MantisProject> projects) {
+        subProjects.addAll(projects);
     }
 
-    public void addSubProject(MantisProject Project) {
-        subProjects.add(Project);
+    public void addSubProject(MantisProject project) {
+        subProjects.add(project);
     }
 }

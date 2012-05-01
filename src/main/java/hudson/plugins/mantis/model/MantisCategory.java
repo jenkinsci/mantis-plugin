@@ -10,7 +10,7 @@ public class MantisCategory implements Serializable {
 
     private static final long serialVersionUID = 1L;
 
-    public static final String None = "Not Selected";
+    public static final String NONE = "Not Selected";
     
     private final String name;
 

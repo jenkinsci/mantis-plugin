@@ -104,7 +104,7 @@ public final class MantisIssueRegister extends Recorder {
         MantisProjectProperty mpp = MantisProjectProperty.get(build);
         int projectId = mpp.getProjectId();
         String categoryName = mpp.getCategory();
-        if (projectId == MantisProject.NONE || MantisCategory.None.equals(categoryName)) {
+        if (projectId == MantisProject.NONE || MantisCategory.NONE.equals(categoryName)) {
             Utility.log(listener.getLogger(), "Neither project nor category selected.");
             return null;
         }
@@ -124,7 +124,7 @@ public final class MantisIssueRegister extends Recorder {
         return summary.toString();
     }
     
-    @Extension(ordinal=1000)
+    @Extension
     public static final class DescriptorImpl extends BuildStepDescriptor<Publisher> {
         
         public DescriptorImpl() {
