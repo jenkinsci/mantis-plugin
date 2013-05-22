@@ -20,6 +20,8 @@ public final class MantisIssue implements Serializable {
     private MantisProject project;
 
     private MantisCategory category;
+    
+    private MantisViewState viewState;
 
     public int getId() {
         return id;
@@ -46,10 +48,16 @@ public final class MantisIssue implements Serializable {
         this.summary = summary;
     }
 
-    public MantisIssue(MantisProject project, MantisCategory category, String summary, String description) {
+    public MantisViewState getViewState() {
+        return viewState;
+    }
+
+    public MantisIssue(MantisProject project, MantisCategory category, String summary, 
+            String description, MantisViewState viewState) {
         this.summary = summary;
         this.description = description;
         this.project = project;
         this.category = category;
+        this.viewState = viewState;
     }
 }

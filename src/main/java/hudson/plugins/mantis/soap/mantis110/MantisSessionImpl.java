@@ -151,7 +151,9 @@ public final class MantisSessionImpl extends AbstractMantisSession {
         data.setCategory(category.getName());
         data.setSummary(issue.getSummary());
         data.setDescription(issue.getDescription());
-
+        ObjectRef viewStateRef = new ObjectRef(BigInteger.valueOf(issue.getViewState().getCode()), null);
+        data.setView_state(viewStateRef);
+        
         BigInteger addedIssueNo = null;
         try {
             addedIssueNo = portType.mc_issue_add(site.getUserName(), site.getPassword(), data);

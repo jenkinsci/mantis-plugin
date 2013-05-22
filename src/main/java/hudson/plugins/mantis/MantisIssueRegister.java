@@ -11,6 +11,7 @@ import hudson.model.Result;
 import hudson.plugins.mantis.model.MantisCategory;
 import hudson.plugins.mantis.model.MantisIssue;
 import hudson.plugins.mantis.model.MantisProject;
+import hudson.plugins.mantis.model.MantisViewState;
 import hudson.plugins.mantis.scripts.JellyScriptContent;
 import hudson.tasks.BuildStepDescriptor;
 import hudson.tasks.BuildStepMonitor;
@@ -31,17 +32,24 @@ public final class MantisIssueRegister extends Recorder {
     
     private String threshold;
     
+    private boolean keepTicketPrivate;
+    
     public static final String FAILURE = "failure";
     
     public static final String FAILUREORUNSTABL = "failureOrUnstable";
     
     @DataBoundConstructor
-    public MantisIssueRegister(String threshold) {
+    public MantisIssueRegister(String threshold, boolean keepTicketPrivate) {
         this.threshold = Util.fixEmptyAndTrim(threshold);
+        this.keepTicketPrivate = keepTicketPrivate;
     }
     
     public String getThreshold() {
         return threshold;
+    }
+
+    public boolean isKeepTicketPrivate() {
+        return keepTicketPrivate;
     }
     
     public BuildStepMonitor getRequiredMonitorService() {
@@ -113,7 +121,13 @@ public final class MantisIssueRegister extends Recorder {
         MantisCategory category = new MantisCategory(categoryName);
         String summary = summary(build);
         String description = new JellyScriptContent().getContent(build, build.getResult());
-        return new MantisIssue(project, category, summary, description);
+        MantisViewState viewState;
+        if (isKeepTicketPrivate()) {
+            viewState = MantisViewState.PUBLIC;
+        } else {
+            viewState = MantisViewState.PRIVATE;
+        }
+        return new MantisIssue(project, category, summary, description, viewState);
     }
     
     private String summary(AbstractBuild<?, ?> build) {
