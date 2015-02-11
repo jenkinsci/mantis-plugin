@@ -11,7 +11,7 @@
 
           <f:entry title="${%URL}" help="/plugin/mantis/help-url.html">
             <f:textbox name="m.url" value="${site.url}" 
-                       checkUrl="'descriptorByName/MantisProjectProperty/checkRequired?value=' + encodeURIComponent(this.value)" />
+                       checkUrl="'descriptorByName/hudson.plugins.mantis.MantisProjectProperty/checkRequired?value=' + encodeURIComponent(this.value)" />
           </f:entry>
 
           <f:entry title="${%Version}" description="${%description.version}">
