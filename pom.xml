@@ -8,7 +8,7 @@
     </parent>
 
     <artifactId>mantis</artifactId>
-    <version>0.26</version>
+    <version>0.27-SNAPSHOT</version>
     <packaging>hpi</packaging>
     <name>Jenkins Mantis plugin</name>
     <description>Integrates Jenkins to Mantis</description>
@@ -194,7 +194,7 @@
         <connection>scm:git:git://github.com/jenkinsci/mantis-plugin.git</connection>
         <developerConnection>scm:git:git@github.com:jenkinsci/mantis-plugin.git</developerConnection>
         <url>https://github.com/jenkinsci/mantis-plugin</url>
-      <tag>mantis-0.26</tag>
+      <tag>HEAD</tag>
   </scm>
 
 
