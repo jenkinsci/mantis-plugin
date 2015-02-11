@@ -9,6 +9,7 @@ import hudson.plugins.mantis.model.MantisProject;
 import hudson.plugins.mantis.model.MantisViewState;
 import hudson.plugins.mantis.soap.MantisSession;
 import hudson.plugins.mantis.soap.MantisSessionFactory;
+import hudson.util.Secret;
 
 import java.net.MalformedURLException;
 import java.net.URL;
@@ -44,7 +45,13 @@ public final class MantisSite {
     /**
      * password for Mantis installation.
      */
-    private final String password;
+    @Deprecated
+    private String password;
+
+    /**
+     * secret password for Mantis installation.
+     */
+    private Secret secretPassword;
 
     /**
      * user name for Basic Authentication.
@@ -54,7 +61,13 @@ public final class MantisSite {
     /**
      * password for Basic Authentication.
      */
-    private final String basicPassword;
+    @Deprecated
+    private String basicPassword;
+
+    /**
+     * secret password for Mantis installation.
+     */
+    private Secret secretBasicPassword;
 
     public static MantisSite get(final AbstractProject<?, ?> p) {
         final MantisProjectProperty mpp = p.getProperty(MantisProjectProperty.class);
@@ -85,9 +98,19 @@ public final class MantisSite {
         return userName;
     }
 
+    @Deprecated
     public String getPassword() {
         return password;
     }
+
+    public String getPlainPassword() {
+        return Secret.toString(secretPassword);
+    }
+
+    public Secret getSecretPassword() {
+        return secretPassword;
+    }
+
 
     public String getName() {
         return url.toExternalForm();
@@ -97,8 +120,17 @@ public final class MantisSite {
         return basicUserName;
     }
 
+    @Deprecated
     public String getBasicPassword() {
         return basicPassword;
+    }
+    
+    public String getPlainBasicPassword() {
+        return Secret.toString(secretBasicPassword);
+    }
+
+    public Secret getSecretBasicPassword() {
+        return secretBasicPassword;
     }
 
     @DataBoundConstructor
@@ -115,9 +147,9 @@ public final class MantisSite {
         }
         this.version = MantisVersion.getVersionSafely(version, MantisVersion.V110);
         this.userName = Util.fixEmptyAndTrim(userName);
-        this.password = Util.fixEmptyAndTrim(password);
+        this.secretPassword = Secret.fromString(Util.fixEmptyAndTrim(password));
         this.basicUserName = Util.fixEmptyAndTrim(basicUserName);
-        this.basicPassword = Util.fixEmptyAndTrim(basicPassword);
+        this.secretBasicPassword = Secret.fromString(Util.fixEmptyAndTrim(basicPassword));
     }
 
     public String getIssueLink(int issueNo) {
@@ -208,6 +240,18 @@ public final class MantisSite {
         public String getDisplayName() {
             return displayName;
         }
+    }
+
+    protected Object readResolve() {
+        if (password != null) {
+            secretPassword = Secret.fromString(password);
+            password = null;
+        }
+        if (basicPassword != null) {
+            secretBasicPassword = Secret.fromString(basicPassword);
+            basicPassword = null;
+        }
+        return this;
     }
 
     private static final Logger LOGGER = Logger.getLogger(MantisSite.class.getName());

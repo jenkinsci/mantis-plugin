@@ -39,9 +39,9 @@ public final class MantisSessionImpl extends AbstractMantisSession {
             portType = locator.getMantisConnectPort(endpoint);
 
             // Basic Authentication if they are specified
-            if (site.getBasicUserName() != null && site.getBasicPassword() != null) {
+            if (site.getBasicUserName() != null && site.getPlainBasicPassword() != null) {
                 ((Stub) portType).setUsername(site.getBasicUserName());
-                ((Stub) portType).setPassword(site.getBasicPassword());
+                ((Stub) portType).setPassword(site.getPlainBasicPassword());
             }
             // Support https
             // Allowing unsigned server certs
@@ -59,7 +59,7 @@ public final class MantisSessionImpl extends AbstractMantisSession {
         IssueData data;
         try {
             data =
-                    portType.mc_issue_get(site.getUserName(), site.getPassword(), BigInteger.valueOf(id));
+                    portType.mc_issue_get(site.getUserName(), site.getPlainPassword(), BigInteger.valueOf(id));
         } catch (final RemoteException e) {
             throw new MantisHandlingException(e);
         }
@@ -74,7 +74,7 @@ public final class MantisSessionImpl extends AbstractMantisSession {
         data.setView_state(new ObjectRef(BigInteger.valueOf(note.getViewState().getCode()), null));
 
         try {
-            portType.mc_issue_note_add(site.getUserName(), site.getPassword(), BigInteger.valueOf(id), data);
+            portType.mc_issue_note_add(site.getUserName(), site.getPlainPassword(), BigInteger.valueOf(id), data);
         } catch (final RemoteException e) {
             throw new MantisHandlingException(e);
         }
@@ -94,7 +94,7 @@ public final class MantisSessionImpl extends AbstractMantisSession {
         List<MantisProject> projects = new ArrayList<MantisProject>();
         ProjectData[] data;
         try {
-            data = portType.mc_projects_get_user_accessible(site.getUserName(), site.getPassword());
+            data = portType.mc_projects_get_user_accessible(site.getUserName(), site.getPlainPassword());
         } catch (final RemoteException e) {
             throw new MantisHandlingException(e);
         }
@@ -120,7 +120,7 @@ public final class MantisSessionImpl extends AbstractMantisSession {
         String[] list;
         try {
             list = portType.mc_project_get_categories(
-                    site.getUserName(), site.getPassword(), BigInteger.valueOf(projectId));
+                    site.getUserName(), site.getPlainPassword(), BigInteger.valueOf(projectId));
         } catch (final RemoteException e) {
             throw new MantisHandlingException(e);
         }
@@ -155,7 +155,7 @@ public final class MantisSessionImpl extends AbstractMantisSession {
         
         BigInteger addedIssueNo = null;
         try {
-            addedIssueNo = portType.mc_issue_add(site.getUserName(), site.getPassword(), data);
+            addedIssueNo = portType.mc_issue_add(site.getUserName(), site.getPlainPassword(), data);
         } catch (final RemoteException e) {
             throw new MantisHandlingException(e);
         }

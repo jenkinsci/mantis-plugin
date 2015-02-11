@@ -28,7 +28,7 @@
 
           <f:entry title="${%Password}" >
             <f:password class="setting-input" 
-                   type="password" name="m.password" value="${site.password}" />
+                   type="password" name="m.password" value="${site.secretPassword}" />
           </f:entry>
 
           <f:advanced>
@@ -38,8 +38,8 @@
                 <f:textbox name="m.basicUserName" value="${site.basicUserName}" />               
               </f:entry>
               <f:entry title="${%Password}" >
-                <input class="setting-input" 
-                       type="password" name="m.basicPassword" value="${site.basicPassword}" />
+                <f:password class="setting-input"
+                       type="password" name="m.basicPassword" value="${site.secretBasicPassword}" />
               </f:entry>
               <f:validateButton
                  title="${%Verify}" progress="${%Verifying...}"

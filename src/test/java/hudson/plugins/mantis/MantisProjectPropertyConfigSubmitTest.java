@@ -39,10 +39,10 @@ public class MantisProjectPropertyConfigSubmitTest extends HudsonTestCase {
         
         assertEquals("http://localhost/mantis/", form.getInputByName("m.url").getValueAttribute());
         assertEquals("V110", form.getSelectByName("m.version").getSelectedOptions().get(0).getValueAttribute());
-        assertEquals("test", form.getInputByName("m.userName").getValueAttribute());
-        assertEquals("test", form.getInputByName("m.password").getValueAttribute());
-        assertEquals("test", form.getInputByName("m.basicUserName").getValueAttribute());
-        assertEquals("test", form.getInputByName("m.basicPassword").getValueAttribute());
+        assertEquals(s.getUserName(), form.getInputByName("m.userName").getValueAttribute());
+        assertEquals(s.getSecretPassword().getEncryptedValue(), form.getInputByName("m.password").getValueAttribute());
+        assertEquals(s.getBasicUserName(), form.getInputByName("m.basicUserName").getValueAttribute());
+        assertEquals(s.getSecretBasicPassword().getEncryptedValue(), form.getInputByName("m.basicPassword").getValueAttribute());
         
     }
 
@@ -73,8 +73,8 @@ public class MantisProjectPropertyConfigSubmitTest extends HudsonTestCase {
         assertEquals(new URL("http://bacons.ddo.jp/mantis/"), site.getUrl());
         assertEquals(MantisSite.MantisVersion.V120, site.getVersion());
         assertEquals("mantis", site.getUserName());
-        assertEquals("mantis", site.getPassword());
+        assertEquals("mantis", site.getPlainPassword());
         assertEquals("mantis", site.getBasicUserName());
-        assertEquals("mantis", site.getBasicPassword());
+        assertEquals("mantis", site.getPlainBasicPassword());
     }
 }

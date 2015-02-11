@@ -4,19 +4,18 @@ import hudson.plugins.mantis.model.MantisCategory;
 import hudson.plugins.mantis.model.MantisIssue;
 import hudson.plugins.mantis.model.MantisProject;
 import hudson.plugins.mantis.model.MantisViewState;
-import java.net.MalformedURLException;
 import java.net.URL;
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
-import static org.junit.Assert.*;
+import org.jvnet.hudson.test.HudsonTestCase;
 
 /**
  * Test class.
  * 
  * @author Seiji Sogabe
  */
-public class MantisSiteTest {
+public class MantisSiteTest extends HudsonTestCase {
 
     private static String MANTIS_URL = "http://bacons.ddo.jp/mantis/";
     
@@ -30,13 +29,17 @@ public class MantisSiteTest {
     }
 
     @Before
-    public void setUp() throws MalformedURLException {
+    @Override
+    public void setUp() throws Exception {
+        super.setUp();
         mantisUrl = new URL(MANTIS_URL);
         googleUrl = new URL("http://www.google.com");
     }
     
     @After
-    public void tearDown() {
+    @Override
+    public void tearDown() throws Exception {
+        super.tearDown();
     }
 
     @Test
@@ -66,10 +69,15 @@ public class MantisSiteTest {
         assertEquals("for Jenkins Mantis Plugin", issue.getSummary());
     }
 
-    @Test(expected = MantisHandlingException.class)
-    public void testGetIssue_NotFound() throws MantisHandlingException {
+    @Test
+    public void testGetIssue_NotFound() {
         target = createMantisSite();
-        target.getIssue(99999);
+        try {
+            target.getIssue(99999);
+            fail();
+        } catch (MantisHandlingException e) {
+            // OK
+        }
     }
     
     @Test
