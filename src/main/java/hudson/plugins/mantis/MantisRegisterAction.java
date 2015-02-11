@@ -30,14 +30,17 @@ public class MantisRegisterAction implements Action {
         return site.getIssueLink(issueNo);
     }
 
+    @Override
     public String getDisplayName() {
         return "";
     }
 
+    @Override
     public String getIconFileName() {
         return null;
     }
 
+    @Override
     public String getUrlName() {
         return null;
     }

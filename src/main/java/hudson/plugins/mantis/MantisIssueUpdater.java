@@ -42,6 +42,7 @@ public final class MantisIssueUpdater extends Recorder {
         return recordChangelog;
     }
 
+    @Override
     public BuildStepMonitor getRequiredMonitorService() {
         return BuildStepMonitor.NONE;
     }

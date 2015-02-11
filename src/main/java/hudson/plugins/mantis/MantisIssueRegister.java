@@ -52,6 +52,7 @@ public final class MantisIssueRegister extends Recorder {
         return keepTicketPrivate;
     }
     
+    @Override
     public BuildStepMonitor getRequiredMonitorService() {
         return BuildStepMonitor.NONE;
     }

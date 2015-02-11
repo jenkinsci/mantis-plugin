@@ -30,10 +30,12 @@ public final class MantisBuildAction implements Action {
         this.issues = Arrays.copyOf(issues, issues.length);
     }
 
+    @Override
     public String getDisplayName() {
         return Messages.MantiBuildAction_Displayname();
     }
 
+    @Override
     public String getUrlName() {
         return "mantis";
     }
@@ -51,6 +53,7 @@ public final class MantisBuildAction implements Action {
         return null;
     }
 
+    @Override
     public String getIconFileName() {
         return null;
     }

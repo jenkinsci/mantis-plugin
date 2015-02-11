@@ -27,10 +27,12 @@ public abstract class AbstractChangeSet<T extends Entry> implements ChangeSet, S
         this.entry = entry;
     }
 
+    @Override
     public int getId() {
         return id;
     }
 
+    @Override
     public abstract String createChangeLog();
 
     protected RepositoryBrowser getRepositoryBrowser() {
