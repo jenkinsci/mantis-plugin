@@ -7,6 +7,7 @@ import hudson.plugins.mantis.model.MantisViewState;
 import java.net.URL;
 import org.junit.After;
 import org.junit.Before;
+import org.junit.Ignore;
 import org.junit.Test;
 import org.jvnet.hudson.test.HudsonTestCase;
 
@@ -15,6 +16,7 @@ import org.jvnet.hudson.test.HudsonTestCase;
  * 
  * @author Seiji Sogabe
  */
+@Ignore(value = "not work behind a proxy")
 public class MantisSiteTest extends HudsonTestCase {
 
     private static String MANTIS_URL = "http://bacons.ddo.jp/mantis/";
