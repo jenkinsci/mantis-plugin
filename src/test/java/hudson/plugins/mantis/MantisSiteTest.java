@@ -5,11 +5,16 @@ import hudson.plugins.mantis.model.MantisIssue;
 import hudson.plugins.mantis.model.MantisProject;
 import hudson.plugins.mantis.model.MantisViewState;
 import java.net.URL;
-import org.junit.After;
+import static junit.framework.TestCase.assertEquals;
+import static junit.framework.TestCase.assertFalse;
+import static junit.framework.TestCase.assertNotNull;
+import static junit.framework.TestCase.assertTrue;
+import static junit.framework.TestCase.fail;
 import org.junit.Before;
 import org.junit.Ignore;
+import org.junit.Rule;
 import org.junit.Test;
-import org.jvnet.hudson.test.HudsonTestCase;
+import org.jvnet.hudson.test.JenkinsRule;
 
 /**
  * Test class.
@@ -17,9 +22,12 @@ import org.jvnet.hudson.test.HudsonTestCase;
  * @author Seiji Sogabe
  */
 @Ignore(value = "not work behind a proxy")
-public class MantisSiteTest extends HudsonTestCase {
+public class MantisSiteTest {
 
-    private static String MANTIS_URL = "http://bacons.ddo.jp/mantis/";
+    @Rule
+    public JenkinsRule j = new JenkinsRule();
+
+    private static final String MANTIS_URL = "http://bacons.ddo.jp/mantis/";
     
     private URL mantisUrl;
     
@@ -31,19 +39,11 @@ public class MantisSiteTest extends HudsonTestCase {
     }
 
     @Before
-    @Override
     public void setUp() throws Exception {
-        super.setUp();
         mantisUrl = new URL(MANTIS_URL);
         googleUrl = new URL("http://www.google.com");
     }
     
-    @After
-    @Override
-    public void tearDown() throws Exception {
-        super.tearDown();
-    }
-
     @Test
     public void testIsConnect() {
         target = createMantisSite();
@@ -108,7 +108,8 @@ public class MantisSiteTest extends HudsonTestCase {
         MantisCategory category = new MantisCategory("plugin");
         MantisIssue issue = new MantisIssue(project, category, summary, description, MantisViewState.PRIVATE);
         target.addIssue(issue);
-    }    
+    }
+    
     private MantisSite createMantisSite() {
         return new MantisSite(mantisUrl, "V120", "jenkinsci", "jenkinsci", null, null);
     }

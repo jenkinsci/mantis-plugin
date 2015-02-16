@@ -1,39 +1,45 @@
 package hudson.plugins.mantis;
 
+import com.gargoylesoftware.htmlunit.html.HtmlButton;
 import com.gargoylesoftware.htmlunit.html.HtmlForm;
-import hudson.model.Hudson;
 import hudson.model.JobProperty;
 import java.net.URL;
-import org.jvnet.hudson.test.HudsonTestCase;
+import jenkins.model.Jenkins;
+import static junit.framework.TestCase.assertEquals;
+import static junit.framework.TestCase.assertNotNull;
+import static org.codehaus.groovy.runtime.DefaultGroovyMethods.last;
+import org.junit.Before;
+import org.junit.Rule;
+import org.junit.Test;
+import org.jvnet.hudson.test.JenkinsRule;
+import org.jvnet.hudson.test.JenkinsRule.WebClient;
 
 /**
  *
  * @author Seiji Sogabe
  */
-public class MantisProjectPropertyConfigSubmitTest extends HudsonTestCase {
+public class MantisProjectPropertyConfigSubmitTest {
+
+    @Rule
+    public JenkinsRule j = new JenkinsRule();
 
     private WebClient webClient;
 
-    @Override
-    protected void setUp() throws Exception {
-        super.setUp();
-        webClient = new WebClient();
+    @Before
+    public void setUp() throws Exception {
+        webClient = j.createWebClient();
         webClient.setCssEnabled(false);
         webClient.setThrowExceptionOnFailingStatusCode(false);
     }
 
-    @Override
-    protected void tearDown() throws Exception {
-        super.tearDown();
-    }
-
+    @Test
     public void testConfigSubmit_001() throws Exception {
         
         MantisProjectProperty.DescriptorImpl descriptor = new MantisProjectProperty.DescriptorImpl();
         MantisSite s = new MantisSite(new URL("http://localhost/mantis/"), "V110", "test", "test", "test", "test");
         descriptor.addSite(s);
         
-        Hudson.getInstance().getDescriptorList(JobProperty.class).add(descriptor);
+        Jenkins.getInstance().getDescriptorList(JobProperty.class).add(descriptor);
         
         HtmlForm form = webClient.goTo("configure").getFormByName("config");
         
@@ -46,13 +52,14 @@ public class MantisProjectPropertyConfigSubmitTest extends HudsonTestCase {
         
     }
 
+    @Test
     public void testConfigSubmit_002() throws Exception {
         
         MantisProjectProperty.DescriptorImpl descriptor = new MantisProjectProperty.DescriptorImpl();
         MantisSite s = new MantisSite(new URL("http://localhost/mantis/"), "V110", "test", "test", null, null);
         descriptor.addSite(s);
         
-        Hudson.getInstance().getDescriptorList(JobProperty.class).add(descriptor);
+        Jenkins.getInstance().getDescriptorList(JobProperty.class).add(descriptor);
         
         HtmlForm form = webClient.goTo("configure").getFormByName("config");
         
@@ -63,7 +70,7 @@ public class MantisProjectPropertyConfigSubmitTest extends HudsonTestCase {
         form.getInputByName("m.basicUserName").setValueAttribute("mantis");
         form.getInputByName("m.basicPassword").setValueAttribute("mantis");
         
-        submit(form);
+        form.submit((HtmlButton)last(form.getHtmlElementsByTagName("button")));
         
         MantisSite[] sites = descriptor.getSites();
         assertNotNull(sites);
