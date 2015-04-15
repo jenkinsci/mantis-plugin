@@ -14,6 +14,8 @@ public final class MantisNote implements Serializable {
     private final String text;
 
     private final MantisViewState viewState;
+    
+
 
     public String getText() {
         return text;
@@ -22,6 +24,7 @@ public final class MantisNote implements Serializable {
     public MantisViewState getViewState() {
         return viewState;
     }
+
 
     public MantisNote(final String text, final MantisViewState viewState) {
         this.text = text;

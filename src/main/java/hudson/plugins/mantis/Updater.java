@@ -28,6 +28,8 @@ final class Updater {
     private static final String CRLF = System.getProperty("line.separator");
     
     private final MantisIssueUpdater property;
+    
+    private boolean flag;
 
     Updater(final MantisIssueUpdater property) {
         this.property = property;
@@ -69,8 +71,17 @@ final class Updater {
             try {
                 final MantisIssue issue = site.getIssue(changeSet.getId());
                 if (update) {
-                    final String text = createUpdateText(build, changeSet, rootUrl);
-                    site.updateIssue(changeSet.getId(), text, property.isKeepNotePrivate());
+                     //Add a System flag to control Changelogs on note
+                     flag = false ;
+                     final String text = createUpdateText(build, changeSet, rootUrl);
+                     String text2 = "" ;
+                    if(property.isNewNoteWithChangeLog()){
+                        
+                        flag = true;
+                        text2 = createUpdateText(build, changeSet, rootUrl);
+                       
+                    }
+                    site.updateIssue(changeSet.getId(), text, text2, property.isKeepNotePrivate(), property.isResolvedFilter(), property.isAddChangeLog(), property.isInvertSecondStateNote(), property.isNewNoteWithChangeLog());
                     Utility.log(logger, Messages.Updater_Updating(changeSet.getId()));
                 }
                 issues.add(issue);
@@ -92,14 +103,23 @@ final class Updater {
         final String prjName = build.getProject().getName();
         final int prjNumber = build.getNumber();
         final String url = rootUrl + build.getUrl();
-
+        
         final StringBuilder text = new StringBuilder();
+
         text.append(Messages.Updater_IssueIntegrated(prjName, prjNumber, url));
         text.append(CRLF).append(CRLF);
         
-        if (property.isRecordChangelog()) {
+        if (property.isAddChangeLog() && property.isNewNoteWithChangeLog() == false ) 
+        {           
             text.append(changeSet.createChangeLog());
         }
+        
+        if (property.isAddChangeLog()&& flag == true) 
+        {           
+            text.append(changeSet.createChangeLog());
+            flag = false;
+        }
+
         return text.toString();
     }
 

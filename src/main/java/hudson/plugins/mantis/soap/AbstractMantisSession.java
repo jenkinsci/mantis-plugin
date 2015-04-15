@@ -22,7 +22,9 @@ public abstract class AbstractMantisSession implements MantisSession {
 
     protected MantisSite site;
 
-    public abstract void addNote(int id, MantisNote note) throws MantisHandlingException;
+/*    public abstract void addNote(int id, MantisNote note) throws MantisHandlingException; */
+    
+    public abstract void addNote(int id, MantisNote note, final boolean ResolvedFilter) throws MantisHandlingException;
 
     public abstract MantisIssue getIssue(int id) throws MantisHandlingException;
 

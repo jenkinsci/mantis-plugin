@@ -9,6 +9,7 @@ import hudson.plugins.mantis.model.MantisProject;
 import hudson.plugins.mantis.model.MantisViewState;
 import hudson.plugins.mantis.soap.MantisSession;
 import hudson.plugins.mantis.soap.MantisSessionFactory;
+import hudson.plugins.mantis.model.MantisIssueStatus;
 import hudson.util.Secret;
 
 import java.net.MalformedURLException;
@@ -173,24 +174,74 @@ public final class MantisSite {
 
     public MantisIssue getIssue(final int id) throws MantisHandlingException {
         final MantisSession session = createSession();
+        
+        String msglog = "LOG LFA : Appel getIssue : ";
+        LOGGER.log(Level.INFO,msglog);
+        
         return session.getIssue(id);
     }
 
-    public void updateIssue(final int id, final String text, final boolean keepNotePrivate)
+    public void updateIssue(final int id, final String text, String textSecondNote, final boolean keepNotePrivate, final boolean resolvedFilter, final boolean addChangeLog, final boolean InvertSecondStateNote, final boolean NewNoteWithChangeLog )
             throws MantisHandlingException {
 
         MantisViewState viewState;
-        if (keepNotePrivate) {
-            viewState = MantisViewState.PRIVATE;
-        } else {
-            viewState = MantisViewState.PUBLIC;
-        }
-        MantisNote note = new MantisNote(text, viewState);
-
+        viewState = MantisViewState.PUBLIC;
+        
         MantisSession session = createSession();
-        session.addNote(id, note);
+        
+        
+            if (keepNotePrivate) 
+            {
+                viewState = MantisViewState.PRIVATE;  
+            }
+            // Try With two Args text
+            this.createNote(viewState, addChangeLog, InvertSecondStateNote, NewNoteWithChangeLog ,resolvedFilter, session, id, text, textSecondNote);  
+        
+            
+            
     }
+    
+    public void createNote(
+            MantisViewState viewState,
+            boolean addChangeLog,
+            boolean InvertSecondStateNote,
+            boolean NewNoteWithChangeLog,
+            boolean Resolved,
+            MantisSession session,
+            int id,
+            String text,
+            String textSecondNote)
+            throws MantisHandlingException
+    {
+        
 
+        
+        if(addChangeLog){    
+            if (NewNoteWithChangeLog)
+            {
+               MantisViewState newNoteViewState = viewState;  
+                if(InvertSecondStateNote)
+                {
+                    
+                    newNoteViewState = MantisViewState.invertViewState(viewState);
+                }
+                //Add note with changelog 
+                MantisNote noteWithChange = new MantisNote(textSecondNote, newNoteViewState);
+                session.addNote(id, noteWithChange,Resolved);
+            }
+            //Add note with changelog 
+            MantisNote noteWithChange = new MantisNote(text, viewState);
+            session.addNote(id, noteWithChange,Resolved);
+        }
+        else
+        {            
+        //Add note without any changelog 
+            // Modif MantisNote Text if Add Changelog == false
+        MantisNote noteWithChange = new MantisNote(text, viewState);
+        session.addNote(id, noteWithChange,Resolved);
+        }
+
+    }
     public List<MantisProject> getProjects() throws MantisHandlingException {
         final MantisSession session = createSession();
         return session.getProjects();

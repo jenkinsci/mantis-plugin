@@ -10,6 +10,7 @@ import hudson.model.BuildListener;
 import hudson.model.Result;
 import hudson.plugins.mantis.model.MantisCategory;
 import hudson.plugins.mantis.model.MantisIssue;
+import hudson.plugins.mantis.model.MantisIssueStatus;
 import hudson.plugins.mantis.model.MantisProject;
 import hudson.plugins.mantis.model.MantisViewState;
 import hudson.plugins.mantis.scripts.JellyScriptContent;
@@ -123,12 +124,13 @@ public final class MantisIssueRegister extends Recorder {
         String summary = summary(build);
         String description = new JellyScriptContent().getContent(build, build.getResult());
         MantisViewState viewState;
+        
         if (isKeepTicketPrivate()) {
             viewState = MantisViewState.PUBLIC;
         } else {
             viewState = MantisViewState.PRIVATE;
         }
-        return new MantisIssue(project, category, summary, description, viewState);
+        return new MantisIssue(project, category, summary, description,viewState,"new");
     }
     
     private String summary(AbstractBuild<?, ?> build) {
