@@ -73,7 +73,7 @@ public final class MantisSessionImpl extends AbstractMantisSession {
         
         
         //Lucas Fabre log issue name
-        String  msg = "LOG LFA : Issue Status : " + data.getStatus().getName();
+        String  msg = "LOG : Issue Status : " + data.getStatus().getName();
         LOGGER.log(Level.INFO,msg);
         //-------------------------------------------------
         
@@ -138,10 +138,10 @@ public final class MantisSessionImpl extends AbstractMantisSession {
         boolean ResultFilter;
         
             //Filter on Status , in goal to add notes on Issues which aren't dead. Check Resolved Filter on Config  
-           if (st_Status.equals(MantisIssueStatus.verified.toString()) || st_Status.equals(MantisIssueStatus.rejected.toString()) ||st_Status.equals(MantisIssueStatus.pending.toString()))
+           if (st_Status.equals(MantisIssueStatus.verified.toString()) || st_Status.equals(MantisIssueStatus.rejected.toString()) ||st_Status.equals(MantisIssueStatus.closed.toString()))
             {
                 // Print Log If Status is >Resolved... Closed
-                msgtest = "LOG LFA : No Note : Status is " + st_Status +": > Verified /Rejected / Closed " ;
+                msgtest = "LOG : No Note : Status is " + st_Status +": > Verified /Rejected / Closed " ;
                  ResultFilter = false ;
             }
            else
