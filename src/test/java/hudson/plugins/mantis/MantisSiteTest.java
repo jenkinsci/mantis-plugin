@@ -2,6 +2,7 @@ package hudson.plugins.mantis;
 
 import hudson.plugins.mantis.model.MantisCategory;
 import hudson.plugins.mantis.model.MantisIssue;
+import hudson.plugins.mantis.model.MantisIssueStatus;
 import hudson.plugins.mantis.model.MantisProject;
 import hudson.plugins.mantis.model.MantisViewState;
 import java.net.URL;
@@ -85,7 +86,7 @@ public class MantisSiteTest {
     @Test
     public void updateIssue() throws MantisHandlingException {
         target = createMantisSite();
-        target.updateIssue(232, "Updated by Jenkins Mantis Plugin.", false);
+        target.updateIssue(232, "Updated by Jenkins Mantis Plugin.","", false, false, false, false, false);
     }
     
     @Test
@@ -95,7 +96,9 @@ public class MantisSiteTest {
         String description = "Added by Jenkins Mantis Plugin.";
         MantisProject project = new MantisProject(2, "Jenkins Project");
         MantisCategory category = new MantisCategory("plugin");
-        MantisIssue issue = new MantisIssue(project, category, summary, description, MantisViewState.PUBLIC);
+        
+        
+        MantisIssue issue = new MantisIssue(project, category, summary, description,MantisViewState.PUBLIC,"acknowledged");
         target.addIssue(issue);
     }
 
@@ -105,8 +108,10 @@ public class MantisSiteTest {
         String summary = "Build failed(Private)";
         String description = "Added by Jenkins Mantis Plugin.";
         MantisProject project = new MantisProject(2, "Jenkins Project");
-        MantisCategory category = new MantisCategory("plugin");
-        MantisIssue issue = new MantisIssue(project, category, summary, description, MantisViewState.PRIVATE);
+        MantisCategory category;
+        category = new MantisCategory("plugin");
+        
+        MantisIssue issue = new MantisIssue(project, category, summary, description,MantisViewState.PRIVATE,"closed");
         target.addIssue(issue);
     }
     

@@ -13,7 +13,10 @@ import java.util.List;
  */
 public interface MantisSession {
 
-    void addNote(final int id, final MantisNote note) throws MantisHandlingException;
+    
+    
+    void addNote(final int id, final MantisNote note, final boolean ResolvedFilter) throws MantisHandlingException;
+
 
     String getVersion() throws MantisHandlingException;
 

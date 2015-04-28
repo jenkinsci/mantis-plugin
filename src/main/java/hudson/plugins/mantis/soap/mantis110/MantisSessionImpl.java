@@ -4,6 +4,7 @@ import hudson.plugins.mantis.MantisHandlingException;
 import hudson.plugins.mantis.MantisSite;
 import hudson.plugins.mantis.model.MantisCategory;
 import hudson.plugins.mantis.model.MantisIssue;
+import hudson.plugins.mantis.model.MantisIssueStatus;
 import hudson.plugins.mantis.model.MantisNote;
 import hudson.plugins.mantis.model.MantisProject;
 import hudson.plugins.mantis.soap.AbstractMantisSession;
@@ -13,6 +14,7 @@ import java.net.URL;
 import java.rmi.RemoteException;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.xml.rpc.ServiceException;
 import org.apache.axis.AxisProperties;
@@ -21,7 +23,7 @@ import org.apache.axis.client.AxisClient;
 import org.apache.axis.client.Stub;
 
 @Deprecated
-public final class MantisSessionImpl extends AbstractMantisSession {
+public class MantisSessionImpl extends AbstractMantisSession {
 
     private final MantisConnectPortType portType;
 
@@ -65,21 +67,68 @@ public final class MantisSessionImpl extends AbstractMantisSession {
             throw new MantisHandlingException(e);
         }
 
-        return new MantisIssue(id, data.getSummary());
+        return new MantisIssue(id, data.getSummary(), data.getStatus().getName());
     }
 
-    public void addNote(final int id, final MantisNote note)
+    @Override
+    public void addNote(final int id, final MantisNote note,final boolean ResolvedFilter)
             throws MantisHandlingException {
-        final IssueNoteData data = new IssueNoteData();
-        data.setText(note.getText());
-        data.setView_state(new ObjectRef(BigInteger.valueOf(note.getViewState().getCode()), null));
+        
+            boolean ResultFilter = true;
 
-        try {
-            portType.mc_issue_note_add(site.getUserName(), site.getPlainPassword(), BigInteger.valueOf(id), data);
-        } catch (final RemoteException e) {
-            throw new MantisHandlingException(e);
-        }
+            if (ResolvedFilter == true)
+            {
+                ResultFilter = FilterStatus(id);            
+            }
+            
+            if(ResultFilter)
+            {
+                
+                final hudson.plugins.mantis.soap.mantis110.IssueNoteData data = new hudson.plugins.mantis.soap.mantis110.IssueNoteData();
+                
+                
+                data.setText(note.getText());
+                
+                data.setView_state(new hudson.plugins.mantis.soap.mantis110.ObjectRef(BigInteger.valueOf(note.getViewState().getCode()), null));
+                
+                try 
+                {
+                    portType.mc_issue_note_add(site.getUserName(), site.getPlainPassword(), BigInteger.valueOf(id), data);
+                } catch (final RemoteException e) {
+                    throw new MantisHandlingException(e);
+                }                
+            }   
+        
+        
     }
+    
+    public boolean FilterStatus(int id)
+    throws MantisHandlingException{
+
+        final MantisIssue IssueLFANote = getIssue(id);
+        String msgtest;
+        String st_Status = IssueLFANote.getStatus();
+        boolean ResultFilter;
+        
+            //Filter on Status , in goal to add notes on Issues which aren't dead. Check Resolved Filter on Config  
+           if (st_Status.equals(MantisIssueStatus.resolved.toString()))
+            {
+                // Print Log If Status is New ...  <Resolved
+                msgtest = "Issue LOG : Add Note : Status is " + st_Status +" == RESOLVED " ;
+                ResultFilter = true ;
+            }
+           else
+		      {
+                // Print Log If Status is >Resolved... Closed
+                msgtest = "LOG : No Note : Status is " + st_Status +": !=  Resolved " ;
+                 ResultFilter = false ;
+            }
+                LOGGER.log(Level.INFO, msgtest);
+           return ResultFilter;
+    }
+
+
+
 
     public String getVersion() throws MantisHandlingException {
         String version;

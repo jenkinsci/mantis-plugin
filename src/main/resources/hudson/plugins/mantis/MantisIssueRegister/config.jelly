@@ -12,7 +12,7 @@
         ${%failure or unstable}
         </label>
     </f:entry>     
-    <f:entry title="" field="keepTicketPrivate">
+    <f:entry title="test" field="keepTicketPrivate">
         <label>
             <f:checkbox />${%Keep ticket private}
         </label>

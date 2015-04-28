@@ -19,4 +19,16 @@ public enum MantisViewState {
     public int getCode() {
         return code;
     }
+    
+    public static MantisViewState invertViewState(MantisViewState viewState)
+    {
+        if(viewState.getCode() == 10)
+        {
+            return MantisViewState.PRIVATE;
+        }
+        else
+        {
+            return MantisViewState.PUBLIC;
+        }
+    }
 }

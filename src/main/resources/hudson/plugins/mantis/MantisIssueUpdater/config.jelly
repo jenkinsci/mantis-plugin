@@ -1,15 +1,49 @@
 <?jelly escape-by-default='true'?>
 <j:jelly xmlns:j="jelly:core" xmlns:st="jelly:stapler" xmlns:d="jelly:define" xmlns:l="/lib/layout" xmlns:t="/lib/hudson" xmlns:f="/lib/form">
-    <f:entry title="" field="keepNotePrivate" >
+ 
+<f:entry title="Keep generated notes private" field="keepNotePrivate" >
+       
+            <f:checkbox checked="${instance.keepNotePrivate}"/>
+    <label>
+        ${%Keep notes private}
+    </label>
+        
+</f:entry>
+ 
+ 
+<f:entry title="Apply Filter Status" field="resolvedFilter">
+            
+  <f:checkbox  checked="${instance.resolvedFilter}" />
+    <label>
+        ${% Issue under resolved status won't have new notes}
+    </label>
+</f:entry>
+
+<f:section title = "This Changelogs Mods are exclusive, choose only one !" >
+<f:advanced title = "Show exclusive changelogs setups">
+
+    <f:entry title="Add changelog on same note" field="ModeAddChangeLogNote">
+
+      <f:checkbox  checked="${instance.ModeAddChangeLogNote}" />
         <label>
-            <f:checkbox checked="${instance.keepNotePrivate}" />
-    ${%Keep note private}
+            ${% Mod with changelog on same note }
         </label>
-    </f:entry>
-    <f:entry title="" field="recordChangelog">
+    </f:entry>  
+    <f:entry title="Add new changelog note " field="ModeNewChangeLogNote">
+
+      <f:checkbox  checked="${instance.ModeNewChangeLogNote}" />
         <label>
-            <f:checkbox checked="${instance.recordChangelog}" />
-    ${%Record changelog to note}
+            ${% Mod with changelog on new note }
         </label>
-    </f:entry>
+    </f:entry>  
+    <f:entry title="Add new changelog note status inverted " field="ModeNewChangeLogNoteInvertedStatus">
+
+      <f:checkbox  checked="${instance.ModeNewChangeLogNoteInvertedStatus}" />
+        <label>
+            ${%  Mod with changelog on new note with inverted status publicy}
+        </label>
+    </f:entry>  
+  </f:advanced>
+</f:section>
+
 </j:jelly>
