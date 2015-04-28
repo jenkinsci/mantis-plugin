@@ -138,17 +138,17 @@ public final class MantisSessionImpl extends AbstractMantisSession {
         boolean ResultFilter;
         
             //Filter on Status , in goal to add notes on Issues which aren't dead. Check Resolved Filter on Config  
-           if (st_Status.equals(MantisIssueStatus.verified.toString()) || st_Status.equals(MantisIssueStatus.rejected.toString()) ||st_Status.equals(MantisIssueStatus.closed.toString()))
-            {
-                // Print Log If Status is >Resolved... Closed
-                msgtest = "LOG : No Note : Status is " + st_Status +": > Verified /Rejected / Closed " ;
-                 ResultFilter = false ;
-            }
-           else
+           if (st_Status.equals(MantisIssueStatus.resolved.toString()))
             {
                 // Print Log If Status is New ...  <Resolved
-                msgtest = "Issue LOG : Add Note : Status is " + st_Status +": not :  Verified /Rejected/ Closed " ;
+                msgtest = "Issue LOG : Add Note : Status is " + st_Status +" == RESOLVED " ;
                 ResultFilter = true ;
+            }
+           else
+		      {
+                // Print Log If Status is >Resolved... Closed
+                msgtest = "LOG : No Note : Status is " + st_Status +": !=  Resolved " ;
+                 ResultFilter = false ;
             }
                 LOGGER.log(Level.INFO, msgtest);
            return ResultFilter;
