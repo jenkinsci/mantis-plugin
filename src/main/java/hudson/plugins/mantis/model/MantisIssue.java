@@ -5,6 +5,7 @@ package hudson.plugins.mantis.model;
  *
  * @author Seiji Sogabe
  */
+
 import java.io.Serializable;
 
 public final class MantisIssue implements Serializable {
@@ -20,8 +21,12 @@ public final class MantisIssue implements Serializable {
     private MantisProject project;
 
     private MantisCategory category;
-    
+
     private MantisViewState viewState;
+
+    private MantisIssueStatus status;
+
+    private MantisIssueResolution resolution;
 
     public int getId() {
         return id;
@@ -43,21 +48,29 @@ public final class MantisIssue implements Serializable {
         return project;
     }
 
-    public MantisIssue(final int id, final String summary) {
-        this.id = id;
-        this.summary = summary;
+    public MantisIssueStatus getStatus() {
+        return status;
     }
 
     public MantisViewState getViewState() {
         return viewState;
     }
 
-    public MantisIssue(MantisProject project, MantisCategory category, String summary, 
-            String description, MantisViewState viewState) {
+    public MantisIssueResolution getResolution() {
+        return resolution;
+    }
+
+    public MantisIssue(final int id, MantisProject project, MantisCategory category, String summary,
+            String description, MantisViewState viewState, MantisIssueStatus status, MantisIssueResolution resolution) {
+        this.id = id;
         this.summary = summary;
         this.description = description;
         this.project = project;
         this.category = category;
         this.viewState = viewState;
+        this.status = status;
+        this.resolution = resolution;
     }
+
+
 }

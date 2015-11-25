@@ -5,23 +5,20 @@ package hudson.plugins.mantis.model;
  *
  * @author Seiji Sogabe
  */
-public enum MantisViewState {
+public enum MantisIssueResolution {
 
-    PUBLIC(10),
-    PRIVATE(50);
+    FIXED(20);
 
     private int code;
-    
-    MantisViewState(final int code) {
+
+    MantisIssueResolution(final int code) {
         this.code = code;
     }
 
-    public static MantisViewState fromCode(int code) {
+    public static MantisIssueResolution fromCode(int code) {
         switch (code) {
-            case 10:
-                return PUBLIC;
-            case 50:
-                return PRIVATE;
+            case 20:
+                return FIXED;
             default:
                 return null;
         }

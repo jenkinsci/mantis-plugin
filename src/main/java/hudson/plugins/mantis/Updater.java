@@ -8,6 +8,8 @@ import hudson.model.Run;
 import hudson.plugins.mantis.changeset.ChangeSet;
 import hudson.plugins.mantis.changeset.ChangeSetFactory;
 import hudson.plugins.mantis.model.MantisIssue;
+import hudson.plugins.mantis.model.MantisIssueResolution;
+import hudson.plugins.mantis.model.MantisIssueStatus;
 import hudson.scm.ChangeLogSet.Entry;
 
 import java.io.PrintStream;
@@ -69,8 +71,15 @@ final class Updater {
             try {
                 final MantisIssue issue = site.getIssue(changeSet.getId());
                 if (update) {
+
                     final String text = createUpdateText(build, changeSet, rootUrl);
-                    site.updateIssue(changeSet.getId(), text, property.isKeepNotePrivate());
+                    site.addNote(changeSet.getId(), text, property.isKeepNotePrivate());
+
+                    if (property.isSetStatusResolved() && issue.getStatus() != MantisIssueStatus.RESOLVED) {
+                        MantisIssue resolvedIssue = createResolvedIssue(issue);
+                        site.updateIssue(resolvedIssue);
+                    }
+
                     Utility.log(logger, Messages.Updater_Updating(changeSet.getId()));
                 }
                 issues.add(issue);
@@ -86,6 +95,11 @@ final class Updater {
                 new MantisBuildAction(mpp.getRegexpPattern(), issues.toArray(new MantisIssue[0])));
 
         return true;
+    }
+
+    private MantisIssue createResolvedIssue(MantisIssue issue) {
+        return new MantisIssue(issue.getId(), issue.getProject(), issue.getCategory(), issue.getDescription(),
+                issue.getDescription(), issue.getViewState(), MantisIssueStatus.RESOLVED, MantisIssueResolution.FIXED);
     }
 
     private String createUpdateText(final AbstractBuild<?, ?> build, final ChangeSet changeSet, final String rootUrl) {
