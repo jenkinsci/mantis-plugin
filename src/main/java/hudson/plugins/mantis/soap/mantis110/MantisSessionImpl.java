@@ -67,7 +67,8 @@ public final class MantisSessionImpl extends AbstractMantisSession {
         return new MantisIssue(id, new MantisProject(data.getProject().getId().intValue(), data.getProject().getName()),
                 new MantisCategory(data.getCategory()), data.getSummary(), data.getDescription(),
                 MantisViewState.fromCode(data.getView_state().getId().intValue()),
-                MantisIssueStatus.fromCode(data.getStatus().getId().intValue()));
+                MantisIssueStatus.fromCode(data.getStatus().getId().intValue()),
+                MantisIssueResolution.fromCode(data.getStatus().getId().intValue()));
     }
 
     public void addNote(final int id, final MantisNote note)
@@ -192,6 +193,8 @@ public final class MantisSessionImpl extends AbstractMantisSession {
         data.setView_state(viewStateRef);
         ObjectRef statusRef = new ObjectRef(BigInteger.valueOf(issue.getStatus().getCode()), null);
         data.setStatus(statusRef);
+        ObjectRef resolutionRef = new ObjectRef(BigInteger.valueOf(issue.getResolution().getCode()), null);
+        data.setResolution(resolutionRef);
 
         try {
             portType.mc_issue_update(site.getUserName(), site.getPlainPassword(), BigInteger.valueOf(issue.getId()), data);

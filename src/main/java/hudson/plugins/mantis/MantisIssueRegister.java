@@ -17,15 +17,16 @@ import hudson.tasks.BuildStepDescriptor;
 import hudson.tasks.BuildStepMonitor;
 import hudson.tasks.Publisher;
 import hudson.tasks.Recorder;
+
 import java.io.IOException;
 
 
 import java.io.PrintStream;
 import java.util.logging.Logger;
+
 import org.kohsuke.stapler.DataBoundConstructor;
 
 /**
- * 
  * @author Seiji Sogabe
  */
 public final class MantisIssueRegister extends Recorder {
@@ -108,7 +109,7 @@ public final class MantisIssueRegister extends Recorder {
         return site.getIssueLink(no);
     }
     
-    private MantisIssue createIssue(AbstractBuild<?, ?> build, BuildListener listener) 
+    private MantisIssue createIssue(AbstractBuild<?, ?> build, BuildListener listener)
             throws IOException, InterruptedException {
         MantisProjectProperty mpp = MantisProjectProperty.get(build);
         int projectId = mpp.getProjectId();
@@ -128,7 +129,7 @@ public final class MantisIssueRegister extends Recorder {
         } else {
             viewState = MantisViewState.PRIVATE;
         }
-        return new MantisIssue(0 ,project, category, summary, description, viewState, null);
+        return new MantisIssue(0, project, category, summary, description, viewState, null, null);
     }
     
     private String summary(AbstractBuild<?, ?> build) {

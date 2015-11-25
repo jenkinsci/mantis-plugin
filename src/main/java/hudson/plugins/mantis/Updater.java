@@ -8,6 +8,7 @@ import hudson.model.Run;
 import hudson.plugins.mantis.changeset.ChangeSet;
 import hudson.plugins.mantis.changeset.ChangeSetFactory;
 import hudson.plugins.mantis.model.MantisIssue;
+import hudson.plugins.mantis.model.MantisIssueResolution;
 import hudson.plugins.mantis.model.MantisIssueStatus;
 import hudson.scm.ChangeLogSet.Entry;
 
@@ -98,7 +99,7 @@ final class Updater {
 
     private MantisIssue createResolvedIssue(MantisIssue issue) {
         return new MantisIssue(issue.getId(), issue.getProject(), issue.getCategory(), issue.getDescription(),
-                issue.getDescription(), issue.getViewState(), MantisIssueStatus.RESOLVED);
+                issue.getDescription(), issue.getViewState(), MantisIssueStatus.RESOLVED, MantisIssueResolution.FIXED);
     }
 
     private String createUpdateText(final AbstractBuild<?, ?> build, final ChangeSet changeSet, final String rootUrl) {

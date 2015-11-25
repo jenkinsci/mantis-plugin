@@ -4,12 +4,15 @@ import hudson.plugins.mantis.model.MantisCategory;
 import hudson.plugins.mantis.model.MantisIssue;
 import hudson.plugins.mantis.model.MantisProject;
 import hudson.plugins.mantis.model.MantisViewState;
+
 import java.net.URL;
+
 import static junit.framework.TestCase.assertEquals;
 import static junit.framework.TestCase.assertFalse;
 import static junit.framework.TestCase.assertNotNull;
 import static junit.framework.TestCase.assertTrue;
 import static junit.framework.TestCase.fail;
+
 import org.junit.Before;
 import org.junit.Ignore;
 import org.junit.Rule;
@@ -95,7 +98,8 @@ public class MantisSiteTest {
         String description = "Added by Jenkins Mantis Plugin.";
         MantisProject project = new MantisProject(2, "Jenkins Project");
         MantisCategory category = new MantisCategory("plugin");
-        MantisIssue issue = new MantisIssue(0, project, category, summary, description, MantisViewState.PUBLIC, null);
+        MantisIssue issue = new MantisIssue(0, project, category, summary, description, MantisViewState.PUBLIC, null,
+                null);
         target.addIssue(issue);
     }
 
@@ -106,7 +110,8 @@ public class MantisSiteTest {
         String description = "Added by Jenkins Mantis Plugin.";
         MantisProject project = new MantisProject(2, "Jenkins Project");
         MantisCategory category = new MantisCategory("plugin");
-        MantisIssue issue = new MantisIssue(0, project, category, summary, description, MantisViewState.PRIVATE, null);
+        MantisIssue issue = new MantisIssue(0, project, category, summary, description, MantisViewState.PRIVATE, null,
+                null);
         target.addIssue(issue);
     }
     
