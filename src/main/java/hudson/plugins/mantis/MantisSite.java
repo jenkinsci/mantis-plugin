@@ -176,7 +176,7 @@ public final class MantisSite {
         return session.getIssue(id);
     }
 
-    public void updateIssue(final int id, final String text, final boolean keepNotePrivate)
+    public void addNote(final int id, final String text, final boolean keepNotePrivate)
             throws MantisHandlingException {
 
         MantisViewState viewState;

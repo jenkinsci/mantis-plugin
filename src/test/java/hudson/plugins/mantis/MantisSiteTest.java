@@ -83,9 +83,9 @@ public class MantisSiteTest {
     }
     
     @Test
-    public void updateIssue() throws MantisHandlingException {
+    public void addNote() throws MantisHandlingException {
         target = createMantisSite();
-        target.updateIssue(232, "Updated by Jenkins Mantis Plugin.", false);
+        target.addNote(232, "Updated by Jenkins Mantis Plugin.", false);
     }
     
     @Test

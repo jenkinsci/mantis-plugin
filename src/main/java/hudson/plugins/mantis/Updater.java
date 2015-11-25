@@ -70,7 +70,7 @@ final class Updater {
                 final MantisIssue issue = site.getIssue(changeSet.getId());
                 if (update) {
                     final String text = createUpdateText(build, changeSet, rootUrl);
-                    site.updateIssue(changeSet.getId(), text, property.isKeepNotePrivate());
+                    site.addNote(changeSet.getId(), text, property.isKeepNotePrivate());
                     Utility.log(logger, Messages.Updater_Updating(changeSet.getId()));
                 }
                 issues.add(issue);
