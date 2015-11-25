@@ -2,11 +2,9 @@ package hudson.plugins.mantis.soap.mantis110;
 
 import hudson.plugins.mantis.MantisHandlingException;
 import hudson.plugins.mantis.MantisSite;
-import hudson.plugins.mantis.model.MantisCategory;
-import hudson.plugins.mantis.model.MantisIssue;
-import hudson.plugins.mantis.model.MantisNote;
-import hudson.plugins.mantis.model.MantisProject;
+import hudson.plugins.mantis.model.*;
 import hudson.plugins.mantis.soap.AbstractMantisSession;
+
 import java.math.BigInteger;
 import java.net.MalformedURLException;
 import java.net.URL;
@@ -15,6 +13,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.logging.Logger;
 import javax.xml.rpc.ServiceException;
+
 import org.apache.axis.AxisProperties;
 import org.apache.axis.EngineConfiguration;
 import org.apache.axis.client.AxisClient;
@@ -65,7 +64,10 @@ public final class MantisSessionImpl extends AbstractMantisSession {
             throw new MantisHandlingException(e);
         }
 
-        return new MantisIssue(id, data.getSummary());
+        return new MantisIssue(id, new MantisProject(data.getProject().getId().intValue(), data.getProject().getName()),
+                new MantisCategory(data.getCategory()), data.getSummary(), data.getDescription(),
+                MantisViewState.fromCode(data.getView_state().getId().intValue()),
+                MantisIssueStatus.fromCode(data.getStatus().getId().intValue()));
     }
 
     public void addNote(final int id, final MantisNote note)

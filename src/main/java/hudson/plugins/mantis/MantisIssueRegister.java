@@ -128,7 +128,7 @@ public final class MantisIssueRegister extends Recorder {
         } else {
             viewState = MantisViewState.PRIVATE;
         }
-        return new MantisIssue(project, category, summary, description, viewState);
+        return new MantisIssue(0 ,project, category, summary, description, viewState, null);
     }
     
     private String summary(AbstractBuild<?, ?> build) {

@@ -18,7 +18,7 @@ import org.jvnet.hudson.test.JenkinsRule;
 
 /**
  * Test class.
- * 
+ *
  * @author Seiji Sogabe
  */
 @Ignore(value = "not work behind a proxy")
@@ -95,7 +95,7 @@ public class MantisSiteTest {
         String description = "Added by Jenkins Mantis Plugin.";
         MantisProject project = new MantisProject(2, "Jenkins Project");
         MantisCategory category = new MantisCategory("plugin");
-        MantisIssue issue = new MantisIssue(project, category, summary, description, MantisViewState.PUBLIC);
+        MantisIssue issue = new MantisIssue(0, project, category, summary, description, MantisViewState.PUBLIC, null);
         target.addIssue(issue);
     }
 
@@ -106,7 +106,7 @@ public class MantisSiteTest {
         String description = "Added by Jenkins Mantis Plugin.";
         MantisProject project = new MantisProject(2, "Jenkins Project");
         MantisCategory category = new MantisCategory("plugin");
-        MantisIssue issue = new MantisIssue(project, category, summary, description, MantisViewState.PRIVATE);
+        MantisIssue issue = new MantisIssue(0, project, category, summary, description, MantisViewState.PRIVATE, null);
         target.addIssue(issue);
     }
     

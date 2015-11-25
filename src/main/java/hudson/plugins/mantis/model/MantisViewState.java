@@ -12,8 +12,19 @@ public enum MantisViewState {
 
     private int code;
     
-    private MantisViewState(final int code) {
+    MantisViewState(final int code) {
         this.code = code;
+    }
+
+    public static MantisViewState fromCode(int code) {
+        switch (code) {
+            case 10:
+                return PUBLIC;
+            case 50:
+                return PRIVATE;
+            default:
+                return null;
+        }
     }
 
     public int getCode() {
