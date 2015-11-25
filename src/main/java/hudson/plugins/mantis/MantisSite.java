@@ -155,7 +155,7 @@ public final class MantisSite {
     public String getIssueLink(int issueNo) {
         String u = getUrl().toExternalForm();
         return String.format("%sview.php?id=%d", u, issueNo);
-    }  
+    }
     
     public boolean isConnect() {
         final String urlString = url.toExternalForm();
@@ -204,6 +204,11 @@ public final class MantisSite {
     public int addIssue(MantisIssue issue) throws MantisHandlingException {
         final MantisSession session = createSession();
         return session.addIssue(issue);
+    }
+
+    public void updateIssue(MantisIssue issue) throws MantisHandlingException {
+        final MantisSession session = createSession();
+        session.updateIssue(issue);
     }
     
     private MantisSession createSession() throws MantisHandlingException {

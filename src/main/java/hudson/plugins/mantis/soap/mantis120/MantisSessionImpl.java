@@ -165,5 +165,39 @@ public final class MantisSessionImpl extends AbstractMantisSession {
         return addedIssueNo.intValue();
     }
 
+    @Override
+    public void updateIssue(MantisIssue issue) throws MantisHandlingException {
+        if (issue == null) {
+            throw new MantisHandlingException("issue should not be null.");
+        }
+        IssueData data = new IssueData();
+
+        MantisProject project = issue.getProject();
+        if (project == null) {
+            throw new MantisHandlingException("project is missing.");
+        }
+        MantisCategory category = issue.getCategory();
+        if (category == null) {
+            throw new MantisHandlingException("category is missing.");
+        }
+
+        data.setId(BigInteger.valueOf(issue.getId()));
+        ObjectRef pRef = new ObjectRef(BigInteger.valueOf(project.getId()), project.getName());
+        data.setProject(pRef);
+        data.setCategory(category.getName());
+        data.setSummary(issue.getSummary());
+        data.setDescription(issue.getDescription());
+        ObjectRef viewStateRef = new ObjectRef(BigInteger.valueOf(issue.getViewState().getCode()), null);
+        data.setView_state(viewStateRef);
+        ObjectRef statusRef = new ObjectRef(BigInteger.valueOf(issue.getStatus().getCode()), null);
+        data.setStatus(statusRef);
+
+        try {
+            portType.mc_issue_update(site.getUserName(), site.getPlainPassword(), BigInteger.valueOf(issue.getId()), data);
+        } catch (RemoteException e) {
+            throw new MantisHandlingException(e);
+        }
+    }
+
     private static final Logger LOGGER = Logger.getLogger(MantisSessionImpl.class.getName());
 }

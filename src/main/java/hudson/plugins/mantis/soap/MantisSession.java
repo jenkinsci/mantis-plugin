@@ -24,4 +24,6 @@ public interface MantisSession {
     List<MantisCategory> getCategories(int projectId) throws MantisHandlingException;
     
     int addIssue(MantisIssue issue) throws MantisHandlingException;
+
+    void updateIssue(MantisIssue issue) throws MantisHandlingException;
 }
