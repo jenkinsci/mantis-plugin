@@ -1,7 +1,7 @@
 package hudson.plugins.mantis;
 
-import com.gargoylesoftware.htmlunit.html.HtmlButton;
-import com.gargoylesoftware.htmlunit.html.HtmlForm;
+import org.htmlunit.html.HtmlButton;
+import org.htmlunit.html.HtmlForm;
 import hudson.model.JobProperty;
 import java.net.URL;
 import jenkins.model.Jenkins;
@@ -43,12 +43,12 @@ public class MantisProjectPropertyConfigSubmitTest {
         
         HtmlForm form = webClient.goTo("configure").getFormByName("config");
         
-        assertEquals("http://localhost/mantis/", form.getInputByName("m.url").getValueAttribute());
-        assertEquals("V110", form.getSelectByName("m.version").getSelectedOptions().get(0).getValueAttribute());
-        assertEquals(s.getUserName(), form.getInputByName("m.userName").getValueAttribute());
-        assertEquals(s.getSecretPassword().getEncryptedValue(), form.getInputByName("m.password").getValueAttribute());
-        assertEquals(s.getBasicUserName(), form.getInputByName("m.basicUserName").getValueAttribute());
-        assertEquals(s.getSecretBasicPassword().getEncryptedValue(), form.getInputByName("m.basicPassword").getValueAttribute());
+        assertEquals("http://localhost/mantis/", form.getInputByName("m.url").getValue());
+        assertEquals("V110", form.getSelectByName("m.version").getSelectedOptions().get(0).getValue());
+        assertEquals(s.getUserName(), form.getInputByName("m.userName").getValue());
+        assertEquals(s.getSecretPassword().getEncryptedValue(), form.getInputByName("m.password").getValue());
+        assertEquals(s.getBasicUserName(), form.getInputByName("m.basicUserName").getValue());
+        assertEquals(s.getSecretBasicPassword().getEncryptedValue(), form.getInputByName("m.basicPassword").getValue());
         
     }
 
@@ -63,12 +63,12 @@ public class MantisProjectPropertyConfigSubmitTest {
         
         HtmlForm form = webClient.goTo("configure").getFormByName("config");
         
-        form.getInputByName("m.url").setValueAttribute("http://bacons.ddo.jp/mantis/");
+        form.getInputByName("m.url").setValue("http://bacons.ddo.jp/mantis/");
         form.getSelectByName("m.version").setSelectedAttribute("V120", true);
-        form.getInputByName("m.userName").setValueAttribute("mantis");
-        form.getInputByName("m.password").setValueAttribute("mantis");
-        form.getInputByName("m.basicUserName").setValueAttribute("mantis");
-        form.getInputByName("m.basicPassword").setValueAttribute("mantis");
+        form.getInputByName("m.userName").setValue("mantis");
+        form.getInputByName("m.password").setValue("mantis");
+        form.getInputByName("m.basicUserName").setValue("mantis");
+        form.getInputByName("m.basicPassword").setValue("mantis");
         
         form.submit((HtmlButton)last(form.getHtmlElementsByTagName("button")));
         
